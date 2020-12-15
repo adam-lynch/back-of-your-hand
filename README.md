@@ -8,11 +8,11 @@ How well do you know your area? Test your knowledge by locating streets.
 
 This is a map-based game I made for my dad for Christmas. You're given random street names and have to locate them on the map.
 
-Try it out at https://backofyourhand.com
+Try it out at [backofyourhand.com](https://backofyourhand.com)
 
 To get more detail on why and how I made it, read [Introducing Back Of Your Hand](https://adamlynch.com/back-of-your-hand).
 
-The game itself also has documentation within; https://backofyourhand.com/learn-more
+The game itself also has documentation within; [backofyourhand.com/learn-more](https://backofyourhand.com/learn-more)
 
 ## Contributing
 

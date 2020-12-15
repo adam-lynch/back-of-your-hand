@@ -1,0 +1,29 @@
+[[redirects]]
+  from = "/tiles/streets-a/*"
+  to = "https://a.tile.openstreetmap.org/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/tiles/streets-b/*"
+  to = "https://b.tile.openstreetmap.org/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/tiles/streets-c/*"
+  to = "https://c.tile.openstreetmap.org/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/tiles/no-streets/*"
+  to = "https://tiles.wmflabs.org/osm-no-labels/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

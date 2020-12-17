@@ -140,6 +140,7 @@
         <a 
           href={"/learn-more?continue=" + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash)}>
           Learn more
+          <span class="hide-accessibly"> (how to play, etc)</span>
         </a>
       </div>
     {/if}

@@ -33,6 +33,11 @@ window.onunhandledrejection = (e) => {
   }
 };
 
+// Hide "add to homescreen" prompt (it covers UI and is confusing)
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+});
+
 try {
   app = new App({
     target: document.body,

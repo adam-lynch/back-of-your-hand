@@ -35,9 +35,12 @@
   let map: leaflet.Map;
   let mapElement: HTMLElement;
   let resultFeatureGroup: leaflet.FeatureGroup;
+  const layerOptions = { 
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  };
   const tileLayers = {
-    "no-streets": leaflet.tileLayer(getTileLayerUrl("no-streets")),
-    streets: leaflet.tileLayer(getTileLayerUrl("streets")),
+    "no-streets": leaflet.tileLayer(getTileLayerUrl("no-streets"), layerOptions),
+    streets: leaflet.tileLayer(getTileLayerUrl("streets"), layerOptions),
   };
 
 
@@ -240,6 +243,8 @@
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
         zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
       }));
+
+    map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
     // @ts-ignore

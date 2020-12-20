@@ -788,11 +788,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   }
 
-
-  .leaflet-control-attribution {
-    display: none;
-  }
-
   .leaflet-touch .leaflet-bar a {
     font-size: 1.2rem !important;
     height: auto !important;

@@ -808,6 +808,11 @@
     }
   }
 
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    user-select: none;
+  }
+
   .leaflet-control-zoom-in:active,
   .leaflet-control-zoom-in:hover,
   .leaflet-control-zoom-out:active,

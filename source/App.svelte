@@ -777,6 +777,8 @@
     overflow: hidden;
     /* This disables overscroll effects and prevents pull-to-refresh */
     overscroll-behavior-y: none;
+    /* Disable zoom on iOS */
+    touch-action: none;
   }
 
   body {

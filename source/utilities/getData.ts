@@ -38,12 +38,39 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
     areaBounds.getSouthEast().lat,
     areaBounds.getSouthEast().lng,
   ].join(",");
+
+  // We don't want highway=bus_stop, for example
+  const highwayValuesAllowed = [
+    "bridleway",
+    "cycleway",
+    "footway",
+    "living_street",
+    "motorway",
+    "motorway_link",
+    "path",
+    "pedestrian",
+    "primary",
+    "primary_link",
+    "residential",
+    "secondary",
+    "service",
+    "steps",
+    "tertiary",
+    "tertiary_link",
+    "track",
+    "trunk",
+    "trunk_link",
+    "unclassified",
+  ];
+  const highwayRegex = `^(${highwayValuesAllowed.join("||")})$`;
+
   /*
     This queries Overpass using the Overpass query lanaguage. It's basically saying give me all
     streets with a name within N metres around M center point. It also specifies the minimal
     properties we need in the response.
   */
-  const urlPath = `api/interpreter?data=[out:json][bbox:${bboxValue}];(way(around:${radius},${centerLatLng.lat},${centerLatLng.lng})[highway][name];);out%20tags%20geom;`;
+  const urlPath = `api/interpreter?data=[out:json][bbox:${bboxValue}];(way(around:${radius},${centerLatLng.lat},${centerLatLng.lng})[highway~"${highwayRegex}"][name];);out%20tags%20geom;`;
+
   // If the query changes, the "cache" is automatically skipped
   const localStorageKey = `overpass-response__${urlPath})`;
   const responseFromLocalStorage = ignoreError(() =>

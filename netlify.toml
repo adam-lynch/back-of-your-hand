@@ -15,7 +15,8 @@
 
 [[redirects]]
   from = "/tiles/no-streets/*"
-  to = "https://tiles.wmflabs.org/osm-no-labels/:splat"
+  to = "https://a.tile.openstreetmap.org/:splat"
+  # to = "https://tiles.wmflabs.org/osm-no-labels/:splat"
   status = 200
 
 [[redirects]]

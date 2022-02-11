@@ -2,7 +2,7 @@ export default (name: "streets" | "no-streets") => {
   let result;
   // @ts-ignore
   if (isProduction) {
-    if (name === "streets") {
+    if (name === "streets" || true) {
       result = `/tiles/${name}-{s}`;
     } else {
       result = `/tiles/${name}`;

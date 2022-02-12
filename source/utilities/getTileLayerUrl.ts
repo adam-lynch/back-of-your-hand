@@ -2,7 +2,7 @@ export default (name: "streets" | "no-streets") => {
   let result;
   // @ts-ignore
   if (isProduction) {
-    if (name === "streets" || true) {
+    if (name === "streets") {
       result = `/tiles/${name}-{s}`;
     } else {
       result = `/tiles/${name}`;
@@ -10,7 +10,7 @@ export default (name: "streets" | "no-streets") => {
   } else if (name === "streets") {
     result = "https://{s}.tile.openstreetmap.org";
   } else {
-    result = "https://tiles.wmflabs.org/osm-no-labels";
+    result = "https://maps.wikimedia.org/osm";
   }
   result += "/{z}/{x}/{y}.png";
   return result;

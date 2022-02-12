@@ -38,6 +38,8 @@
     "@turf/nearest-point-on-line": "^6.0.2",
     "leaflet": "^1.7.1",
     "lodash-es": "^4.17.15",
+    "mapbox-gl": "2.4.1",
+    "mapbox-gl-leaflet": "^0.0.15",
     "turf-featurecollection": "^1.0.1",
     "turf-linestring": "^1.0.2",
     "turf-point": "^2.0.1"

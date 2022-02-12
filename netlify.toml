@@ -16,7 +16,6 @@
 [[redirects]]
   from = "/tiles/no-streets/*"
   to = "https://maps.wikimedia.org/osm/:splat"
-  
   status = 200
 
 [[redirects]]

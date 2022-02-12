@@ -14,7 +14,6 @@
   import type { Question } from "./utilities/types";
   import trackEvent from "./utilities/trackEvent"; 
 
-
   let activeTileLayerName = "streets";
   let areaBoundsCircle: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
@@ -42,7 +41,6 @@
     "no-streets": leaflet.tileLayer(getTileLayerUrl("no-streets"), layerOptions),
     streets: leaflet.tileLayer(getTileLayerUrl("streets"), layerOptions),
   };
-
 
   // Used when intializing, plus when updating its style (when starting a new round)
   const areaBoundsCircleSelectionStyle = {

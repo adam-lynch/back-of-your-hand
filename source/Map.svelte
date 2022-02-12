@@ -1,5 +1,6 @@
 <script lang="ts">
   import leaflet from "leaflet"; 
+  import "mapbox-gl-leaflet"; 
   import debounce from "lodash-es/debounce.js"; 
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
@@ -7,7 +8,6 @@
   import drawStreet from "./utilities/drawStreet";
   import getDistance from "./utilities/getDistance";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
-  import getTileLayerUrl from "./utilities/getTileLayerUrl";
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
   import roundNumber from "./utilities/roundNumber";
@@ -15,7 +15,6 @@
   import trackEvent from "./utilities/trackEvent"; 
 
 
-  let activeTileLayerName = "streets";
   let areaBoundsCircle: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
@@ -35,14 +34,28 @@
   let map: leaflet.Map;
   let mapElement: HTMLElement;
   let resultFeatureGroup: leaflet.FeatureGroup;
-  const layerOptions = { 
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  };
+  const getTileLayer = (id: string) => {
+    let baseApiUrl;
+    let maptilerBaseUrl = 'https://api.maptiler.com';
+    // @ts-ignore
+    if(isProduction) {
+      baseApiUrl = `${window.location.origin}/mapbox`;
+      maptilerBaseUrl = `${window.location.origin}/maptiler`;
+    }
+    // @ts-ignore
+    return leaflet.mapboxGL({
+      baseApiUrl,
+      accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNremswaDJ3NzBjMDYybnRhMHVqYnVqcm8ifQ.ZBtEBrWfOTBSIsUZ2Tkwlw",
+      attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+      style: `${maptilerBaseUrl}/maps/${id}/style.json?key=mT0aLJwYzlO7b9bKD0ZU`,
+    });
+  }
   const tileLayers = {
-    "no-streets": leaflet.tileLayer(getTileLayerUrl("no-streets"), layerOptions),
-    streets: leaflet.tileLayer(getTileLayerUrl("streets"), layerOptions),
+    base: getTileLayer("d5e820e5-567f-41f8-a7ae-4803e4392477"),
+    streets: getTileLayer("96a024f1-e71a-48f3-8ea8-9e0744939308"),
   };
 
+  let isStreetsLayerShown = true;
 
   // Used when intializing, plus when updating its style (when starting a new round)
   const areaBoundsCircleSelectionStyle = {
@@ -88,30 +101,24 @@
     areaBoundsCircle = newAreaBoundsCircle;
   };
 
-  // Used for showing / hiding street names
-  const changeTileLayer = (newLayerName, oldLayerName) => {
-    if(newLayerName === activeTileLayerName) {
+  const hideStreetsLayer = () => {
+    if(!isStreetsLayerShown) {
       return;
     }
-    tileLayers[newLayerName]
-      .addTo(map)
-      .once("tileload", () => {
-        // To be safe (this could be fired later than expected)
-        if(activeTileLayerName === newLayerName) {
-          tileLayers[newLayerName].bringToFront().on("load", () => {
-            // To be safe (this could be fired later than expected)
-            if(activeTileLayerName !== oldLayerName) {
-              map.removeLayer(tileLayers[oldLayerName]);
-            }
-          });
-        }
-      });
-    activeTileLayerName = newLayerName;
-  }
+    map.removeLayer(tileLayers.streets);
+    isStreetsLayerShown = false;
+  };
+
+  const showStreetsLayer = () => {
+    if(isStreetsLayerShown) {
+      return;
+    }
+    tileLayers.streets.addTo(map);
+  };
 
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
-    changeTileLayer("no-streets", "streets");
+    hideStreetsLayer();
     map.fitBounds($areaBounds)
       .setMaxBounds($areaBounds)
       .setMinZoom(initialZoom - 2);
@@ -194,7 +201,7 @@
     /* Zoom in on result and reveal street names */
 
     map.fitBounds(resultFeatureGroup.getBounds().pad(0.2));
-    changeTileLayer("streets", "no-streets");
+    showStreetsLayer();
   }
 
   const onMapClick = (e) => {
@@ -232,7 +239,7 @@
     const viewportWidth = getViewportWidth();
     map = leaflet.map(mapElement, {
       center: leaflet.latLng($areaCenter),
-      layers: [tileLayers[activeTileLayerName]],
+      layers: Object.values(tileLayers),
       zoom: initialZoom,
       zoomControl: false,
       zoomSnap: 0.25,
@@ -263,10 +270,10 @@
   // Remove polylines, markers, etc. from map. Used when moving to a new street, etc.
   const resetMap = (shouldFitBounds = true, shouldShowStreets = false) => {
     if(shouldShowStreets) {
-      changeTileLayer("streets", "no-streets");
+      showStreetsLayer();
     }
     else {
-      changeTileLayer("no-streets", "streets");
+      hideStreetsLayer();
     }
 
     if(resultFeatureGroup) {
@@ -391,5 +398,10 @@
     height: 100%;
     flex: 1;
     grid-area: map;
+  }
+
+  :global(.leaflet-gl-layer.mapboxgl-map) {
+    position: absolute;
+    inset: 0;
   }
 </style>

@@ -118,6 +118,7 @@
       }
       tileLayers.streets
         .once("add", () => {
+          isStreetsLayerShown = true;
           resolve()
         })
         .addTo(map);

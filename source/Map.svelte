@@ -13,6 +13,7 @@
   import roundNumber from "./utilities/roundNumber";
   import type { Question } from "./utilities/types";
   import trackEvent from "./utilities/trackEvent"; 
+  import delay from "./utilities/delay";
 
 
   let areaBoundsCircle: leaflet.Circle;
@@ -109,11 +110,18 @@
     isStreetsLayerShown = false;
   };
 
-  const showStreetsLayer = () => {
-    if(isStreetsLayerShown) {
-      return;
-    }
-    tileLayers.streets.addTo(map);
+  const showStreetsLayer = (): Promise<void> => {
+    return new Promise((resolve) => {
+      if(isStreetsLayerShown) {
+        resolve();
+        return;
+      }
+      tileLayers.streets
+        .once("add", () => {
+          resolve()
+        })
+        .addTo(map);
+    });
   };
 
   // I.e. when they've confirmed the area selection
@@ -135,7 +143,7 @@
   };
 
   // When they've confirmed their guess, compute and draw result
-  const onChosenPointConfirmed = () => {
+  const onChosenPointConfirmed = async () => {
     /* First, compute the distance / score */
 
     const chosenLatLng = chosenPointMarker.getLatLng();
@@ -200,8 +208,13 @@
 
     /* Zoom in on result and reveal street names */
 
-    map.fitBounds(resultFeatureGroup.getBounds().pad(0.2));
     showStreetsLayer();
+    await delay(100);
+    if(!resultFeatureGroup) {
+      return;
+    }
+
+    map.fitBounds(resultFeatureGroup.getBounds().pad(0.2));
   }
 
   const onMapClick = (e) => {
@@ -281,7 +294,11 @@
       resultFeatureGroup = null;
     }
     if(shouldFitBounds) {
-      map.fitBounds($areaBounds);
+        map.fitBounds($areaBounds)
+        .once("zoomend", () => {
+          // This prevents the map going (and staying gray) on Firefox for Android sometimes
+          map.panBy([1, 1]);
+        });
     }
   };
 

@@ -13,7 +13,9 @@ export const deviceBestScore = writable(
 );
 export const chosenPoint = writable(null);
 
-const pathSegments = window.location.pathname.split("/").filter(Boolean);
+const pathSegments = window.location.pathname
+  .split("/")
+  .filter((segment) => segment && segment !== "geo-lookup-done");
 export const gotInitialSeedFromUrl = writable(
   pathSegments.length === 2 && pathSegments[1].length
 );

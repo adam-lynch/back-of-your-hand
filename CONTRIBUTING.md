@@ -16,6 +16,10 @@ This recompiles and live-reloads the app as you make changes.
 
 Warning: I think this might be slightly broken since I introduced Babel. At least for me, it sometimes requires a manual reload.
 
+## Edge handlers
+
+To run the [edge handlers](./functions) in dev mode, additionally run `npx wrangler pages dev public --port 8788`.
+
 ## TypeScript
 
 This project uses TypeScript, but the actual amount of it used is very little. This is my first Svelte project but it seems like the TypeScript integration isn't very deep. So TypeScript is mostly used for:

@@ -1,10 +1,13 @@
 import ignoreError from "./ignoreError";
 import type { LatLng } from "./types";
 
-const getAreaCenterFromUrl = (): LatLng | void => {
-  const [unparsedAreaCenter] = window.location.pathname
-    .split("/")
-    .filter(Boolean);
+const getAreaCenterFromUrl = (regExpToRemove?: RegExp): LatLng | void => {
+  let pathname = window.location.pathname;
+  if (regExpToRemove) {
+    pathname = pathname.replace(regExpToRemove, "");
+  }
+  const segments = pathname.split("/").filter(Boolean);
+  const unparsedAreaCenter = segments[0];
   if (
     unparsedAreaCenter &&
     /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(
@@ -32,6 +35,10 @@ const getAreaCenterFromStorage = (): LatLng | void => {
 };
 
 export default () =>
+  // Did the user provide one in the URL?
   getAreaCenterFromUrl() ||
+  // Did they play previously?
   getAreaCenterFromStorage() ||
+  // Did the edge handler provide one?
+  getAreaCenterFromUrl(/^\/?geo-lookup-done/) ||
   ({ lat: 51.89863, lng: -8.47039 } as LatLng);

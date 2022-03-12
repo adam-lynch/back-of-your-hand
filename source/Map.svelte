@@ -46,9 +46,9 @@
     // @ts-ignore
     return leaflet.mapboxGL({
       baseApiUrl,
-      accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNremswaDJ3NzBjMDYybnRhMHVqYnVqcm8ifQ.ZBtEBrWfOTBSIsUZ2Tkwlw",
+      accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
       attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
-      style: `${maptilerBaseUrl}/maps/${id}/style.json?key=mT0aLJwYzlO7b9bKD0ZU`,
+      style: `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc`,
     });
   }
   const tileLayers = {

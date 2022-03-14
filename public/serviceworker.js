@@ -59,7 +59,7 @@ addEventListener("fetch", (fetchEvent) => {
   if (
     request.method !== "GET" ||
     request.url.includes("count.backofyourhand.com") ||
-    request.url.includes("/tiles")
+    request.url.includes("chrome-extension")
   ) {
     return;
   }

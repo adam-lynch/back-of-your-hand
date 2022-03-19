@@ -39,7 +39,7 @@
     let baseApiUrl;
     let maptilerBaseUrl = 'https://api.maptiler.com';
     // @ts-ignore
-    if(isProduction) {
+    if(isProduction && false) {
       baseApiUrl = `${window.location.origin}/mapbox`;
       maptilerBaseUrl = `${window.location.origin}/maptiler`;
     }

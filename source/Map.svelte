@@ -38,17 +38,19 @@
   const getTileLayer = (id: string) => {
     let baseApiUrl;
     let maptilerBaseUrl = 'https://api.maptiler.com';
-    // @ts-ignore
-    if(isProduction && false) {
-      baseApiUrl = `${window.location.origin}/mapbox`;
-      maptilerBaseUrl = `${window.location.origin}/maptiler`;
-    }
+    // // @ts-ignore
+    // if(isProduction && false) {
+    //   baseApiUrl = `${window.location.origin}/mapbox`;
+    //   maptilerBaseUrl = `${window.location.origin}/maptiler`;
+    // }
+    const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc&ignore`;
+    console.log('styleUrl', styleUrl);
     // @ts-ignore
     return leaflet.mapboxGL({
       baseApiUrl,
       accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
       attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
-      style: `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc`,
+      style: styleUrl,
     });
   }
   const tileLayers = {

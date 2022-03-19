@@ -12,7 +12,9 @@ const getAreaCenterFromUrl = (regExpToRemove?: RegExp): LatLng | void => {
     unparsedAreaCenter &&
     /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(
       unparsedAreaCenter
-    )
+    ) &&
+    // https://news.ycombinator.com/item?id=30734921
+    unparsedAreaCenter !== "51.89863,-8.47039"
   ) {
     const areaCenterPieces = unparsedAreaCenter.split(",");
     if (areaCenterPieces.length) {

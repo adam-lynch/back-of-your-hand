@@ -4,6 +4,18 @@ import type { LatLng, Overpass, Question } from "./types";
 
 import ignoreError from "./ignoreError";
 
+// Return a value between 180 and 180
+const capLng = (input: number): number => {
+  let result = input;
+  while (result < -180) {
+    result += 360;
+  }
+  while (result > 180) {
+    result -= 360;
+  }
+  return result;
+};
+
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
   streetElement: Overpass.Element,
@@ -34,9 +46,9 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
   // Setting the bounding box is important. It massively speeds up the query
   let bboxValue = [
     areaBounds.getNorthWest().lat,
-    areaBounds.getNorthWest().lng,
+    capLng(areaBounds.getNorthWest().lng),
     areaBounds.getSouthEast().lat,
-    areaBounds.getSouthEast().lng,
+    capLng(areaBounds.getSouthEast().lng),
   ].join(",");
 
   // We don't want highway=bus_stop, for example
@@ -69,7 +81,11 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
     streets with a name within N metres around M center point. It also specifies the minimal
     properties we need in the response.
   */
-  const urlPath = `api/interpreter?data=[out:json][bbox:${bboxValue}];(way(around:${radius},${centerLatLng.lat},${centerLatLng.lng})[highway~"${highwayRegex}"][name];);out%20tags%20geom;`;
+  const urlPath = `api/interpreter?data=[out:json][bbox:${bboxValue}];(way(around:${radius},${
+    centerLatLng.lat
+  },${capLng(
+    centerLatLng.lng
+  )})[highway~"${highwayRegex}"][name];);out%20tags%20geom;`;
 
   // If the query changes, the "cache" is automatically skipped
   const localStorageKey = `overpass-response__${urlPath})`;

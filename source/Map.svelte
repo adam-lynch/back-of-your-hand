@@ -38,11 +38,11 @@
   const getTileLayer = (id: string) => {
     let baseApiUrl;
     let maptilerBaseUrl = 'https://api.maptiler.com';
-    // // @ts-ignore
-    // if(isProduction && false) {
-    //   baseApiUrl = `${window.location.origin}/mapbox`;
-    //   maptilerBaseUrl = `${window.location.origin}/maptiler`;
-    // }
+    // @ts-ignore
+    if(isProduction) {
+      baseApiUrl = `${window.location.origin}/mapbox`;
+      maptilerBaseUrl = `${window.location.origin}/maptiler`;
+    }
     const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc&ignore`;
     console.log('styleUrl', styleUrl);
     // @ts-ignore

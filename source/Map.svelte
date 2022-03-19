@@ -82,7 +82,7 @@
     }).addTo(map);
 
     if(shouldShowAreaBoundsPopup) {
-      newAreaBoundsCircle.bindPopup(`${$interactionVerb} anywhere on the map to select a different area`, {
+      newAreaBoundsCircle.bindPopup(`To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map`, {
         offset: leaflet.point(0, -$areaRadius/50),
       });
       newAreaBoundsCircle.openPopup();

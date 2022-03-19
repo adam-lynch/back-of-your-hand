@@ -124,7 +124,7 @@
         How well do you know your area? Test your knowledge by locating streets.
       </p>
 
-      <p class="hide-accessibly">{$interactionVerb} anywhere on the map to select a different area</p>
+      <p class="hide-accessibly">To select a different area, you can zoom out and {$interactionVerb.toLowerCase()} anywhere on the map</p>
 
       {#if $deviceBestScore}
         <p class="subtext">Personal best score: {$deviceBestScore} / 500.</p>

@@ -17,6 +17,7 @@
 
 
   let areaBoundsCircle: leaflet.Circle;
+  let areaBoundsCenterMarker: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
     shouldShowAreaBoundsPopup: true,
@@ -82,11 +83,18 @@
       radius: $areaRadius,
     }).addTo(map);
 
+    const newAreaBoundsCenterMarker = leaflet.circle($areaCenter, {
+      ...areaBoundsCircleSelectionStyle,
+      fillOpacity: 0.75,
+      opacity: 0,
+      radius: 50,
+    }).addTo(map);
+
     if(shouldShowAreaBoundsPopup) {
-      newAreaBoundsCircle.bindPopup(`To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map`, {
-        offset: leaflet.point(0, -$areaRadius/50),
-      });
-      newAreaBoundsCircle.openPopup();
+      newAreaBoundsCenterMarker.bindPopup(
+        `To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map`
+      );
+      newAreaBoundsCenterMarker.openPopup();
     }
 
     const newAreaBounds = newAreaBoundsCircle.getBounds();
@@ -100,7 +108,11 @@
     if(areaBoundsCircle) {
       map.removeLayer(areaBoundsCircle);
     }
+    if(areaBoundsCenterMarker) {
+      map.removeLayer(areaBoundsCenterMarker);
+    }
     areaBoundsCircle = newAreaBoundsCircle;
+    areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
   const hideStreetsLayer = () => {
@@ -139,9 +151,13 @@
         fill: false,
         stroke: true,
         opacity: 0.4,
-      })
+      });
+
+    areaBoundsCenterMarker
       .closePopup()
       .unbindPopup();
+
+    map.removeLayer(areaBoundsCenterMarker);
   };
 
   // When they've confirmed their guess, compute and draw result

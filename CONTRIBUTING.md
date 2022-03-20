@@ -1,5 +1,9 @@
 Contributions are more than welcome! It's probably worth reading why and how I made this; [Introducing Back Of Your Hand](https://adamlynch.com/back-of-your-hand).
 
+# Exclusions
+
+If you'd like to exclude a certain street name from being selected (e.g. "alley"), you can edit [`source/utilities/exclusions.ts`](./source/utilities/exclusions.ts).
+
 # Set up the project
 
 Prerequisites: [Node.js](https://nodejs.org).

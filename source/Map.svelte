@@ -44,7 +44,6 @@
       maptilerBaseUrl = `${window.location.origin}/maptiler`;
     }
     const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc&ignore`;
-    console.log('styleUrl', styleUrl);
     // @ts-ignore
     return leaflet.mapboxGL({
       baseApiUrl,

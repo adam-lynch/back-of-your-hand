@@ -3,6 +3,7 @@ import getRandomItem from "./getRandomItem";
 import type { LatLng, Overpass, Question } from "./types";
 
 import ignoreError from "./ignoreError";
+import exclusions from "./exclusions";
 
 // Return a value between 180 and 180
 const capLng = (input: number): number => {
@@ -137,14 +138,7 @@ export default async (
   )) as Overpass.Response;
 
   const results = [];
-  // must be lowercase:
-  const namesToExclude = [
-    "alley",
-    "escalator",
-    "treppe tiefgarage", // Stairs to the underground parking garage
-    "tunnel entrance street",
-    "zugang steig",
-  ];
+  const namesToExclude = exclusions;
   for (let i = 0; i < numberOfStreets; i++) {
     // Pick a random street, ignoring any already included in the round
     const element = getRandomItem(

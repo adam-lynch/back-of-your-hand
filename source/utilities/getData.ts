@@ -137,7 +137,14 @@ export default async (
   )) as Overpass.Response;
 
   const results = [];
-  const namesToExclude = ["alley", "escalator"]; // must be lowercase
+  // must be lowercase:
+  const namesToExclude = [
+    "alley",
+    "escalator",
+    "treppe tiefgarage", // Stairs to the underground parking garage
+    "tunnel entrance street",
+    "zugang steig",
+  ];
   for (let i = 0; i < numberOfStreets; i++) {
     // Pick a random street, ignoring any already included in the round
     const element = getRandomItem(

@@ -24,7 +24,7 @@
       return bounds.pad(
         getViewportWidth() >= 800 
         // It seems to ignore anything past two decimal places
-        ? roundNumber(1-(6000/$areaRadius), 2)
+        ? roundNumber(1-(3800/$areaRadius), 2)
         : 0
       );
     }

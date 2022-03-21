@@ -139,12 +139,24 @@ export default async (
 
   const results = [];
   const namesToExclude = exclusions;
+
+  // Pot for drawing streets from.
+  const pot = {};
+
+  // Iterate through all items, filter them based on the exclusion criteria
+  // and add them to the pot without duplicates.
+  for (let element of elements) {
+    const key = element.tags.name?.toLowerCase();
+
+    if (!namesToExclude.includes(key)) {
+      pot[key] = element;
+    }
+  }
+
   for (let i = 0; i < numberOfStreets; i++) {
-    // Pick a random street, ignoring any already included in the round
-    const element = getRandomItem(
-      elements.filter(
-        (element) => !namesToExclude.includes(element.tags.name?.toLowerCase())
-      ),
+    // Pick a random street from the pot.
+    const key = getRandomItem(
+      Object.keys(pot),
       getRandomNumber
     );
 
@@ -152,11 +164,15 @@ export default async (
       This will happen if there are less than the desired amount of (uniquely named) streets in the area.
       It's the caller's responsibility to handle this case.
     */
-    if (!element) {
+    if (!key) {
       break;
     }
-    results.push(element);
-    namesToExclude.push(element.tags.name);
+
+    // Add the street to the results.
+    results.push(pot[key]);
+
+    // Remove the street from the pot.
+    delete pot[key];
   }
 
   // Convert to our type, join with other streets of the same name, etc.

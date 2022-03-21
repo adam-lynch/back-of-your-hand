@@ -235,26 +235,38 @@
     map.fitBounds(resultFeatureGroup.getBounds().pad(0.2));
   }
 
+  const updateInitialCenter = (latlng: LatLng) => {
+    const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(latlng));
+    // If they came in with a seed and then change the area, warn them
+    if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
+      hasShownPredefinedAreaChangedWarning = true;
+      trackEvent({ name: "change-prefined-area-seed_attempted", title: "Change predefined area-seed: attempted" });
+      if(confirm("The link you opened contains a pre-defined area and set of streets. A friend may have given you the URL so you could compete. \n\nChange the area anyway?")) {
+        trackEvent({ name: "change-prefined-area-seed_confirmed", title: "Change predefined area-seed: confirmed" });
+        updateCenter();
+      }
+      else {
+        trackEvent({ name: "change-prefined-area-seed_cancelled", title: "Change predefined area-seed: cancelled" });
+      }
+    }
+    else {
+      updateCenter();
+    }
+    return;
+  }
+
+
+  const onMapMove = (e) => {
+    if(!$isAreaConfirmed) {
+      updateInitialCenter(map.getCenter());
+      return;
+    }
+  };
+
   const onMapClick = (e) => {
     // They're selecting an area
     if(!$isAreaConfirmed) {
-      const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(e.latlng));
-
-      // If they came in with a seed and then change the area, warn them
-      if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
-        hasShownPredefinedAreaChangedWarning = true;
-        trackEvent({ name: "change-prefined-area-seed_attempted", title: "Change predefined area-seed: attempted" });
-        if(confirm("The link you opened contains a pre-defined area and set of streets. A friend may have given you the URL so you could compete. \n\nChange the area anyway?")) {
-          trackEvent({ name: "change-prefined-area-seed_confirmed", title: "Change predefined area-seed: confirmed" });
-          updateCenter();
-        }
-        else {
-          trackEvent({ name: "change-prefined-area-seed_cancelled", title: "Change predefined area-seed: cancelled" });
-        }
-      }
-      else {
-        updateCenter();
-      }
+      updateInitialCenter(e.latlng);
       return;
     }
 
@@ -276,6 +288,7 @@
       zoomSnap: 0.25,
     })
       .on('click', onMapClick)
+      .on('move', onMapMove)
       .addControl(leaflet.control.zoom({
         position: 'topright',
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),

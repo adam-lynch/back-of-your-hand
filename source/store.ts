@@ -1,11 +1,12 @@
 import { derived, writable } from "svelte/store";
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
+import getInitialAreaRadius from "./utilities/getInitialAreaRadius";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
 
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
-export const areaRadius = writable(2000);
+export const areaRadius = writable(getInitialAreaRadius());
 export const deviceBestScore = writable(
   parseInt(
     ignoreError(() => {

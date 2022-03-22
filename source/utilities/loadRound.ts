@@ -5,7 +5,7 @@ import getSeed from "./getSeed";
 import { isAreaConfirmed, isLoading, round } from "../store";
 import type { LatLng } from "./types";
 
-const [_areaCenter, seedFromUrl] = window.location.pathname
+const [_area, seedFromUrl] = window.location.pathname
   .split("/")
   .filter(Boolean);
 

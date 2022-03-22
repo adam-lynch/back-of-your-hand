@@ -1,7 +1,7 @@
 <script lang="ts">
   import leaflet from "leaflet";
   import "@maplibre/maplibre-gl-leaflet";
-  import debounce from "lodash-es/debounce.js"; 
+  import debounce from "lodash-es/debounce.js";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
 
@@ -10,7 +10,7 @@
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
   import type { Question } from "./utilities/types";
-  import trackEvent from "./utilities/trackEvent"; 
+  import trackEvent from "./utilities/trackEvent";
   import delay from "./utilities/delay";
   import capLng from "./utilities/capLng";
 
@@ -86,13 +86,13 @@
 
     const newAreaBounds = newAreaBoundsCircle.getBounds();
     areaBounds.update(() => newAreaBounds);
-    
+
     const boundsToFitInView = newAreaBoundsCircle.getBounds().pad(getBoundsPaddingWhenMarkingBounds());
     map.flyToBounds(boundsToFitInView, {
       animate: true,
       duration: 0.75,
     });
-    
+
     if(areaBoundsCircle) {
       map.removeLayer(areaBoundsCircle);
     }
@@ -193,7 +193,7 @@
 
       return result;
     });
-    
+
     /* Then draw the result & reveal the street */
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
@@ -203,7 +203,7 @@
       question: { ...$currentQuestion, ...currentQuestionUpdates },
       shouldDrawCircle: true
     });
-    
+
     const distancePolyline = leaflet.polyline(
       [
         chosenLatLng,
@@ -265,7 +265,7 @@
   };
 
   const initializeMap = () => {
-    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
+    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
 
     const viewportWidth = getViewportWidth();
     const mapOptions = {
@@ -287,7 +287,7 @@
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
         zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
       }));
-      
+
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
     map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
     map.attributionControl.setPrefix("");
@@ -364,6 +364,14 @@
 
     // Mark the area bounds whenever the center point changes
     areaCenter.subscribe((value) => {
+      if(!value) {
+        return;
+      }
+
+      markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+    });
+
+    areaRadius.subscribe((value) => {
       if(!value) {
         return;
       }

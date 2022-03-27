@@ -271,6 +271,8 @@
     map = leaflet.map(mapElement, {
       center: leaflet.latLng($areaCenter),
       layers: Object.values(tileLayers),
+      // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
+      maxZoom: 23,
       zoom: initialZoom,
       zoomControl: false,
       zoomSnap: 0.25,

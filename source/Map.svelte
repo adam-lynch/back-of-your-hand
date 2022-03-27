@@ -142,7 +142,8 @@
   const onAreaConfirmed = () => {
     hideStreetsLayer();
     map.fitBounds($areaBounds)
-      .setMaxBounds($areaBounds)
+      // Allow some over-scrolling so it's not too awkward for streets near the edge
+      .setMaxBounds($areaBounds.pad(0.12))
       .setMinZoom(initialZoom - 2);
 
     areaBoundsCircle

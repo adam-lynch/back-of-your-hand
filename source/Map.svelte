@@ -74,7 +74,7 @@
       ...areaBoundsCircleSelectionStyle,
       fillOpacity: 0.75,
       opacity: 0,
-      radius: 50,
+      radius: $areaRadius / 50,
     }).addTo(map);
 
     if(shouldShowAreaBoundsPopup) {

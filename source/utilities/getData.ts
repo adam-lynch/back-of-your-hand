@@ -54,25 +54,17 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
 
   // We don't want highway=bus_stop, for example
   const highwayValuesAllowed = [
-    "bridleway",
     "cycleway",
-    "footway",
     "living_street",
     "motorway",
-    "motorway_link",
-    "path",
     "pedestrian",
     "primary",
-    "primary_link",
     "residential",
     "secondary",
     "service",
     "steps",
     "tertiary",
-    "tertiary_link",
-    "track",
     "trunk",
-    "trunk_link",
     "unclassified",
   ];
   const highwayRegex = `^(${highwayValuesAllowed.join("||")})$`;
@@ -155,10 +147,7 @@ export default async (
 
   for (let i = 0; i < numberOfStreets; i++) {
     // Pick a random street from the pot.
-    const key = getRandomItem(
-      Object.keys(pot),
-      getRandomNumber
-    );
+    const key = getRandomItem(Object.keys(pot), getRandomNumber);
 
     /*
       This will happen if there are less than the desired amount of (uniquely named) streets in the area.

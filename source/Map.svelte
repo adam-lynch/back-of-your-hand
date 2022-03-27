@@ -265,7 +265,7 @@
   };
 
   const initializeMap = () => {
-    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
+    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
 
     const viewportWidth = getViewportWidth();
     map = leaflet.map(mapElement, {
@@ -285,6 +285,8 @@
       }));
 
     map.attributionControl.setPrefix("");
+
+    map.setMaxZoom(25);
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
     // @ts-ignore
@@ -377,6 +379,21 @@
       }
 
       chosenPointMarker = leaflet.marker(value).addTo(map);
+
+      // Zoom in a litle to help them see how close they really are
+      const currentZoom = map.getZoom();
+      const maxZoom = map.getMaxZoom();
+      const minDesiredZoom = 17;
+      if(currentZoom < maxZoom - 5) {
+        // Keep the new zoom within the max and min zoom levels we'd like
+        let newZoom = Math.max(
+          Math.min(currentZoom + 3, maxZoom),
+          minDesiredZoom,
+        );
+        setTimeout(() => {
+          map.flyTo(chosenPointMarker.getLatLng(), newZoom, { animate: true, duration: 0.5 });
+        }, 250);
+      }
     });
 
     // When they confirm their guess, or when it's reset when moving to another street / round

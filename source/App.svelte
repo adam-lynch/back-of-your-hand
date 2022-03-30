@@ -7,7 +7,7 @@
   import { areaBounds, areaCenter, areaRadius, currentQuestion, deviceBestScore, gotInitialSeedFromUrl, isAreaConfirmed, nextQuestion, round, totalScore } from './store';
   import loadRound from './utilities/loadRound';
   import type { LatLng } from './utilities/types';
-import trackEvent from "./utilities/trackEvent";
+  import trackEvent from "./utilities/trackEvent";
 
   export let unhandledError = null;
 

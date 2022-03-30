@@ -7,6 +7,7 @@
   import { areaBounds, areaCenter, areaRadius, currentQuestion, deviceBestScore, gotInitialSeedFromUrl, isAreaConfirmed, nextQuestion, round, totalScore } from './store';
   import loadRound from './utilities/loadRound';
   import type { LatLng } from './utilities/types';
+import trackEvent from "./utilities/trackEvent";
 
   export let unhandledError = null;
 
@@ -17,8 +18,6 @@
       pathname += `/${$round.seed}`;
     }
     history.replaceState(null, "", window.location.origin + pathname);
-    // @ts-ignore
-    ignoreError(() => window.goatcounter.count());
   }
 
   // Update the URL path when the area center changes
@@ -31,6 +30,7 @@
       throw new Error("areaCenter:setItem, lng doesn't exist");
     }
     updateUrl();
+    trackEvent({ name: "area-center-moved", title: "Area center moved" });
   })
 
   // Load round of streets once area is confirmed

@@ -262,7 +262,9 @@
     const initialZoom = viewportWidth > 800 ? 14 : 13.2;
 
     map = leaflet.map(mapElement, {
+      boxZoom: false,
       center: leaflet.latLng($areaCenter),
+      doubleClickZoom: false,
       layers: Object.values(tileLayers),
       // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
       maxZoom: 23,

@@ -11,6 +11,7 @@ export type Question = {
     alternativeName?: string;
     name: string;
     points: LatLng[][];
+    width?: number;
   };
   distance?: {
     amount: number;
@@ -51,6 +52,7 @@ export namespace Overpass {
     tags: {
       name: string;
       "name:ga"?: string;
+      width?: string;
     };
   };
 

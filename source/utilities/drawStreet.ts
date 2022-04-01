@@ -24,7 +24,7 @@ export default ({
       color: colorToUse,
       fillColor: "white",
       fillOpacity: 1,
-      weight: 10,
+      weight: Math.max(Math.ceil(question.street.width || 0), 10),
     })
     .addTo(layer);
 
@@ -49,7 +49,7 @@ export default ({
     circle = leaflet
       .circle(streetPolylineCenterCoordinates, {
         color: colorToUse,
-        fillOpacity: 0.1, 
+        fillOpacity: 0.1,
         opacity: 0.2,
         radius:
           Math.max(

@@ -23,14 +23,31 @@ const adjustStreetDetails = (
   allStreetElements: Overpass.Element[]
 ): Question["street"] => {
   // Group all streets with the same name
-  const points = [
+  const equivalentStreets = [
     streetElement,
     ...allStreetElements.filter(
       (element) =>
         element.id !== streetElement.id &&
         element.tags.name === streetElement.tags.name
     ),
-  ].map(({ geometry }) => geometry.map(convertOverpassLatLngtoLatLng));
+  ];
+
+  const points = equivalentStreets.map(({ geometry }) =>
+    geometry.map(convertOverpassLatLngtoLatLng)
+  );
+
+  let width: number;
+  const widths = equivalentStreets.map(({ tags }) => {
+    // Parse width; see https://wiki.openstreetmap.org/wiki/Key:width
+    const match = tags.width?.match(/^(\d+(\.\d+)?)( ?m)?$/);
+    if (match) {
+      return parseFloat(match[1]);
+    }
+  });
+  if (widths.length) {
+    // Average
+    width = widths.reduce((a, b) => a + b, 0) / widths.length;
+  }
 
   return {
     // `name:ga` is the Irish name (ga = "Gaeilge")
@@ -39,6 +56,7 @@ const adjustStreetDetails = (
       : null,
     name: streetElement.tags["name:ga"] || streetElement.tags.name,
     points,
+    width,
   };
 };
 

@@ -162,6 +162,11 @@
       $currentQuestion.street.points as Question["street"]["points"],
     );
     const distance = getDistance(chosenLatLng, nearestPointOnStreet);
+    let score = 0;
+    if(distance < 1) {
+      const massagedDistance = Math.max(distance, 0.015) - 0.015;
+      score = Math.floor((1 - massagedDistance) * 100);
+    }
 
     /* Then update the round / question state */
 
@@ -170,7 +175,7 @@
         amount: distance * 1000,
         unit: "metres",
       },
-      score: distance > 1 ? 0 : Math.round((1 - distance) * 100),
+      score,
       status: "complete",
     };
     round.update((value) => {

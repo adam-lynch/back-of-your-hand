@@ -259,19 +259,19 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
 
     const viewportWidth = getViewportWidth();
-    const initialZoom = viewportWidth > 800 ? 14 : 13.2;
-
-    map = leaflet.map(mapElement, {
+    const mapOptions = {
       boxZoom: false,
       center: leaflet.latLng($areaCenter),
       doubleClickZoom: false,
       layers: Object.values(tileLayers),
       // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
       maxZoom: 23,
-      zoom: initialZoom,
+      zoom: viewportWidth > 800 ? 14 : 13.2,
       zoomControl: false,
       zoomSnap: 0.25,
-    })
+    };
+
+    map = leaflet.map(mapElement, mapOptions)
       .on('click', onMapClick)
       .addControl(leaflet.control.zoom({
         position: 'topright',
@@ -280,7 +280,7 @@
       }));
       
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
-    map.flyToBounds(leaflet.latLng($areaCenter).toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
+    map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)

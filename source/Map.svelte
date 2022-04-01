@@ -10,29 +10,20 @@
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
-  import roundNumber from "./utilities/roundNumber";
   import type { Question } from "./utilities/types";
   import trackEvent from "./utilities/trackEvent"; 
   import delay from "./utilities/delay";
 
+  const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
 
   let areaBoundsCircle: leaflet.Circle;
   let areaBoundsCenterMarker: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
     shouldShowAreaBoundsPopup: true,
-    transformBoundsToZoomTo: (bounds) => {
-      return bounds.pad(
-        getViewportWidth() >= 800 
-        // It seems to ignore anything past two decimal places
-        ? roundNumber(1-(3800/$areaRadius), 2)
-        : 0
-      );
-    }
   };
   let chosenPointMarker: leaflet.Marker;
   let hasShownPredefinedAreaChangedWarning: boolean;
-  const initialZoom = 14;
   let map: leaflet.Map;
   let mapElement: HTMLElement;
   let resultFeatureGroup: leaflet.FeatureGroup;
@@ -73,10 +64,8 @@
   // Draw the area bounds circle
   const markBounds = ({
     shouldShowAreaBoundsPopup,
-    transformBoundsToZoomTo = ((bounds) => bounds),
   }: {
     shouldShowAreaBoundsPopup?: boolean;
-    transformBoundsToZoomTo?: ((bounds: leaflet.LatLngBounds) => leaflet.LatLngBounds);
   }) => {
     const newAreaBoundsCircle = leaflet.circle($areaCenter, {
       ...areaBoundsCircleSelectionStyle,
@@ -100,10 +89,11 @@
     const newAreaBounds = newAreaBoundsCircle.getBounds();
     areaBounds.update(() => newAreaBounds);
     
-    const boundsToFitInView = transformBoundsToZoomTo(newAreaBoundsCircle.getBounds());
-    if(!map.getBounds().contains(boundsToFitInView)) {
-      map.fitBounds(boundsToFitInView);
-    }
+    const boundsToFitInView = newAreaBoundsCircle.getBounds().pad(getBoundsPaddingWhenMarkingBounds());
+    map.flyToBounds(boundsToFitInView, {
+      animate: true,
+      duration: 0.75,
+    });
     
     if(areaBoundsCircle) {
       map.removeLayer(areaBoundsCircle);
@@ -144,7 +134,7 @@
     map.fitBounds($areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds($areaBounds.pad(0.12))
-      .setMinZoom(initialZoom - 2);
+      .setMinZoom(12);
 
     areaBoundsCircle
       .setStyle({
@@ -269,6 +259,8 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
 
     const viewportWidth = getViewportWidth();
+    const initialZoom = viewportWidth > 800 ? 14 : 13.2;
+
     map = leaflet.map(mapElement, {
       center: leaflet.latLng($areaCenter),
       layers: Object.values(tileLayers),
@@ -284,10 +276,10 @@
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
         zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
       }));
-
+      
+    // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
+    map.flyToBounds(leaflet.latLng($areaCenter).toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
     map.attributionControl.setPrefix("");
-
-    map.setMaxZoom(25);
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
     // @ts-ignore

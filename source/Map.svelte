@@ -6,7 +6,6 @@
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
 
   import drawStreet from "./utilities/drawStreet";
-  import getDistance from "./utilities/getDistance";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
@@ -157,11 +156,12 @@
 
     const chosenLatLng = chosenPointMarker.getLatLng();
     // This is used to compute the distance but we'll use it to visualize the distance
-    const nearestPointOnStreet = getNearestPointOnPolyLine(
+    const { distance, point: nearestPointOnStreet } = getNearestPointOnPolyLine(
+      map,
       chosenLatLng,
       $currentQuestion.street.points as Question["street"]["points"],
     );
-    const distance = getDistance(chosenLatLng, nearestPointOnStreet);
+
     let score = 0;
     if(distance < 1) {
       const massagedDistance = Math.max(distance, 0.015) - 0.015;
@@ -208,7 +208,7 @@
     const distancePolyline = leaflet.polyline(
       [
         chosenLatLng,
-        nearestPointOnStreet
+        map.layerPointToLatLng(nearestPointOnStreet)
       ],
       {
         color: "black",

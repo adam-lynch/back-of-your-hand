@@ -1,31 +1,52 @@
-import getDistance from "@turf/distance";
-import createLineString from "turf-linestring";
-import getNearestPointOnLine from "@turf/nearest-point-on-line";
-import createPoint from "turf-point";
-import convertCoordinatesToLatLng from "./convertCoordinatesToLatLng";
-import convertLatLngToCoordinates from "./convertLatLngToCoordinates";
+import leaflet from "leaflet";
 import type { LatLng } from "./types";
 
-export default (latLng: LatLng, polyLinePoints: LatLng[][]): LatLng => {
-  const firstItem = polyLinePoints
-    .map((innerPolyLinePoints) => {
-      const line = createLineString(
-        innerPolyLinePoints.map(convertLatLngToCoordinates),
-        {}
-      );
+export default (
+  map: leaflet.Map,
+  latLng: LatLng,
+  polyLinePoints: LatLng[][]
+): { distance: number; point: leaflet.Point } => {
+  const point = map.latLngToLayerPoint(latLng);
+  const flattenedPolyLinePoints = polyLinePoints.flat(1);
 
-      const point = createPoint(convertLatLngToCoordinates(latLng));
-      const nearestPoint = getNearestPointOnLine.default(line, point);
+  let nearestPoint: leaflet.Point;
+  let nearestPointDistance: number;
 
-      return {
-        distanceFromPoint: getDistance.default(nearestPoint, point),
-        nearestPoint,
-      };
-    })
-    .sort((a, b) => a.distanceFromPoint - b.distanceFromPoint)
-    .find(Boolean);
+  for (let i = 1; i < flattenedPolyLinePoints.length; i++) {
+    const previousPolyLinePoint = map.latLngToLayerPoint(
+      flattenedPolyLinePoints[i - 1]
+    );
+    const currentPolyLinePoint = map.latLngToLayerPoint(
+      flattenedPolyLinePoints[i]
+    );
 
-  return convertCoordinatesToLatLng(
-    firstItem && firstItem.nearestPoint.geometry.coordinates
-  );
+    const nearestPointOnSegment = leaflet.LineUtil.closestPointOnSegment(
+      point,
+      previousPolyLinePoint,
+      currentPolyLinePoint
+    );
+
+    const distanceFromPoint = map
+      .layerPointToLatLng(nearestPointOnSegment)
+      .distanceTo(latLng);
+    if (!nearestPoint || distanceFromPoint < nearestPointDistance) {
+      nearestPoint = nearestPointOnSegment;
+      nearestPointDistance = distanceFromPoint;
+    }
+  }
+
+  if (!nearestPointDistance) {
+    throw new Error("No nearest point found");
+  }
+
+  if (typeof nearestPointDistance !== "number") {
+    throw new Error(
+      `distance is not a number (${typeof nearestPointDistance})`
+    );
+  }
+
+  return {
+    distance: nearestPointDistance / 1000,
+    point: nearestPoint,
+  };
 };

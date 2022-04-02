@@ -14,6 +14,7 @@ export default async ({
   areaCenter,
   areaBounds,
   gotInitialSeedFromUrl,
+  numberOfStreets,
   radius,
 }) => {
   isLoading.update(() => true);
@@ -22,7 +23,6 @@ export default async ({
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(seed);
   }
-  const numberOfStreets = 5;
   const streets = await getData(
     areaBounds,
     areaCenter as LatLng,

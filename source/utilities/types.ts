@@ -15,7 +15,7 @@ export type Question = {
   };
   distance?: {
     amount: number;
-    unit: number;
+    unit: string;
   };
   index: number;
   score?: number;

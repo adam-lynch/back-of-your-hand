@@ -12,6 +12,7 @@
   import type { Question } from "./utilities/types";
   import trackEvent from "./utilities/trackEvent"; 
   import delay from "./utilities/delay";
+  import capLng from "./utilities/capLng";
 
   const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
 
@@ -156,7 +157,7 @@
 
     const chosenLatLng = chosenPointMarker.getLatLng();
     // This is used to compute the distance but we'll use it to visualize the distance
-    const { distance, point: nearestPointOnStreet } = getNearestPointOnPolyLine(
+    const { distance, latLng: nearestPointOnStreet } = getNearestPointOnPolyLine(
       map,
       chosenLatLng,
       $currentQuestion.street.points as Question["street"]["points"],
@@ -208,7 +209,7 @@
     const distancePolyline = leaflet.polyline(
       [
         chosenLatLng,
-        map.layerPointToLatLng(nearestPointOnStreet)
+        nearestPointOnStreet,
       ],
       {
         color: "black",
@@ -232,9 +233,14 @@
   }
 
   const onMapClick = (e) => {
+    const latLng = {
+      ...e.latlng,
+      lng: capLng(e.latlng.lng),
+    };
+
     // They're selecting an area
     if(!$isAreaConfirmed) {
-      const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(e.latlng));
+      const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(latLng));
 
       // If they came in with a seed and then change the area, warn them
       if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
@@ -256,7 +262,7 @@
 
     // They're marking their guess
     if(!$isChosenPointConfirmed) {
-      chosenPoint.update(() => e.latlng);
+      chosenPoint.update(() => latLng);
     }
   };
 

@@ -6,7 +6,7 @@
 <div class="summary">
   <h2 class="hide-accessibly">Summary</h2>
   <p class="points-total">
-    <span>Total points: {$totalScore} / {$round.questions.length * 100}</span>
+    <span>Total score: {Math.round($totalScore / $round.questions.length)}%</span>
     {#if $round.didSetNewDeviceBestScore}
       <span class="tada">New personal best!</span>
     {/if}
@@ -22,7 +22,7 @@
           {/if}
         </span>
         <span class="hide-accessibly">(Score: </span>
-        <span>{question.score}</span>
+        <span>{question.score}%</span>
         <span class="hide-accessibly">)</span>
       </li>
     {/each}

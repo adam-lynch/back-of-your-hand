@@ -8,7 +8,21 @@ export const areaCenter = writable(getInitialAreaCenter());
 export const areaRadius = writable(2000);
 export const deviceBestScore = writable(
   parseInt(
-    ignoreError(() => localStorage.getItem("deviceBestScore")) as string
+    ignoreError(() => {
+      let storedValue = localStorage.getItem("deviceBestScore");
+      if (!storedValue) {
+        return;
+      }
+      let score = parseInt(storedValue, 10);
+      // We used to show the score as "350 / 500" for example, rather than 70%
+      if (score > 100) {
+        score = Math.round(score / 5);
+        ignoreError(() =>
+          localStorage.setItem("deviceBestScore", score.toString())
+        );
+      }
+      return score;
+    }) as unknown as string
   ) || null
 );
 export const chosenPoint = writable(null);
@@ -25,6 +39,7 @@ export const isChosenPointConfirmed = writable(false);
 export const interactionVerb = writable(isTouchDevice() ? "Tap" : "Click");
 export const isLoading = writable(false);
 export const isSummaryShown = writable(false);
+export const numberOfStreets = writable(5);
 export const round = writable(null);
 export const seedFromUrl = writable(null);
 

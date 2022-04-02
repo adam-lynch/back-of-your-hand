@@ -4,18 +4,7 @@ import type { LatLng, Overpass, Question } from "./types";
 
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
-
-// Return a value between 180 and 180
-const capLng = (input: number): number => {
-  let result = input;
-  while (result < -180) {
-    result += 360;
-  }
-  while (result > 180) {
-    result -= 360;
-  }
-  return result;
-};
+import capLng from "./capLng";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (

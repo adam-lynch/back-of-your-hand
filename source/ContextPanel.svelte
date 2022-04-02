@@ -79,7 +79,7 @@
           <div>
             <h2>Result</h2>
             <p>Distance: {Math.round($currentQuestion.distance.amount).toLocaleString()} {$currentQuestion.distance.unit}</p>
-            <p>Score: {$currentQuestion.score} / 100</p>
+            <p>Score: {$currentQuestion.score}%</p>
           </div>
         {/if}
       {/if}
@@ -127,7 +127,7 @@
       <p class="hide-accessibly">To select a different area, you can zoom out and {$interactionVerb.toLowerCase()} anywhere on the map</p>
 
       {#if $deviceBestScore}
-        <p class="subtext">Personal best score: {$deviceBestScore} / 500.</p>
+        <p class="subtext">Personal best score: {$deviceBestScore}%</p>
       {/if}
 
       <div class="call-to-action">

@@ -1,3 +1,4 @@
+import capLng from "./capLng";
 import ignoreError from "./ignoreError";
 import type { LatLng } from "./types";
 
@@ -36,11 +37,15 @@ const getAreaCenterFromStorage = (): LatLng | void => {
   }
 };
 
-export default () =>
+export default () => {
   // Did the user provide one in the URL?
-  getAreaCenterFromUrl() ||
-  // Did they play previously?
-  getAreaCenterFromStorage() ||
-  // Did the edge handler provide one?
-  getAreaCenterFromUrl(/^\/?geo-lookup-done/) ||
-  ({ lat: 51.89863, lng: -8.47039 } as LatLng);
+  const result =
+    getAreaCenterFromUrl() ||
+    // Did they play previously?
+    getAreaCenterFromStorage() ||
+    // Did the edge handler provide one?
+    getAreaCenterFromUrl(/^\/?geo-lookup-done/) ||
+    ({ lat: 51.89863, lng: -8.47039 } as LatLng);
+  result.lng = capLng(result.lng);
+  return result;
+};

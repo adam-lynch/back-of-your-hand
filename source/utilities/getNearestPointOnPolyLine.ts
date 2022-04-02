@@ -1,12 +1,13 @@
 import leaflet from "leaflet";
+
 import type { LatLng } from "./types";
 
 export default (
   map: leaflet.Map,
   latLng: LatLng,
   polyLinePoints: LatLng[][]
-): { distance: number; point: leaflet.Point } => {
-  const point = map.latLngToLayerPoint(latLng);
+): { distance: number; latLng: leaflet.LatLng } => {
+  const point = map.latLngToLayerPoint(latLng, map);
   const flattenedPolyLinePoints = polyLinePoints.flat(1);
 
   let nearestPoint: leaflet.Point;
@@ -14,10 +15,12 @@ export default (
 
   for (let i = 1; i < flattenedPolyLinePoints.length; i++) {
     const previousPolyLinePoint = map.latLngToLayerPoint(
-      flattenedPolyLinePoints[i - 1]
+      flattenedPolyLinePoints[i - 1],
+      map
     );
     const currentPolyLinePoint = map.latLngToLayerPoint(
-      flattenedPolyLinePoints[i]
+      flattenedPolyLinePoints[i],
+      map
     );
 
     const nearestPointOnSegment = leaflet.LineUtil.closestPointOnSegment(
@@ -47,6 +50,6 @@ export default (
 
   return {
     distance: nearestPointDistance / 1000,
-    point: nearestPoint,
+    latLng: map.layerPointToLatLng(nearestPoint),
   };
 };

@@ -4,7 +4,19 @@
   import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
   import Map from "./Map.svelte";
   import ignoreError from "./utilities/ignoreError";
-  import { areaBounds, areaCenter, areaRadius, currentQuestion, deviceBestScore, gotInitialSeedFromUrl, isAreaConfirmed, nextQuestion, round, totalScore } from './store';
+  import {
+    areaBounds,
+    areaCenter,
+    areaRadius,
+    currentQuestion,
+    deviceBestScore,
+    gotInitialSeedFromUrl,
+    isAreaConfirmed,
+    nextQuestion,
+    numberOfStreets,
+    round,
+    totalScore
+  } from './store';
   import loadRound from './utilities/loadRound';
   import type { LatLng } from './utilities/types';
   import trackEvent from "./utilities/trackEvent";
@@ -39,7 +51,13 @@
       return;
     }
     
-    loadRound({ areaBounds: $areaBounds, areaCenter: $areaCenter, gotInitialSeedFromUrl: $gotInitialSeedFromUrl, radius: $areaRadius });
+    loadRound({ 
+      areaBounds: $areaBounds,
+      areaCenter: $areaCenter,
+      gotInitialSeedFromUrl: $gotInitialSeedFromUrl,
+      numberOfStreets: $numberOfStreets,
+      radius: $areaRadius,
+    });
     ignoreError(() => {
       localStorage.setItem(
         "centerLatLng",

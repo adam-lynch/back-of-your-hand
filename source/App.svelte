@@ -787,15 +787,6 @@
    * -------------------------------
   */
 
-  /*
-    Mapbox console.warn's if their CSS isn't loaded.
-    They check the computed style of a hidden element.
-    https://github.com/mapbox/mapbox-gl-js/issues/5359
-  */
-  .mapboxgl-canary {
-    background-color: rgb(250, 128, 114);
-  }
-
   * {
     box-sizing: border-box;
     margin: 0;

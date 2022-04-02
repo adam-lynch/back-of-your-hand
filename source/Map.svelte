@@ -1,6 +1,6 @@
 <script lang="ts">
-  import leaflet from "leaflet"; 
-  import "mapbox-gl-leaflet"; 
+  import leaflet from "leaflet";
+  import "@maplibre/maplibre-gl-leaflet";
   import debounce from "lodash-es/debounce.js"; 
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
@@ -29,17 +29,14 @@
   let mapElement: HTMLElement;
   let resultFeatureGroup: leaflet.FeatureGroup;
   const getTileLayer = (id: string) => {
-    let baseApiUrl;
     let maptilerBaseUrl = 'https://api.maptiler.com';
     // @ts-ignore
     if(isProduction) {
-      baseApiUrl = `${window.location.origin}/mapbox`;
       maptilerBaseUrl = `${window.location.origin}/maptiler`;
     }
     const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc&ignore`;
     // @ts-ignore
-    return leaflet.mapboxGL({
-      baseApiUrl,
+    return leaflet.maplibreGL({
       accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
       attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
       style: styleUrl,
@@ -461,7 +458,7 @@
     grid-area: map;
   }
 
-  :global(.leaflet-gl-layer.mapboxgl-map) {
+  :global(.leaflet-gl-layer.maplibre-map) {
     position: absolute;
     inset: 0;
   }

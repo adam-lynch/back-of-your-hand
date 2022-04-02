@@ -44,7 +44,7 @@ const adjustStreetDetails = (
       return parseFloat(match[1]);
     }
   });
-  if (widths.length) {
+  if (widths.filter((width) => typeof width === "number").length) {
     // Average
     width = widths.reduce((a, b) => a + b, 0) / widths.length;
   }

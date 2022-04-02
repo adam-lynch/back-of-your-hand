@@ -22,6 +22,7 @@
   const areaSelectionMarkBoundsOptions = {
     shouldShowAreaBoundsPopup: true,
   };
+  const defaultMinZoom = 3.5;
   let chosenPointMarker: leaflet.Marker;
   let hasShownPredefinedAreaChangedWarning: boolean;
   let map: leaflet.Map;
@@ -275,8 +276,8 @@
       center: leaflet.latLng($areaCenter),
       doubleClickZoom: false,
       layers: Object.values(tileLayers),
+      minZoom: defaultMinZoom,
       // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-      maxZoom: 23,
       zoom: viewportWidth > 800 ? 14 : 13.2,
       zoomControl: false,
       zoomSnap: 0.25,
@@ -419,7 +420,7 @@
     isAreaConfirmed.subscribe((isConfirmed) => {
       // They've chosen to start a new round, back to area selection
       if(!isConfirmed) {
-        map.setMaxBounds(null).setMinZoom(null);
+        map.setMaxBounds(null).setMinZoom(defaultMinZoom);
         resetMap(false, true);
         markBounds(areaSelectionMarkBoundsOptions);
         areaBoundsCircle.setStyle(areaBoundsCircleSelectionStyle);

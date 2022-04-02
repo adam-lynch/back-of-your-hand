@@ -3,6 +3,7 @@
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
   import Map from "./Map.svelte";
+  import computeTotalScore from "./utilities/computeTotalScore";
   import ignoreError from "./utilities/ignoreError";
   import {
     areaBounds,
@@ -90,12 +91,15 @@
     }
     
     // Once the round ends, see if a new personal best was set
-    if(value.status === "complete" && $totalScore > $deviceBestScore) {
-      deviceBestScore.update(() => $totalScore);
-      round.update((value) => ({
-        ...value,
-        didSetNewDeviceBestScore: true,
-      }))
+    if(value.status === "complete") {
+      const newPotentialBestScore = computeTotalScore($totalScore, $round);
+      if(newPotentialBestScore > $deviceBestScore) {
+        deviceBestScore.update(() => newPotentialBestScore);
+        round.update((value) => ({
+          ...value,
+          didSetNewDeviceBestScore: true,
+        }))
+      }
     }
   });
 

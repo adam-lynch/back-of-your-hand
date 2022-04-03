@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
+  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, leafletMap, round, areaCenter, geolocationRequesterStatus } from './store';
   import Summary from './Summary.svelte';
+  import capLng from './utilities/capLng';
+import getLatLngFromWebGeolocationApi from './utilities/getLatLngFromWebGeolocationApi';
+import setAreaCenterUsingWebGeolocationApi from './utilities/setAreaCenterUsingWebGeolocationApi';
   import trackEvent from './utilities/trackEvent';
+  import type { LatLng } from './utilities/types';
 
   const onChosenPointConfirmed = () => {
     isChosenPointConfirmed.update(() => true);
@@ -46,6 +50,22 @@
   const onStartClicked = () => {
     isAreaConfirmed.update(() => true);
     trackEvent({ name: "start", title: "Start" });
+  };
+
+  const onLocateClicked = async () => {
+    const permission = await navigator.permissions.query({ name: 'geolocation' });
+
+    if(permission.state === 'granted'){
+      await setAreaCenterUsingWebGeolocationApi();
+      return;
+    }
+
+    if(permission.state === 'prompt') {
+      geolocationRequesterStatus.update(() => 'pre-prompt');
+      return;
+    }
+
+    // TODO: denied
   };
 </script>
 
@@ -135,6 +155,10 @@
           class="button--primary"
           on:click={onStartClicked}>
           Start
+        </button>
+        <button
+          on:click={onLocateClicked}>
+          Find me
         </button>
         
         <a 

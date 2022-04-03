@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GeolocationRequester from "./GeolocationRequester.svelte";
   import HUD from "./HUD.svelte";
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
@@ -121,6 +122,7 @@
     <Map />
     <p class="hide-accessibly"><a href="#context-panel">Back to context panel</a></p>
     <HUD />
+    <GeolocationRequester />
   {/if}
 </main>
 

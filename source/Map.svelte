@@ -3,7 +3,7 @@
   import "@maplibre/maplibre-gl-leaflet";
   import debounce from "lodash-es/debounce.js"; 
   import { onMount } from 'svelte';
-  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
+  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, leafletMap, round } from './store';
 
   import drawStreet from "./utilities/drawStreet";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
@@ -287,6 +287,8 @@
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
         zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
       }));
+
+    leafletMap.update(() => map);
       
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
     map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));

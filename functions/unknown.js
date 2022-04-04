@@ -11,10 +11,11 @@ export async function onRequestGet({ request }) {
       (request.cf.latitude.toString().startsWith("53.3") &&
         request.cf.longitude.toString().startsWith("-6.2"))
     ) {
-      parsedUrl.pathname += "51.89863,-8.47039";
+      parsedUrl.searchParams.set("lat", "51.89863");
+      parsedUrl.searchParams.set("lng", "-8.47039");
     } else {
-      parsedUrl.pathname +=
-        "/" + [request.cf.latitude, request.cf.longitude].join(",");
+      parsedUrl.searchParams.set("lat", request.cf.latitude);
+      parsedUrl.searchParams.set("lng", request.cf.longitude);
     }
   }
   console.log(`Redirecting / to ${parsedUrl}...`);

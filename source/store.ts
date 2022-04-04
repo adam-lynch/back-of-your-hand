@@ -2,6 +2,7 @@ import { derived, writable } from "svelte/store";
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
+import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
 
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
@@ -27,12 +28,7 @@ export const deviceBestScore = writable(
 );
 export const chosenPoint = writable(null);
 
-const pathSegments = window.location.pathname
-  .split("/")
-  .filter((segment) => segment && segment !== "geo-lookup-done");
-export const gotInitialSeedFromUrl = writable(
-  pathSegments.length === 2 && pathSegments[1].length
-);
+export const gotInitialSeedFromUrl = writable(Boolean(parseSeedFromUrl()));
 
 export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);

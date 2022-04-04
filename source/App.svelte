@@ -26,11 +26,13 @@
 
   let lastSeenSeed;
   const updateUrl = () => {
-    let pathname = `/${$areaCenter.lat},${$areaCenter.lng}`;
+    const url = new URL(window.location.origin);
+    url.searchParams.set('lat', $areaCenter.lat);
+    url.searchParams.set('lng', $areaCenter.lng);
     if($round) {
-      pathname += `/${$round.seed}`;
+      url.searchParams.set('seed', $round.seed);
     }
-    history.replaceState(null, "", window.location.origin + pathname);
+    history.replaceState(null, "", url);
   }
 
   // Update the URL path when the area center changes

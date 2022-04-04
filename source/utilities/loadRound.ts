@@ -3,11 +3,10 @@ import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import getSeed from "./getSeed";
 import { isAreaConfirmed, isLoading, round } from "../store";
-import type { LatLng } from "./types";
+import type { LatLng, Round } from "./types";
+import parseSeedFromUrl from "./parseSeedFromUrl";
 
-const [_areaCenter, seedFromUrl] = window.location.pathname
-  .split("/")
-  .filter(Boolean);
+const seedFromUrl = parseSeedFromUrl();
 
 let getRandomNumber;
 export default async ({
@@ -19,7 +18,9 @@ export default async ({
 }) => {
   isLoading.update(() => true);
 
-  const seed = gotInitialSeedFromUrl ? seedFromUrl : getSeed();
+  const seed = gotInitialSeedFromUrl
+    ? (seedFromUrl as Round["seed"])
+    : getSeed();
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(seed);
   }

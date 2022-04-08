@@ -7,6 +7,7 @@
     geolocationRequesterStatus.update(() => 'prompted');
     try {
       await setAreaCenterUsingWebGeolocationApi();
+      geolocationRequesterStatus.update(() => null);
       trackEvent({
         name: "web-geolocation-prompt-flow-complete",
         title: "Web geolocation prompt flow complete",
@@ -15,6 +16,7 @@
       if(!(e instanceof GeolocationPositionError)) {
         throw e;
       }
+
       geolocationRequesterStatus.update(() => null);
       trackEvent({
         name: "web-geolocation-prompt-rejected",

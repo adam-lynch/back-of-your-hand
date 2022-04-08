@@ -9,7 +9,6 @@ export default async (): Promise<LatLng> => {
           lat: coords.latitude,
           lng: capLng(coords.longitude),
         };
-        // TODO: set in localStorage
         resolve(latLng);
       },
       reject,

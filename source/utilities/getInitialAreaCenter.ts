@@ -37,7 +37,7 @@ const getAreaCenterFromStorage = (): LatLng | void => {
   }
 };
 
-export default () => {
+export default async () => {
   // Did the user provide one in the URL?
   const result =
     getAreaCenterFromUrl() ||

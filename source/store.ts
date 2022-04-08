@@ -6,8 +6,9 @@ import isTouchDevice from "./utilities/isTouchDevice";
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
 export const areaRadius = writable(2000);
-export const geolocationRequesterStatus = writable(null);
-export const leafletMap = writable(null);
+export const geolocationRequesterStatus = writable<
+  null | "denied" | "pre-prompt" | "prompted"
+>(null);
 export const deviceBestScore = writable(
   parseInt(
     ignoreError(() => {

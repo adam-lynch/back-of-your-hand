@@ -459,7 +459,8 @@
     grid-area: map;
   }
 
-  :global(.leaflet-gl-layer.maplibre-map) {
+  :global(.leaflet-gl-layer.maplibre-map),
+  :global(.leaflet-gl-layer.maplibregl-map) {
     position: absolute;
     inset: 0;
   }

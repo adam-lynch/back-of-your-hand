@@ -3,7 +3,7 @@
   import "@maplibre/maplibre-gl-leaflet";
   import debounce from "lodash-es/debounce.js"; 
   import { onMount } from 'svelte';
-  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
+  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, isZooming, round } from './store';
 
   import drawStreet from "./utilities/drawStreet";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
@@ -155,6 +155,14 @@
     /* First, compute the distance / score */
 
     const chosenLatLng = chosenPointMarker.getLatLng();
+
+    // Wait any ongoing zooms to end
+    if($isZooming) {
+      await new Promise((resolve) => {
+        map.once('zoomend', resolve);
+      });
+    }
+
     // This is used to compute the distance but we'll use it to visualize the distance
     const { distance, latLng: nearestPointOnStreet } = getNearestPointOnPolyLine(
       map,
@@ -288,7 +296,10 @@
         zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
         zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
       }));
-      
+
+    map.on('zoomend', () => isZooming.update(() => false));
+    map.on('zoomstart', () => isZooming.update(() => true));
+
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
     map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
     map.attributionControl.setPrefix("");

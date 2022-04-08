@@ -1,5 +1,6 @@
 <script lang="ts">
   import { geolocationRequesterStatus, interactionVerb } from "./store";
+  import ignoreError from "./utilities/ignoreError";
   import setAreaCenterUsingWebGeolocationApi from "./utilities/setAreaCenterUsingWebGeolocationApi";
   import trackEvent from "./utilities/trackEvent";
 
@@ -8,15 +9,18 @@
     try {
       await setAreaCenterUsingWebGeolocationApi();
       geolocationRequesterStatus.update(() => null);
+      ignoreError(() => localStorage.setItem("lastKnownWebGeolocationPermissionState", 'granted'));
       trackEvent({
         name: "web-geolocation-prompt-flow-complete",
         title: "Web geolocation prompt flow complete",
       });
     } catch (e) {
       if(!(e instanceof GeolocationPositionError)) {
+        ignoreError(() => localStorage.removeItem("lastKnownWebGeolocationPermissionState"));
         throw e;
       }
-
+      
+      ignoreError(() => localStorage.setItem("lastKnownWebGeolocationPermissionState", 'denied'));
       geolocationRequesterStatus.update(() => null);
       trackEvent({
         name: "web-geolocation-prompt-rejected",
@@ -33,7 +37,8 @@
     });
   };
 
-  const reload = () => {
+  const retry = () => {
+    ignoreError(() => localStorage.removeItem("lastKnownWebGeolocationPermissionState"));
     // @ts-ignore
     window.location = window.location.href;
   }
@@ -78,14 +83,14 @@
           <p>You previously blocked this. To proceed:<p>
           <ol>
             <li>Reset all permissions for backofyourhand.com in your web browser settings.</li>
-            <li>Reload this page.</li>
+            <li>Click "Retry" below.</li>
           </ol>
         </div>
 
         <div class="button-group">
           <button
             class="button--primary"
-            on:click={reload}>Reload</button>
+            on:click={retry}>Retry</button>
           <button
             class="button--secondary"
             on:click={cancel}>Cancel</button>

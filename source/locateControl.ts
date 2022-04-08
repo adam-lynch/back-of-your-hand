@@ -1,6 +1,7 @@
 import leaflet from "leaflet";
 import { geolocationRequesterStatus } from "./store";
 import getViewportWidth from "./utilities/getViewportWidth";
+import ignoreError from "./utilities/ignoreError";
 import setAreaCenterUsingWebGeolocationApi from "./utilities/setAreaCenterUsingWebGeolocationApi";
 import trackEvent from "./utilities/trackEvent";
 
@@ -8,36 +9,75 @@ let control: leaflet.Control | null = null;
 let container: HTMLElement;
 
 const onClick = async () => {
-  const permission = await navigator.permissions.query({
-    name: "geolocation",
-  });
+  let permissionState: string;
 
-  if (permission.state === "granted") {
+  if ("permissions" in navigator && "query" in navigator.permissions) {
+    const permission = await navigator.permissions.query({
+      name: "geolocation",
+    });
+    permissionState = permission.state;
+  } else {
+    // Doesn't support querying permissions :(
+    try {
+      const storedValue = localStorage.getItem(
+        "lastKnownWebGeolocationPermissionState"
+      );
+      if (storedValue) {
+        permissionState = storedValue;
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  if (!permissionState) {
+    geolocationRequesterStatus.update(() => "pre-prompt");
+    trackEvent({
+      name: "locate--no-permissions-query-support",
+      title: "Locate button clicked (no support for querying permissions)",
+    });
+    return;
+  }
+
+  if (permissionState === "granted") {
     trackEvent({
       name: "locate--already-granted",
       title:
         "Locate button clicked (web geolocation persmission state: granted)",
     });
-    await setAreaCenterUsingWebGeolocationApi();
+    try {
+      await setAreaCenterUsingWebGeolocationApi();
+    } catch (e) {
+      ignoreError(() =>
+        localStorage.removeItem("lastKnownWebGeolocationPermissionState")
+      );
+      throw e;
+    }
     return;
   }
 
-  if (permission.state === "prompt") {
+  if (permissionState === "prompt") {
     trackEvent({
       name: "locate--pre-prompt",
       title:
         "Locate button clicked (web geolocation persmission state: prompt)",
     });
+    ignoreError(() =>
+      localStorage.removeItem("lastKnownWebGeolocationPermissionState")
+    );
     geolocationRequesterStatus.update(() => "pre-prompt");
     return;
   }
 
-  if (permission.state === "denied") {
+  if (permissionState === "denied") {
     trackEvent({
       name: "locate--denied",
       title:
         "Locate button clicked (web geolocation persmission state: denied)",
     });
+    ignoreError(() =>
+      localStorage.setItem("lastKnownWebGeolocationPermissionState", "denied")
+    );
     geolocationRequesterStatus.update(() => "denied");
     return;
   }

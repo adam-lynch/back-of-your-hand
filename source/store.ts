@@ -41,6 +41,7 @@ export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);
 export const interactionVerb = writable(isTouchDevice() ? "Tap" : "Click");
 export const isLoading = writable(false);
+export const isZooming = writable(false);
 export const isSummaryShown = writable(false);
 export const numberOfStreets = writable(5);
 export const round = writable(null);

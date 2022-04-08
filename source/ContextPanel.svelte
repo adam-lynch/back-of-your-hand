@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
+  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round, areaCenter, geolocationRequesterStatus } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
 
@@ -242,6 +242,7 @@
   .call-to-action > a {
     color: white;
     text-decoration: none;
+    display: none;
   }
 
   .call-to-action > a:hover {

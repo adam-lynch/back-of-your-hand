@@ -2,6 +2,7 @@ import leaflet from "leaflet";
 import { geolocationRequesterStatus } from "./store";
 import getViewportWidth from "./utilities/getViewportWidth";
 import setAreaCenterUsingWebGeolocationApi from "./utilities/setAreaCenterUsingWebGeolocationApi";
+import trackEvent from "./utilities/trackEvent";
 
 let control: leaflet.Control | null = null;
 let container: HTMLElement;
@@ -12,16 +13,31 @@ const onClick = async () => {
   });
 
   if (permission.state === "granted") {
+    trackEvent({
+      name: "locate--already-granted",
+      title:
+        "Locate button clicked (web geolocation persmission state: granted)",
+    });
     await setAreaCenterUsingWebGeolocationApi();
     return;
   }
 
   if (permission.state === "prompt") {
+    trackEvent({
+      name: "locate--pre-prompt",
+      title:
+        "Locate button clicked (web geolocation persmission state: prompt)",
+    });
     geolocationRequesterStatus.update(() => "pre-prompt");
     return;
   }
 
   if (permission.state === "denied") {
+    trackEvent({
+      name: "locate--denied",
+      title:
+        "Locate button clicked (web geolocation persmission state: denied)",
+    });
     geolocationRequesterStatus.update(() => "denied");
     return;
   }

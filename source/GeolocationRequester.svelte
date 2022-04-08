@@ -1,21 +1,34 @@
 <script lang="ts">
   import { geolocationRequesterStatus, interactionVerb } from "./store";
   import setAreaCenterUsingWebGeolocationApi from "./utilities/setAreaCenterUsingWebGeolocationApi";
+  import trackEvent from "./utilities/trackEvent";
 
   const prompt = async () => {
     geolocationRequesterStatus.update(() => 'prompted');
     try {
       await setAreaCenterUsingWebGeolocationApi();
+      trackEvent({
+        name: "web-geolocation-prompt-flow-complete",
+        title: "Web geolocation prompt flow complete",
+      });
     } catch (e) {
       if(!(e instanceof GeolocationPositionError)) {
         throw e;
       }
       geolocationRequesterStatus.update(() => null);
+      trackEvent({
+        name: "web-geolocation-prompt-rejected",
+        title: "Web geolocation prompt rejected",
+      });
     }
   };
 
   const cancel = async () => {
     geolocationRequesterStatus.update(() => null);
+    trackEvent({
+      name: `geolocation-requester-cancelled--${$geolocationRequesterStatus}`,
+      title: `GeolocationRequester cancelled (status was ${$geolocationRequesterStatus})`,
+    });
   };
 
   const reload = () => {

@@ -65,7 +65,7 @@
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
         <div class="street-sign-wrapper">
-          <div class="street-sign">
+          <div class="street-sign {$currentQuestion.street.countryCode === "ie" ? `street-sign--alternative-name-on-top` : ''}">
             <span class="street-name">{$currentQuestion.street.name}</span>
             {#if $currentQuestion.street.alternativeName}
               <span class="street-name-alternative">
@@ -280,7 +280,10 @@
 
   .street-sign {
     position: relative;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+    gap: 0.25rem;
     padding: 0.5rem 1rem;
     border: 4px solid black;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
@@ -296,18 +299,22 @@
     display: block;
   }
 
-  .street-name:not(:last-child) {
+  .street-name {
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+  }
+  
+  .street-name-alternative {
     font-style: italic;
     font-size: 0.9rem;
   }
 
-  .street-sign span:last-child {
-    letter-spacing: 0.1rem;
-    text-transform: uppercase;
+  .street-sign--alternative-name-on-top .street-name {
+    order: 1;
   }
 
-  .street-name + .street-name-alternative  {
-    margin-top: 0.25rem;
+  .street-sign--alternative-name-on-top .street-name-alternative {
+    order: 0;
   }
 
   .question-index {

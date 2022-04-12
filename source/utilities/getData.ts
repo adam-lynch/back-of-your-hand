@@ -1,3 +1,4 @@
+import countries from "./countries";
 import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import type { LatLng, Overpass, Question } from "./types";
@@ -5,6 +6,7 @@ import type { LatLng, Overpass, Question } from "./types";
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
 import capLng from "./capLng";
+import getNamesFromElement from "./getNamesFromElement";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
@@ -38,12 +40,16 @@ const adjustStreetDetails = (
     width = widths.reduce((a, b) => a + b, 0) / widths.length;
   }
 
+  const countryCode = "ie";
+  const [name, alternativeName] = getNamesFromElement(
+    streetElement,
+    countryCode
+  );
+
   return {
-    // `name:ga` is the Irish name (ga = "Gaeilge")
-    alternativeName: streetElement.tags["name:ga"]
-      ? streetElement.tags.name
-      : null,
-    name: streetElement.tags["name:ga"] || streetElement.tags.name,
+    alternativeName: alternativeName,
+    countryCode,
+    name,
     points,
     width,
   };

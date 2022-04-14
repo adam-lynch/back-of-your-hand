@@ -1,23 +1,66 @@
-import countries from "./countries";
+import languages from "./languages";
 import type { Overpass } from "./types";
 
-// Up to two names, ordered by preference in country
-export default (element: Overpass.Element, countryCode?: string): string[] => {
-  const results = [element.tags.name];
+const isUsableAlternativeName = (
+  alternativeName: string | void,
+  mainName: string
+): boolean => alternativeName && alternativeName !== mainName;
 
-  if (countryCode) {
-    const possibleLanguageCodes = countries[countryCode];
-    if (possibleLanguageCodes?.length) {
-      const alternativeNameLanguageCode = possibleLanguageCodes.find(
-        (languageCode: string) =>
-          element.tags[`name:${languageCode}`] &&
-          element.tags[`name:${languageCode}`] !== element.tags.name
-      );
-      if (alternativeNameLanguageCode) {
-        results.push(element.tags[`name:${alternativeNameLanguageCode}`]);
+const getAlternativeName = (
+  element: Overpass.Element,
+  mainName: string
+): { languageCode: string; name: string } | void => {
+  const tagEntries = Object.entries(element.tags);
+
+  for (const languageCode of languages) {
+    const nameTagProperty = `name:${languageCode}`;
+    const nameTagValue = element.tags[nameTagProperty];
+    if (isUsableAlternativeName(nameTagValue, mainName)) {
+      return {
+        languageCode,
+        name: nameTagValue,
+      };
+    }
+
+    for (const [tagName, value] of tagEntries) {
+      if (
+        tagName.startsWith(`${nameTagProperty}-`) &&
+        isUsableAlternativeName(value, mainName)
+      ) {
+        return {
+          languageCode,
+          name: value,
+        };
       }
     }
   }
 
-  return results;
+  for (const [tagName, value] of tagEntries) {
+    if (
+      tagName.startsWith("name:") &&
+      isUsableAlternativeName(value, mainName)
+    ) {
+      return {
+        languageCode: tagName.match(/^name:([a-z]+)/)[1].toLowerCase(),
+        name: value,
+      };
+    }
+  }
+};
+
+// Up to two names
+// TODO: street-sign--alternative-name-on-top
+export default (
+  element: Overpass.Element
+): {
+  alternativeName: string | void;
+  alternativeNameLanguageCode: string | void;
+  name: string;
+} => {
+  const alternativeNameDetails = getAlternativeName(element, element.tags.name);
+  return {
+    alternativeName: alternativeNameDetails?.name,
+    alternativeNameLanguageCode: alternativeNameDetails?.languageCode,
+    name: element.tags.name,
+  };
 };

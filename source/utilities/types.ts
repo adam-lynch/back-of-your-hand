@@ -15,8 +15,8 @@ export type Question = {
   score?: number;
   status: "pending" | "ongoing" | "complete" | "skipped";
   street: {
-    alternativeName?: string;
-    countryCode?: string;
+    alternativeName?: string | void;
+    alternativeNameLanguageCode?: string | void;
     name: string;
     points: LatLng[][];
     width?: number;

@@ -65,7 +65,7 @@
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
         <div class="street-sign-wrapper">
-          <div class="street-sign {$currentQuestion.street.countryCode === "ie" ? `street-sign--alternative-name-on-top` : ''}">
+          <div class="street-sign {$currentQuestion.street.alternativeNameLanguageCode === "ga" ? `street-sign--alternative-name-on-top` : ''}">
             <span class="street-name">{$currentQuestion.street.name}</span>
             {#if $currentQuestion.street.alternativeName}
               <span class="street-name-alternative">

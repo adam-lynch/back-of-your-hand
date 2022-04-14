@@ -1,4 +1,3 @@
-import countries from "./countries";
 import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import type { LatLng, Overpass, Question } from "./types";
@@ -40,16 +39,8 @@ const adjustStreetDetails = (
     width = widths.reduce((a, b) => a + b, 0) / widths.length;
   }
 
-  const countryCode = "ie";
-  const [name, alternativeName] = getNamesFromElement(
-    streetElement,
-    countryCode
-  );
-
   return {
-    alternativeName: alternativeName,
-    countryCode,
-    name,
+    ...getNamesFromElement(streetElement),
     points,
     width,
   };

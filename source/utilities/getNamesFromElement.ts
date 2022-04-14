@@ -1,4 +1,3 @@
-import languages from "./languages";
 import type { Overpass } from "./types";
 
 const isUsableAlternativeName = (
@@ -9,42 +8,16 @@ const isUsableAlternativeName = (
 const getAlternativeName = (
   element: Overpass.Element,
   mainName: string
-): { languageCode: string; name: string } | void => {
-  const tagEntries = Object.entries(element.tags);
-
-  for (const languageCode of languages) {
-    const nameTagProperty = `name:${languageCode}`;
-    const nameTagValue = element.tags[nameTagProperty];
-    if (isUsableAlternativeName(nameTagValue, mainName)) {
-      return {
-        languageCode,
-        name: nameTagValue,
-      };
-    }
-
-    for (const [tagName, value] of tagEntries) {
-      if (
-        tagName.startsWith(`${nameTagProperty}-`) &&
-        isUsableAlternativeName(value, mainName)
-      ) {
-        return {
-          languageCode,
-          name: value,
-        };
-      }
-    }
+): { languageCode?: string; name: string } | void => {
+  if (isUsableAlternativeName(element.tags["name:ga"], mainName)) {
+    return {
+      languageCode: "ga",
+      name: element.tags["name:ga"],
+    };
   }
 
-  for (const [tagName, value] of tagEntries) {
-    if (
-      tagName.startsWith("name:") &&
-      isUsableAlternativeName(value, mainName)
-    ) {
-      return {
-        languageCode: tagName.match(/^name:([a-z]+)/)[1].toLowerCase(),
-        name: value,
-      };
-    }
+  if (isUsableAlternativeName(element.tags.old_name, mainName)) {
+    return { name: element.tags.old_name };
   }
 };
 

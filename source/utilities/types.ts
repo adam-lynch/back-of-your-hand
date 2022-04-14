@@ -53,6 +53,7 @@ export namespace Overpass {
     tags: {
       name: string;
       "name:ga"?: string;
+      old_name?: string;
       width?: string;
     };
   };

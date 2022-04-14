@@ -49,7 +49,6 @@ const getAlternativeName = (
 };
 
 // Up to two names
-// TODO: street-sign--alternative-name-on-top
 export default (
   element: Overpass.Element
 ): {

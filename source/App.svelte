@@ -12,11 +12,11 @@
     areaRadius,
     currentQuestion,
     deviceBestScore,
-    gotInitialSeedFromUrl,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
     round,
+    seed,
     totalScore
   } from './store';
   import loadRound from './utilities/loadRound';
@@ -27,11 +27,12 @@
 
   let lastSeenSeed;
   const updateUrl = () => {
-    let pathname = `/${$areaCenter.lat},${$areaCenter.lng}`;
-    if($round) {
-      pathname += `/${$round.seed}`;
-    }
-    history.replaceState(null, "", window.location.origin + pathname);
+    const url = new URL(window.location.origin);
+    url.pathname = '/game';
+    url.searchParams.set('lat', $areaCenter.lat.toString());
+    url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('seed', $seed);
+    history.replaceState(null, "", url);
   }
 
   // Update the URL path when the area center changes
@@ -56,7 +57,6 @@
     loadRound({ 
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
-      gotInitialSeedFromUrl: $gotInitialSeedFromUrl,
       numberOfStreets: $numberOfStreets,
       radius: $areaRadius,
     });
@@ -95,7 +95,7 @@
     if(value.status === "complete") {
       const newPotentialBestScore = computeTotalScore($totalScore, $round);
       if(newPotentialBestScore > $deviceBestScore) {
-        deviceBestScore.update(() => newPotentialBestScore);
+        deviceBestScore.set(newPotentialBestScore);
         round.update((value) => ({
           ...value,
           didSetNewDeviceBestScore: true,

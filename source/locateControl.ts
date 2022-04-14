@@ -31,7 +31,7 @@ const onClick = async () => {
   }
 
   if (!permissionState) {
-    geolocationRequesterStatus.update(() => "pre-prompt");
+    geolocationRequesterStatus.set("pre-prompt");
     trackEvent({
       name: "locate--no-permissions-query-support",
       title: "Locate button clicked (no support for querying permissions)",
@@ -65,7 +65,7 @@ const onClick = async () => {
     ignoreError(() =>
       localStorage.removeItem("lastKnownWebGeolocationPermissionState")
     );
-    geolocationRequesterStatus.update(() => "pre-prompt");
+    geolocationRequesterStatus.set("pre-prompt");
     return;
   }
 
@@ -78,7 +78,7 @@ const onClick = async () => {
     ignoreError(() =>
       localStorage.setItem("lastKnownWebGeolocationPermissionState", "denied")
     );
-    geolocationRequesterStatus.update(() => "denied");
+    geolocationRequesterStatus.set("denied");
     return;
   }
 };

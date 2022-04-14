@@ -12,7 +12,6 @@
     areaRadius,
     currentQuestion,
     deviceBestScore,
-    gotInitialSeedFromUrl,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
@@ -58,7 +57,6 @@
     loadRound({ 
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
-      gotInitialSeedFromUrl: $gotInitialSeedFromUrl,
       numberOfStreets: $numberOfStreets,
       radius: $areaRadius,
     });

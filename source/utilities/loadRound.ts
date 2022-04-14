@@ -3,24 +3,18 @@ import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import getSeed from "./getSeed";
 import { isAreaConfirmed, isLoading, round } from "../store";
-import type { LatLng, Round } from "./types";
+import type { LatLng } from "./types";
 import parseSeedFromUrl from "./parseSeedFromUrl";
 
-const seedFromUrl = parseSeedFromUrl();
+let seed = parseSeedFromUrl();
 
 let getRandomNumber;
-export default async ({
-  areaCenter,
-  areaBounds,
-  gotInitialSeedFromUrl,
-  numberOfStreets,
-  radius,
-}) => {
+export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
   isLoading.update(() => true);
 
-  const seed = gotInitialSeedFromUrl
-    ? (seedFromUrl as Round["seed"])
-    : getSeed();
+  if (!seed) {
+    seed = getSeed();
+  }
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(seed);
   }

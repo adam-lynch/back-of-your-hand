@@ -28,6 +28,7 @@
   let lastSeenSeed;
   const updateUrl = () => {
     const url = new URL(window.location.origin);
+    url.pathname = '/game';
     url.searchParams.set('lat', $areaCenter.lat.toString());
     url.searchParams.set('lng', $areaCenter.lng.toString());
     url.searchParams.set('seed', $seed);

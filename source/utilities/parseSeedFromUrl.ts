@@ -1,6 +1,6 @@
 import type { Round } from "./types";
 
-export default (): Round["seed"] | void => {
+export default (): string | void => {
   const seedQueryArgument = new URLSearchParams(window.location.search).get(
     "seed"
   );

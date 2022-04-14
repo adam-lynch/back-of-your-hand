@@ -88,7 +88,7 @@
     }
 
     const newAreaBounds = newAreaBoundsCircle.getBounds();
-    areaBounds.update(() => newAreaBounds);
+    areaBounds.set(newAreaBounds);
     
     const boundsToFitInView = newAreaBoundsCircle.getBounds().pad(getBoundsPaddingWhenMarkingBounds());
     map.flyToBounds(boundsToFitInView, {
@@ -250,7 +250,7 @@
 
     // They're selecting an area
     if(!$isAreaConfirmed) {
-      const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(latLng));
+      const updateCenter = () => areaCenter.set(reduceLatLngPrecision(latLng));
 
       // If they came in with a seed and then change the area, warn them
       if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
@@ -272,7 +272,7 @@
 
     // They're marking their guess
     if(!$isChosenPointConfirmed) {
-      chosenPoint.update(() => latLng);
+      chosenPoint.set(latLng);
     }
   };
 
@@ -304,8 +304,8 @@
 
     locateControl.add(map);
 
-    map.on('zoomend', () => isZooming.update(() => false));
-    map.on('zoomstart', () => isZooming.update(() => true));
+    map.on('zoomend', () => isZooming.set(false));
+    map.on('zoomstart', () => isZooming.set(true));
       
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
     map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
@@ -349,7 +349,7 @@
 
   // Draw all streets on the map, etc.
   const showSummary = debounce(() => {
-    chosenPoint.update(() => null);
+    chosenPoint.set(null);
     resetMap(false, true);
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);

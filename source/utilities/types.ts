@@ -27,7 +27,6 @@ export type Round = {
   didSetNewDeviceBestScore?: boolean;
   // I couldn't think of a better name
   questions: Question[];
-  seed: string;
   status: "error" | "ongoing" | "complete";
 };
 

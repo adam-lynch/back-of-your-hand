@@ -7,6 +7,9 @@ import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
 export const areaRadius = writable(2000);
+export const geolocationRequesterStatus = writable<
+  null | "denied" | "pre-prompt" | "prompted"
+>(null);
 export const deviceBestScore = writable(
   parseInt(
     ignoreError(() => {
@@ -34,6 +37,7 @@ export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);
 export const interactionVerb = writable(isTouchDevice() ? "Tap" : "Click");
 export const isLoading = writable(false);
+export const isZooming = writable(false);
 export const isSummaryShown = writable(false);
 export const numberOfStreets = writable(5);
 export const round = writable(null);

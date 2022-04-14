@@ -16,6 +16,7 @@
     nextQuestion,
     numberOfStreets,
     round,
+    seed,
     totalScore
   } from './store';
   import loadRound from './utilities/loadRound';
@@ -27,11 +28,9 @@
   let lastSeenSeed;
   const updateUrl = () => {
     const url = new URL(window.location.origin);
-    url.searchParams.set('lat', $areaCenter.lat);
-    url.searchParams.set('lng', $areaCenter.lng);
-    if($round) {
-      url.searchParams.set('seed', $round.seed);
-    }
+    url.searchParams.set('lat', $areaCenter.lat.toString());
+    url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
   }
 

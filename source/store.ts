@@ -1,5 +1,6 @@
 import { derived, writable } from "svelte/store";
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
+import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
 import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
@@ -31,7 +32,8 @@ export const deviceBestScore = writable(
 );
 export const chosenPoint = writable(null);
 
-export const gotInitialSeedFromUrl = writable(Boolean(parseSeedFromUrl()));
+const seedFromUrl = parseSeedFromUrl();
+export const gotInitialSeedFromUrl = writable(Boolean(seedFromUrl));
 
 export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);
@@ -41,7 +43,7 @@ export const isZooming = writable(false);
 export const isSummaryShown = writable(false);
 export const numberOfStreets = writable(5);
 export const round = writable(null);
-export const seedFromUrl = writable(null);
+export const seed = writable(seedFromUrl || getSeed());
 
 export const orderedQuestions = derived(round, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {

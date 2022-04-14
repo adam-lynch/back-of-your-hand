@@ -1,22 +1,17 @@
+import { get } from "svelte/store";
+
 import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
-import getSeed from "./getSeed";
-import { isAreaConfirmed, isLoading, round } from "../store";
+import { isAreaConfirmed, isLoading, round, seed } from "../store";
 import type { LatLng } from "./types";
-import parseSeedFromUrl from "./parseSeedFromUrl";
-
-let seed = parseSeedFromUrl();
 
 let getRandomNumber;
 export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
   isLoading.update(() => true);
 
-  if (!seed) {
-    seed = getSeed();
-  }
   if (!getRandomNumber) {
-    getRandomNumber = getRandomNumberGenerator(seed);
+    getRandomNumber = getRandomNumberGenerator(get(seed));
   }
   const streets = await getData(
     areaBounds,
@@ -43,7 +38,6 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
       index,
       status: index === 0 ? "ongoing" : "pending",
     })),
-    seed,
     status: "ongoing",
   }));
 

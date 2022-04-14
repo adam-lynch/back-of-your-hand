@@ -94,7 +94,7 @@
     if(value.status === "complete") {
       const newPotentialBestScore = computeTotalScore($totalScore, $round);
       if(newPotentialBestScore > $deviceBestScore) {
-        deviceBestScore.update(() => newPotentialBestScore);
+        deviceBestScore.set(newPotentialBestScore);
         round.update((value) => ({
           ...value,
           didSetNewDeviceBestScore: true,

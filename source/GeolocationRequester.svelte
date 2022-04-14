@@ -5,10 +5,10 @@
   import trackEvent from "./utilities/trackEvent";
 
   const prompt = async () => {
-    geolocationRequesterStatus.update(() => 'prompted');
+    geolocationRequesterStatus.set('prompted');
     try {
       await setAreaCenterUsingWebGeolocationApi();
-      geolocationRequesterStatus.update(() => null);
+      geolocationRequesterStatus.set(null);
       ignoreError(() => localStorage.setItem("lastKnownWebGeolocationPermissionState", 'granted'));
       trackEvent({
         name: "web-geolocation-prompt-flow-complete",
@@ -21,7 +21,7 @@
       }
       
       ignoreError(() => localStorage.setItem("lastKnownWebGeolocationPermissionState", 'denied'));
-      geolocationRequesterStatus.update(() => null);
+      geolocationRequesterStatus.set(null);
       trackEvent({
         name: "web-geolocation-prompt-rejected",
         title: "Web geolocation prompt rejected",
@@ -30,7 +30,7 @@
   };
 
   const cancel = async () => {
-    geolocationRequesterStatus.update(() => null);
+    geolocationRequesterStatus.set(null);
     trackEvent({
       name: `geolocation-requester-cancelled--${$geolocationRequesterStatus}`,
       title: `GeolocationRequester cancelled (status was ${$geolocationRequesterStatus})`,

@@ -8,7 +8,7 @@ import type { LatLng } from "./types";
 
 let getRandomNumber;
 export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
-  isLoading.update(() => true);
+  isLoading.set(true);
 
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(get(seed));
@@ -26,12 +26,12 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
     alert(
       "There aren't enough streets in this area. Please select somewhere else"
     );
-    isAreaConfirmed.update(() => false);
-    isLoading.update(() => false);
+    isAreaConfirmed.set(false);
+    isLoading.set(false);
     return;
   }
 
-  round.update(() => ({
+  round.set({
     areaBounds: areaBounds,
     questions: streets.map((street, index) => ({
       street,
@@ -39,7 +39,7 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
       status: index === 0 ? "ongoing" : "pending",
     })),
     status: "ongoing",
-  }));
+  });
 
-  isLoading.update(() => false);
+  isLoading.set(false);
 };

@@ -4,7 +4,7 @@
   import trackEvent from './utilities/trackEvent';
 
   const onChosenPointConfirmed = () => {
-    isChosenPointConfirmed.update(() => true);
+    isChosenPointConfirmed.set(true);
   };
 
   const onNextClicked = () => {
@@ -24,27 +24,27 @@
       }
     });
     // Reset chosen point / marker
-    chosenPoint.update(() => null);
-    isChosenPointConfirmed.update(() => false);
+    chosenPoint.set(null);
+    isChosenPointConfirmed.set(false);
   }
 
   const onRestartClicked = () => {
     // Reset a lot of stuff
-    chosenPoint.update(() => null);
-    isAreaConfirmed.update(() => false);
-    isChosenPointConfirmed.update(() => false);
-    isSummaryShown.update(() => false);
-    round.update(() => null);
+    chosenPoint.set(null);
+    isAreaConfirmed.set(false);
+    isChosenPointConfirmed.set(false);
+    isSummaryShown.set(false);
+    round.set(null);
     trackEvent({ name: "restart", title: "Restart" });
   }
 
   const onSummaryRequested = () => {
-    isSummaryShown.update(() => true);
+    isSummaryShown.set(true);
     trackEvent({ name: "view-summary", title: "View summary" });
   };
 
   const onStartClicked = () => {
-    isAreaConfirmed.update(() => true);
+    isAreaConfirmed.set(true);
     trackEvent({ name: "start", title: "Start" });
   };
 </script>

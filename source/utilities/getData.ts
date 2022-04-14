@@ -5,6 +5,7 @@ import type { LatLng, Overpass, Question } from "./types";
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
 import capLng from "./capLng";
+import roundNumber from "./roundNumber";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
@@ -52,11 +53,18 @@ const adjustStreetDetails = (
 // Actually get the data. Try localStorage, fallback to hitting OpenStreetMap's Overpass API
 const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
   // Setting the bounding box is important. It massively speeds up the query
+  const numberOfDecimalPointsToConsider = 4;
   let bboxValue = [
-    areaBounds.getNorthWest().lat,
-    capLng(areaBounds.getNorthWest().lng),
-    areaBounds.getSouthEast().lat,
-    capLng(areaBounds.getSouthEast().lng),
+    roundNumber(areaBounds.getNorthWest().lat, numberOfDecimalPointsToConsider),
+    roundNumber(
+      capLng(areaBounds.getNorthWest().lng),
+      numberOfDecimalPointsToConsider
+    ),
+    roundNumber(areaBounds.getSouthEast().lat, numberOfDecimalPointsToConsider),
+    roundNumber(
+      capLng(areaBounds.getSouthEast().lng),
+      numberOfDecimalPointsToConsider
+    ),
   ].join(",");
 
   // We don't want highway=bus_stop, for example

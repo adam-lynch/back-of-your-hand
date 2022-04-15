@@ -5,6 +5,7 @@ import type { LatLng, Overpass, Question } from "./types";
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
 import capLng from "./capLng";
+import getNamesFromElement from "./getNamesFromElement";
 import roundNumber from "./roundNumber";
 
 // Convert to our type, join with other streets of the same name, etc.
@@ -40,11 +41,7 @@ const adjustStreetDetails = (
   }
 
   return {
-    // `name:ga` is the Irish name (ga = "Gaeilge")
-    alternativeName: streetElement.tags["name:ga"]
-      ? streetElement.tags.name
-      : null,
-    name: streetElement.tags["name:ga"] || streetElement.tags.name,
+    ...getNamesFromElement(streetElement),
     points,
     width,
   };

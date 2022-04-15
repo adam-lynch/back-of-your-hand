@@ -7,12 +7,6 @@ export type LatLng = {
 export type Coordinates = number[];
 
 export type Question = {
-  street: {
-    alternativeName?: string;
-    name: string;
-    points: LatLng[][];
-    width?: number;
-  };
   distance?: {
     amount: number;
     unit: string;
@@ -20,6 +14,13 @@ export type Question = {
   index: number;
   score?: number;
   status: "pending" | "ongoing" | "complete" | "skipped";
+  street: {
+    alternativeName?: string | void;
+    alternativeNameLanguageCode?: string | void;
+    name: string;
+    points: LatLng[][];
+    width?: number;
+  };
 };
 
 export type Round = {
@@ -51,6 +52,7 @@ export namespace Overpass {
     tags: {
       name: string;
       "name:ga"?: string;
+      old_name?: string;
       width?: string;
     };
   };

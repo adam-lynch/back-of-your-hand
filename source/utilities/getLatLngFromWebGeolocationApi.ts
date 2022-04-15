@@ -5,10 +5,10 @@ import type { LatLng } from "./types";
 export default async (): Promise<LatLng> => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
+      (result) => {
         const latLng = {
-          lat: coords.latitude,
-          lng: capLng(coords.longitude),
+          lat: result.coords.latitude,
+          lng: capLng(result.coords.longitude),
         };
         resolve(latLng);
       },

@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round, areaCenter, geolocationRequesterStatus } from './store';
+  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
+  import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
 
   const onChosenPointConfirmed = () => {
     isChosenPointConfirmed.set(true);
@@ -43,7 +44,9 @@
     trackEvent({ name: "view-summary", title: "View summary" });
   };
 
-  const onStartClicked = () => {
+  const onStartClicked = async () => {
+    await waitForAnyOngoingZoomsToEnd();
+
     isAreaConfirmed.set(true);
     trackEvent({ name: "start", title: "Start" });
   };

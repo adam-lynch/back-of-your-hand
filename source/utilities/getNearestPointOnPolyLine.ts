@@ -1,25 +1,24 @@
 import leaflet from "leaflet";
+import convertLatLngToLayerPoint from "./convertLatLngToLayerPoint.ts";
 
 import type { LatLng } from "./types";
 
-export default (
+export default async (
   map: leaflet.Map,
   latLng: LatLng,
   polyLinePoints: LatLng[][]
-): { distance: number; latLng: leaflet.LatLng } => {
-  const point = map.latLngToLayerPoint(latLng);
+): Promise<{ distance: number; latLng: leaflet.LatLng }> => {
+  const point = await convertLatLngToLayerPoint(latLng, map);
   const flattenedPolyLinePoints = polyLinePoints.flat(1);
 
   let nearestPoint: leaflet.Point;
   let nearestPointDistance: number;
 
   for (let i = 1; i < flattenedPolyLinePoints.length; i++) {
-    const previousPolyLinePoint = map.latLngToLayerPoint(
-      flattenedPolyLinePoints[i - 1]
-    );
-    const currentPolyLinePoint = map.latLngToLayerPoint(
-      flattenedPolyLinePoints[i]
-    );
+    const [previousPolyLinePoint, currentPolyLinePoint] = await Promise.all([
+      convertLatLngToLayerPoint(flattenedPolyLinePoints[i - 1], map),
+      convertLatLngToLayerPoint(flattenedPolyLinePoints[i], map),
+    ]);
 
     const nearestPointOnSegment = leaflet.LineUtil.closestPointOnSegment(
       point,

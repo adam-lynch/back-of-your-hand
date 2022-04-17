@@ -3,7 +3,7 @@
   import "@maplibre/maplibre-gl-leaflet";
   import debounce from "lodash-es/debounce.js"; 
   import { onMount } from 'svelte';
-  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, isZooming, round } from './store';
+  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 
   import * as locateControl from "./locateControl";
   import drawStreet from "./utilities/drawStreet";
@@ -15,6 +15,7 @@
   import delay from "./utilities/delay";
   import capLng from "./utilities/capLng";
   import roundNumber from "./utilities/roundNumber";
+  import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
 
   // @ts-ignore
   const isProd = isProduction;
@@ -159,15 +160,10 @@
 
     const chosenLatLng = chosenPointMarker.getLatLng();
 
-    // Wait any ongoing zooms to end
-    if($isZooming) {
-      await new Promise((resolve) => {
-        map.once('zoomend', resolve);
-      });
-    }
+    await waitForAnyOngoingZoomsToEnd();
 
     // This is used to compute the distance but we'll use it to visualize the distance
-    const { distance, latLng: nearestPointOnStreet } = getNearestPointOnPolyLine(
+    const { distance, latLng: nearestPointOnStreet } = await getNearestPointOnPolyLine(
       map,
       chosenLatLng,
       $currentQuestion.street.points as Question["street"]["points"],
@@ -304,8 +300,19 @@
 
     locateControl.add(map);
 
-    map.on('zoomend', () => isZooming.set(false));
-    map.on('zoomstart', () => isZooming.set(true));
+    map.on('zoomend', (event) => {
+      /*
+        I wish we could we track each zoomstart event and wait for an equal
+        number zoomend events, but I've seen this happen: 
+        1. zoomstart 
+        2. zoomstart 
+        3. zoomend
+      */
+      ongoingZoomCount.set(0);
+    });
+    map.on('zoomstart', (event) => {
+      ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
+    });
       
     // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
     map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
@@ -388,10 +395,10 @@
       }
 
       // If it hasn't changed, add a little animation as some feedback for the locate button press
-      const mapCenterLatLng = map.getCenter();
+      const currrentMapCenterLatLng = map.getCenter();
       const numberOfDecimalPointsToConsider = 4;
-      const hasChanged = roundNumber(mapCenterLatLng.lat, numberOfDecimalPointsToConsider) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) || 
-        roundNumber(mapCenterLatLng.lng, numberOfDecimalPointsToConsider) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
+      const hasChanged = roundNumber(currrentMapCenterLatLng.lat, numberOfDecimalPointsToConsider) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) || 
+        roundNumber(currrentMapCenterLatLng.lng, numberOfDecimalPointsToConsider) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
       
       if(!hasChanged) {
         map.zoomOut(1, {

@@ -22,7 +22,7 @@ export default async (): Promise<void> => {
           return;
         }
         unsubscribe();
-        resolve();
+        setTimeout(resolve, 50);
       };
       onDone();
     });

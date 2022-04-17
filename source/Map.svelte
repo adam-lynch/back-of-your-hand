@@ -276,14 +276,13 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
 
     const viewportWidth = getViewportWidth();
-    const mapOptions = {
+    const initialMapOptions = {
       boxZoom: false,
-      center: leaflet.latLng($areaCenter),
       doubleClickZoom: false,
       layers: Object.values(tileLayers),
-      minZoom: defaultMinZoom,
       // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-      zoom: viewportWidth > 800 ? 14 : 13.2,
+      maxZoom: 23,
+      minZoom: defaultMinZoom,
       zoomControl: false,
       zoomSnap: 0.25,
     };
@@ -294,28 +293,26 @@
       zoomOutText: "&minus;" + (viewportWidth > 800 ? "&emsp;Zoom out" : ""),
     });
 
-    map = leaflet.map(mapElement, mapOptions)
+    map = leaflet.map(mapElement, initialMapOptions)
       .on('click', onMapClick)
+      .on('zoomend', () => {
+        /*
+          I wish we could we track each zoomstart event and wait for an equal
+          number zoomend events, but I've seen this happen: 
+          1. zoomstart 
+          2. zoomstart 
+          3. zoomend
+        */
+        ongoingZoomCount.set(0);
+      })
+      .on('zoomstart', () => {
+        ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
+      })
+      .fitBounds(leaflet.latLng($areaCenter).toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()))
       .addControl(zoomControl);
 
     locateControl.add(map);
-
-    map.on('zoomend', (event) => {
-      /*
-        I wish we could we track each zoomstart event and wait for an equal
-        number zoomend events, but I've seen this happen: 
-        1. zoomstart 
-        2. zoomstart 
-        3. zoomend
-      */
-      ongoingZoomCount.set(0);
-    });
-    map.on('zoomstart', (event) => {
-      ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
-    });
       
-    // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
-    map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)

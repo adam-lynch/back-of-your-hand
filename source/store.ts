@@ -1,5 +1,6 @@
 import { derived, writable } from "svelte/store";
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
+import getInitialAreaRadius from "./utilities/getInitialAreaRadius";
 import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
@@ -7,7 +8,7 @@ import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
 
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
-export const areaRadius = writable(2000);
+export const areaRadius = writable(getInitialAreaRadius());
 export const geolocationRequesterStatus = writable<
   null | "denied" | "pre-prompt" | "prompted"
 >(null);

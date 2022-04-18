@@ -1,7 +1,7 @@
 <script lang="ts">
   import leaflet from "leaflet";
   import "@maplibre/maplibre-gl-leaflet";
-  import debounce from "lodash-es/debounce.js"; 
+  import debounce from "lodash-es/debounce.js";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 
@@ -11,7 +11,7 @@
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
   import type { Question } from "./utilities/types";
-  import trackEvent from "./utilities/trackEvent"; 
+  import trackEvent from "./utilities/trackEvent";
   import delay from "./utilities/delay";
   import capLng from "./utilities/capLng";
   import roundNumber from "./utilities/roundNumber";
@@ -78,7 +78,7 @@
       ...areaBoundsCircleSelectionStyle,
       fillOpacity: 0.75,
       opacity: 0,
-      radius: 50,
+      radius: $areaRadius / 50,
     }).addTo(map);
 
     if(shouldShowAreaBoundsPopup) {
@@ -90,13 +90,13 @@
 
     const newAreaBounds = newAreaBoundsCircle.getBounds();
     areaBounds.set(newAreaBounds);
-    
+
     const boundsToFitInView = newAreaBoundsCircle.getBounds().pad(getBoundsPaddingWhenMarkingBounds());
     map.flyToBounds(boundsToFitInView, {
       animate: true,
       duration: 0.75,
     });
-    
+
     if(areaBoundsCircle) {
       map.removeLayer(areaBoundsCircle);
     }
@@ -201,7 +201,7 @@
 
       return result;
     });
-    
+
     /* Then draw the result & reveal the street */
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
@@ -211,7 +211,7 @@
       question: { ...$currentQuestion, ...currentQuestionUpdates },
       shouldDrawCircle: true
     });
-    
+
     const distancePolyline = leaflet.polyline(
       [
         chosenLatLng,
@@ -273,7 +273,7 @@
   };
 
   const initializeMap = () => {
-    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/"; 
+    leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
 
     const viewportWidth = getViewportWidth();
     const initialMapOptions = {
@@ -298,9 +298,9 @@
       .on('zoomend', () => {
         /*
           I wish we could we track each zoomstart event and wait for an equal
-          number zoomend events, but I've seen this happen: 
-          1. zoomstart 
-          2. zoomstart 
+          number zoomend events, but I've seen this happen:
+          1. zoomstart
+          2. zoomstart
           3. zoomend
         */
         ongoingZoomCount.set(0);
@@ -312,7 +312,7 @@
       .addControl(zoomControl);
 
     locateControl.add(map);
-      
+
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
@@ -394,9 +394,9 @@
       // If it hasn't changed, add a little animation as some feedback for the locate button press
       const currrentMapCenterLatLng = map.getCenter();
       const numberOfDecimalPointsToConsider = 4;
-      const hasChanged = roundNumber(currrentMapCenterLatLng.lat, numberOfDecimalPointsToConsider) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) || 
+      const hasChanged = roundNumber(currrentMapCenterLatLng.lat, numberOfDecimalPointsToConsider) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) ||
         roundNumber(currrentMapCenterLatLng.lng, numberOfDecimalPointsToConsider) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
-      
+
       if(!hasChanged) {
         map.zoomOut(1, {
           animate: false,
@@ -404,6 +404,14 @@
         setTimeout(() => {
           markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
         }, 250);
+        return;
+      }
+
+      markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+    });
+
+    areaRadius.subscribe((value) => {
+      if(!value) {
         return;
       }
 

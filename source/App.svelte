@@ -31,6 +31,7 @@
     url.pathname = '/game';
     url.searchParams.set('lat', $areaCenter.lat.toString());
     url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('radius', $areaRadius.toString());
     url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
   }
@@ -48,23 +49,34 @@
     trackEvent({ name: "area-center-moved", title: "Area center moved" });
   })
 
+  areaRadius.subscribe((value: number) => {
+    if (!value) {
+      return;
+    }
+
+    updateUrl();
+  })
+
   // Load round of streets once area is confirmed
   isAreaConfirmed.subscribe(async (isConfirmed) => {
     if(!isConfirmed) {
       return;
     }
-    
-    loadRound({ 
+
+    loadRound({
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
       numberOfStreets: $numberOfStreets,
       radius: $areaRadius,
     });
+
     ignoreError(() => {
       localStorage.setItem(
         "centerLatLng",
         JSON.stringify($areaCenter)
       );
+
+      localStorage.setItem("radius", $areaRadius.toString())
     });
   });
 
@@ -85,12 +97,12 @@
     if(!value){
       return;
     }
-    
+
     if(value.seed !== lastSeenSeed) {
       updateUrl();
       lastSeenSeed = value.seed;
     }
-    
+
     // Once the round ends, see if a new personal best was set
     if(value.status === "complete") {
       const newPotentialBestScore = computeTotalScore($totalScore, $round);
@@ -874,7 +886,7 @@
   .leaflet-locate-control:hover {
     background: #f4f4f4;
   }
-  
+
   .leaflet-locate-control button,
   .leaflet-locate-control button:active,
   .leaflet-locate-control button:focus,
@@ -898,7 +910,7 @@
       padding-left: 5px !important;
     }
   }
-  
+
   .leaflet-locate-control svg {
     position: absolute;
     top: 50%;
@@ -951,6 +963,43 @@
     text-overflow: ellipsis;
   }
 
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 12px;
+    background: #df206f;
+    cursor: pointer;
+  }
+
+  .slider::-webkit-slider-thumb:hover {
+    background: #d11563;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 12px;
+    background: #df206f;
+    cursor: pointer;
+  }
+
+  .slider::-moz-range-thumb:hover {
+    background: #d11563;
+  }
+
   button {
     padding: 0.5rem 1rem;
     border: none;
@@ -994,8 +1043,8 @@
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
   }
 
-  button:disabled, 
-  button:disabled:active, 
+  button:disabled,
+  button:disabled:active,
   button:disabled:hover {
     background: rgba(0, 0, 0, 0.3);
     color: rgba(255, 255, 255, 0.3);
@@ -1036,7 +1085,7 @@
     bottom: 0;
     left: 0;
     z-index: 999999;
-    
+
     overflow-y: auto;
     background: white;
   }
@@ -1086,7 +1135,7 @@
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 1fr auto;
-    grid-template-areas: 
+    grid-template-areas:
       "map"
       "context-panel";
     overflow: hidden;

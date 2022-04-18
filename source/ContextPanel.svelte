@@ -1,8 +1,13 @@
 <script lang="ts">
-  import { chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
+
+  const onRadiusChanged = () => {
+    const radius = parseInt((document.getElementById("radiusSlider") as HTMLInputElement).value);
+    areaRadius.update(() => radius);
+  };
 
   const onChosenPointConfirmed = () => {
     isChosenPointConfirmed.set(true);
@@ -63,7 +68,7 @@
     {#if $isSummaryShown}
       <Summary onRestartClicked={onRestartClicked} />
     {:else if ["ongoing", "complete"].includes($round && $round.status)}
-    
+
       <!-- Just to be safe-->
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
@@ -86,7 +91,7 @@
           </div>
         {/if}
       {/if}
-      
+
       <div class="call-to-action">
         {#if $currentQuestion && $currentQuestion.status === "ongoing"}
           <button
@@ -133,14 +138,28 @@
         <p class="subtext">Personal best score: {$deviceBestScore}%</p>
       {/if}
 
+      <div>
+        <label for="radiusSlider">Radius of area</label>
+        <div class="subtext" id="radius">{$areaRadius} m</div>
+        <input
+          type="range"
+          min="100"
+          max="5000"
+          value="{$areaRadius}"
+          step="100"
+          class="slider"
+          id="radiusSlider"
+          on:input={onRadiusChanged}>
+      </div>
+
       <div class="call-to-action">
         <button
           class="button--primary"
           on:click={onStartClicked}>
           Start
         </button>
-        
-        <a 
+
+        <a
           href={"/learn-more?continue=" + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash)}>
           Learn more
           <span class="hide-accessibly"> (how to play, etc)</span>

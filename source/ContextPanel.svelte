@@ -2,6 +2,7 @@
   import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
+  import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
 
   const onRadiusChanged = () => {
     const radius = parseInt((document.getElementById("radiusSlider") as HTMLInputElement).value);
@@ -9,7 +10,7 @@
   };
 
   const onChosenPointConfirmed = () => {
-    isChosenPointConfirmed.update(() => true);
+    isChosenPointConfirmed.set(true);
   };
 
   const onNextClicked = () => {
@@ -29,27 +30,29 @@
       }
     });
     // Reset chosen point / marker
-    chosenPoint.update(() => null);
-    isChosenPointConfirmed.update(() => false);
+    chosenPoint.set(null);
+    isChosenPointConfirmed.set(false);
   }
 
   const onRestartClicked = () => {
     // Reset a lot of stuff
-    chosenPoint.update(() => null);
-    isAreaConfirmed.update(() => false);
-    isChosenPointConfirmed.update(() => false);
-    isSummaryShown.update(() => false);
-    round.update(() => null);
+    chosenPoint.set(null);
+    isAreaConfirmed.set(false);
+    isChosenPointConfirmed.set(false);
+    isSummaryShown.set(false);
+    round.set(null);
     trackEvent({ name: "restart", title: "Restart" });
   }
 
   const onSummaryRequested = () => {
-    isSummaryShown.update(() => true);
+    isSummaryShown.set(true);
     trackEvent({ name: "view-summary", title: "View summary" });
   };
 
-  const onStartClicked = () => {
-    isAreaConfirmed.update(() => true);
+  const onStartClicked = async () => {
+    await waitForAnyOngoingZoomsToEnd();
+
+    isAreaConfirmed.set(true);
     trackEvent({ name: "start", title: "Start" });
   };
 </script>
@@ -70,7 +73,7 @@
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
         <div class="street-sign-wrapper">
-          <div class="street-sign">
+          <div class="street-sign {$currentQuestion.street.alternativeNameLanguageCode === "ga" ? `street-sign--alternative-name-on-top` : ''}">
             <span class="street-name">{$currentQuestion.street.name}</span>
             {#if $currentQuestion.street.alternativeName}
               <span class="street-name-alternative">
@@ -261,6 +264,7 @@
   .call-to-action > a {
     color: white;
     text-decoration: none;
+    display: none;
   }
 
   .call-to-action > a:hover {
@@ -298,7 +302,10 @@
 
   .street-sign {
     position: relative;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+    gap: 0.25rem;
     padding: 0.5rem 1rem;
     border: 4px solid black;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
@@ -314,18 +321,22 @@
     display: block;
   }
 
-  .street-name:not(:last-child) {
+  .street-name {
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+  }
+  
+  .street-name-alternative {
     font-style: italic;
     font-size: 0.9rem;
   }
 
-  .street-sign span:last-child {
-    letter-spacing: 0.1rem;
-    text-transform: uppercase;
+  .street-sign--alternative-name-on-top .street-name {
+    order: 1;
   }
 
-  .street-name + .street-name-alternative  {
-    margin-top: 0.25rem;
+  .street-sign--alternative-name-on-top .street-name-alternative {
+    order: 0;
   }
 
   .question-index {

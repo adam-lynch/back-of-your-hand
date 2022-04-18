@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GeolocationRequester from "./GeolocationRequester.svelte";
   import HUD from "./HUD.svelte";
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
@@ -11,11 +12,11 @@
     areaRadius,
     currentQuestion,
     deviceBestScore,
-    gotInitialSeedFromUrl,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
     round,
+    seed,
     totalScore
   } from './store';
   import loadRound from './utilities/loadRound';
@@ -26,11 +27,13 @@
 
   let lastSeenSeed;
   const updateUrl = () => {
-    let pathname = `/${$areaCenter.lat},${$areaCenter.lng},${$areaRadius}`;
-    if($round) {
-      pathname += `/${$round.seed}`;
-    }
-    history.replaceState(null, "", window.location.origin + pathname);
+    const url = new URL(window.location.origin);
+    url.pathname = '/game';
+    url.searchParams.set('lat', $areaCenter.lat.toString());
+    url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('radius', $areaRadius.toString());
+    url.searchParams.set('seed', $seed);
+    history.replaceState(null, "", url);
   }
 
   // Update the URL path when the area center changes
@@ -63,7 +66,6 @@
     loadRound({
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
-      gotInitialSeedFromUrl: $gotInitialSeedFromUrl,
       numberOfStreets: $numberOfStreets,
       radius: $areaRadius,
     });
@@ -105,7 +107,7 @@
     if(value.status === "complete") {
       const newPotentialBestScore = computeTotalScore($totalScore, $round);
       if(newPotentialBestScore > $deviceBestScore) {
-        deviceBestScore.update(() => newPotentialBestScore);
+        deviceBestScore.set(newPotentialBestScore);
         round.update((value) => ({
           ...value,
           didSetNewDeviceBestScore: true,
@@ -132,6 +134,7 @@
     <Map />
     <p class="hide-accessibly"><a href="#context-panel">Back to context panel</a></p>
     <HUD />
+    <GeolocationRequester />
   {/if}
 </main>
 
@@ -486,7 +489,7 @@
   .leaflet-control-zoom-out {
     font: bold 18px 'Lucida Console', Monaco, monospace;
     text-indent: 1px;
-    }
+  }
 
   .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
     font-size: 22px;
@@ -824,21 +827,33 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   }
 
+  .leaflet-control-container .leaflet-top.leaflet-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .leaflet-bar a,
+  .leaflet-touch .leaflet-bar a {
+    height: auto !important;
+    width: auto !important;
+    padding: 2px 10px !important;
+  }
+
+  .leaflet-bar a,
+  .leaflet-bar button,
   .leaflet-touch .leaflet-bar a {
     font-size: 1.2rem !important;
-    height: auto !important;
-    width: auto  !important;
-    padding: 2px 10px !important;
-    text-align: left !important;
     font-weight: bold !important;
+    text-align: left !important;
   }
 
 
   @media(min-width: 800px) {
-    .leaflet-touch .leaflet-bar a {
-      padding: 2px 5px !important;
+    .leaflet-bar a,
+    .leaflet-bar button,
+    .leaflet-touch .leaflet-right a {
+      padding: 2px 7px 2px 10px !important;
       font-size: 1rem !important;
-      font-weight: normal !important;
     }
   }
 
@@ -859,6 +874,64 @@
     /* Just hide it rather than have an inaccessible colour contrast */
     display: none;
   }
+
+  .leaflet-locate-control {
+    display: flex;
+    background: #fff;
+    cursor: pointer;
+    /* Copied from leaflet zoom control */
+    font: bold 18px 'Lucida Console', Monaco, monospace;
+  }
+
+  .leaflet-locate-control:hover {
+    background: #f4f4f4;
+  }
+
+  .leaflet-locate-control button,
+  .leaflet-locate-control button:active,
+  .leaflet-locate-control button:focus,
+  .leaflet-locate-control button:hover {
+    all: unset;
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    line-height: 30px;
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  @media(min-width: 800px) {
+    .leaflet-locate-control button,
+    .leaflet-locate-control button:active,
+    .leaflet-locate-control button:focus,
+    .leaflet-locate-control button:hover {
+      padding-left: 5px !important;
+    }
+  }
+
+  .leaflet-locate-control svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 20px;
+  }
+
+  @media(min-width: 800px) {
+    .leaflet-locate-control svg {
+      position: static;
+      transform: none;
+    }
+  }
+
+  .leaflet-locate-control span {
+    position: relative;
+    top: 1px;
+    margin-left: 6px;
+  }
+
 
   .leaflet-container a.leaflet-popup-close-button {
     /* For better colour contrast */
@@ -933,6 +1006,7 @@
     border-radius: 2rem;
     font-size: 1.2rem;
     background: #f0f0f0;
+    background: rgba(240, 240, 240, 0.9);
     text-shadow: 0 1px 2px white;
     cursor: pointer;
   }
@@ -981,6 +1055,15 @@
   button:disabled:active {
     position: relative;
     top: 1px;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .button-group button + button {
+    margin-left: 20px;
   }
 
   .summary-street-tooltip {

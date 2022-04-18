@@ -3,6 +3,25 @@ import ignoreError from "./ignoreError";
 import type { LatLng } from "./types";
 
 const getAreaCenterFromUrl = (regExpToRemove?: RegExp): LatLng | void => {
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  if (urlSearchParams.has("lat") && urlSearchParams.has("lng")) {
+    const lat = urlSearchParams.get("lat");
+    const lng = urlSearchParams.get("lng");
+    if (
+      !/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)/.test(lat) ||
+      !/[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(lng)
+    ) {
+      return;
+    }
+
+    return ignoreError(() => ({
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+    }));
+  }
+
+  /* Legacy URL pattern... */
+
   let pathname = window.location.pathname;
 
   if (regExpToRemove) {

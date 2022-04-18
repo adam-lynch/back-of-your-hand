@@ -14,6 +14,8 @@ To get more detail on why and how I made it, read [Introducing Back Of Your Hand
 
 The game itself also has documentation within; [backofyourhand.com/learn-more](https://backofyourhand.com/learn-more)
 
+The "Show HN" Hacker News post (rank #2 globally): https://news.ycombinator.com/item?id=30733339
+
 ## Contributing
 
 You'd like to improve it? Nice! Thanks. See [CONTRIBUTING.md](./CONTRIBUTING.md).

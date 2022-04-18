@@ -1,12 +1,17 @@
 import { derived, writable } from "svelte/store";
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
 import getInitialAreaRadius from "./utilities/getInitialAreaRadius";
+import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
+import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
 
 export const areaBounds = writable(null);
 export const areaCenter = writable(getInitialAreaCenter());
 export const areaRadius = writable(getInitialAreaRadius());
+export const geolocationRequesterStatus = writable<
+  null | "denied" | "pre-prompt" | "prompted"
+>(null);
 export const deviceBestScore = writable(
   parseInt(
     ignoreError(() => {
@@ -28,21 +33,19 @@ export const deviceBestScore = writable(
 );
 export const chosenPoint = writable(null);
 
-const pathSegments = window.location.pathname
-  .split("/")
-  .filter((segment) => segment && segment !== "geo-lookup-done");
-export const gotInitialSeedFromUrl = writable(
-  pathSegments.length === 2 && pathSegments[1].length
-);
+const seedFromUrl = parseSeedFromUrl();
+export const gotInitialSeedFromUrl = writable(Boolean(seedFromUrl));
 
 export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);
 export const interactionVerb = writable(isTouchDevice() ? "Tap" : "Click");
 export const isLoading = writable(false);
+export const ongoingZoomCount = writable(0);
+export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
 export const isSummaryShown = writable(false);
 export const numberOfStreets = writable(5);
 export const round = writable(null);
-export const seedFromUrl = writable(null);
+export const seed = writable(seedFromUrl || getSeed());
 
 export const orderedQuestions = derived(round, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {

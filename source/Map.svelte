@@ -3,8 +3,9 @@
   import "@maplibre/maplibre-gl-leaflet";
   import debounce from "lodash-es/debounce.js";
   import { onMount } from 'svelte';
-  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, round } from './store';
+  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 
+  import * as locateControl from "./locateControl";
   import drawStreet from "./utilities/drawStreet";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "./utilities/getViewportWidth";
@@ -13,7 +14,11 @@
   import trackEvent from "./utilities/trackEvent";
   import delay from "./utilities/delay";
   import capLng from "./utilities/capLng";
+  import roundNumber from "./utilities/roundNumber";
+  import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
 
+  // @ts-ignore
+  const isProd = isProduction;
   const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
 
   let areaBoundsCircle: leaflet.Circle;
@@ -30,11 +35,10 @@
   let resultFeatureGroup: leaflet.FeatureGroup;
   const getTileLayer = (id: string) => {
     let maptilerBaseUrl = 'https://api.maptiler.com';
-    // @ts-ignore
-    if(isProduction) {
+    if(isProd) {
       maptilerBaseUrl = `${window.location.origin}/maptiler`;
     }
-    const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=gZ3xPIpoAqBYwurn52Nc&ignore`;
+    const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=${isProd ? 'zm4JSszp5sVOISxewKum' : 'EkaPCzaxygV010mMpMr5'}`;
     // @ts-ignore
     return leaflet.maplibreGL({
       accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
@@ -43,8 +47,8 @@
     });
   }
   const tileLayers = {
-    base: getTileLayer("d5e820e5-567f-41f8-a7ae-4803e4392477"),
-    streets: getTileLayer("96a024f1-e71a-48f3-8ea8-9e0744939308"),
+    base: getTileLayer(isProd ? "d5e820e5-567f-41f8-a7ae-4803e4392477" : "48e2a705-ab83-4285-a263-66e82dd5c500"),
+    streets: getTileLayer(isProd ? "96a024f1-e71a-48f3-8ea8-9e0744939308" : "530cdb39-2936-48ad-8995-08fbe6cb072b"),
   };
 
   let isStreetsLayerShown = true;
@@ -79,13 +83,13 @@
 
     if(shouldShowAreaBoundsPopup) {
       newAreaBoundsCenterMarker.bindPopup(
-        `To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map`
+        `To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map.`
       );
       newAreaBoundsCenterMarker.openPopup();
     }
 
     const newAreaBounds = newAreaBoundsCircle.getBounds();
-    areaBounds.update(() => newAreaBounds);
+    areaBounds.set(newAreaBounds);
 
     const boundsToFitInView = newAreaBoundsCircle.getBounds().pad(getBoundsPaddingWhenMarkingBounds());
     map.flyToBounds(boundsToFitInView, {
@@ -129,6 +133,7 @@
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
     hideStreetsLayer();
+    locateControl.remove(map);
     map.fitBounds($areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds($areaBounds.pad(0.12))
@@ -154,8 +159,11 @@
     /* First, compute the distance / score */
 
     const chosenLatLng = chosenPointMarker.getLatLng();
+
+    await waitForAnyOngoingZoomsToEnd();
+
     // This is used to compute the distance but we'll use it to visualize the distance
-    const { distance, latLng: nearestPointOnStreet } = getNearestPointOnPolyLine(
+    const { distance, latLng: nearestPointOnStreet } = await getNearestPointOnPolyLine(
       map,
       chosenLatLng,
       $currentQuestion.street.points as Question["street"]["points"],
@@ -238,7 +246,7 @@
 
     // They're selecting an area
     if(!$isAreaConfirmed) {
-      const updateCenter = () => areaCenter.update(() => reduceLatLngPrecision(latLng));
+      const updateCenter = () => areaCenter.set(reduceLatLngPrecision(latLng));
 
       // If they came in with a seed and then change the area, warn them
       if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
@@ -260,7 +268,7 @@
 
     // They're marking their guess
     if(!$isChosenPointConfirmed) {
-      chosenPoint.update(() => latLng);
+      chosenPoint.set(latLng);
     }
   };
 
@@ -268,28 +276,43 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
 
     const viewportWidth = getViewportWidth();
-    const mapOptions = {
+    const initialMapOptions = {
       boxZoom: false,
-      center: leaflet.latLng($areaCenter),
       doubleClickZoom: false,
       layers: Object.values(tileLayers),
-      minZoom: defaultMinZoom,
       // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-      zoom: viewportWidth > 800 ? 14 : 13.2,
+      maxZoom: 23,
+      minZoom: defaultMinZoom,
       zoomControl: false,
       zoomSnap: 0.25,
     };
 
-    map = leaflet.map(mapElement, mapOptions)
-      .on('click', onMapClick)
-      .addControl(leaflet.control.zoom({
-        position: 'topright',
-        zoomInText: "&#43;" + (viewportWidth > 800 ? " Zoom in" : ""),
-        zoomOutText: "&minus;" + (viewportWidth > 800 ? " Zoom out" : ""),
-      }));
+    const zoomControl = leaflet.control.zoom({
+      position: 'topright',
+      zoomInText: "&#43;" + (viewportWidth > 800 ? "&emsp;Zoom in" : ""),
+      zoomOutText: "&minus;" + (viewportWidth > 800 ? "&emsp;Zoom out" : ""),
+    });
 
-    // zoom to initial bounds (it doesn't seem possible to calculate this before the map is initialized)
-    map.flyToBounds(mapOptions.center.toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()));
+    map = leaflet.map(mapElement, initialMapOptions)
+      .on('click', onMapClick)
+      .on('zoomend', () => {
+        /*
+          I wish we could we track each zoomstart event and wait for an equal
+          number zoomend events, but I've seen this happen:
+          1. zoomstart
+          2. zoomstart
+          3. zoomend
+        */
+        ongoingZoomCount.set(0);
+      })
+      .on('zoomstart', () => {
+        ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
+      })
+      .fitBounds(leaflet.latLng($areaCenter).toBounds($areaRadius).pad(getBoundsPaddingWhenMarkingBounds()))
+      .addControl(zoomControl);
+
+    locateControl.add(map);
+
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
@@ -330,7 +353,7 @@
 
   // Draw all streets on the map, etc.
   const showSummary = debounce(() => {
-    chosenPoint.update(() => null);
+    chosenPoint.set(null);
     resetMap(false, true);
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
@@ -365,6 +388,22 @@
     // Mark the area bounds whenever the center point changes
     areaCenter.subscribe((value) => {
       if(!value) {
+        return;
+      }
+
+      // If it hasn't changed, add a little animation as some feedback for the locate button press
+      const currrentMapCenterLatLng = map.getCenter();
+      const numberOfDecimalPointsToConsider = 4;
+      const hasChanged = roundNumber(currrentMapCenterLatLng.lat, numberOfDecimalPointsToConsider) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) ||
+        roundNumber(currrentMapCenterLatLng.lng, numberOfDecimalPointsToConsider) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
+
+      if(!hasChanged) {
+        map.zoomOut(1, {
+          animate: false,
+        });
+        setTimeout(() => {
+          markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+        }, 250);
         return;
       }
 
@@ -427,6 +466,7 @@
       if(!isConfirmed) {
         map.setMaxBounds(null).setMinZoom(defaultMinZoom);
         resetMap(false, true);
+        locateControl.add(map);
         markBounds(areaSelectionMarkBoundsOptions);
         areaBoundsCircle.setStyle(areaBoundsCircleSelectionStyle);
 
@@ -466,7 +506,8 @@
     grid-area: map;
   }
 
-  :global(.leaflet-gl-layer.maplibre-map) {
+  :global(.leaflet-gl-layer.maplibre-map),
+  :global(.leaflet-gl-layer.maplibregl-map) {
     position: absolute;
     inset: 0;
   }

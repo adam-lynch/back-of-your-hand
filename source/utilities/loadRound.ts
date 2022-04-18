@@ -1,27 +1,17 @@
+import { get } from "svelte/store";
+
 import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
-import getSeed from "./getSeed";
-import { isAreaConfirmed, isLoading, round } from "../store";
+import { isAreaConfirmed, isLoading, round, seed } from "../store";
 import type { LatLng } from "./types";
 
-const [_area, seedFromUrl] = window.location.pathname
-  .split("/")
-  .filter(Boolean);
-
 let getRandomNumber;
-export default async ({
-  areaCenter,
-  areaBounds,
-  gotInitialSeedFromUrl,
-  numberOfStreets,
-  radius,
-}) => {
-  isLoading.update(() => true);
+export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
+  isLoading.set(true);
 
-  const seed = gotInitialSeedFromUrl ? seedFromUrl : getSeed();
   if (!getRandomNumber) {
-    getRandomNumber = getRandomNumberGenerator(seed);
+    getRandomNumber = getRandomNumberGenerator(get(seed));
   }
   const streets = await getData(
     areaBounds,
@@ -36,21 +26,20 @@ export default async ({
     alert(
       "There aren't enough streets in this area. Please select somewhere else"
     );
-    isAreaConfirmed.update(() => false);
-    isLoading.update(() => false);
+    isAreaConfirmed.set(false);
+    isLoading.set(false);
     return;
   }
 
-  round.update(() => ({
+  round.set({
     areaBounds: areaBounds,
     questions: streets.map((street, index) => ({
       street,
       index,
       status: index === 0 ? "ongoing" : "pending",
     })),
-    seed,
     status: "ongoing",
-  }));
+  });
 
-  isLoading.update(() => false);
+  isLoading.set(false);
 };

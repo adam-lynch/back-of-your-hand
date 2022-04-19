@@ -88,6 +88,7 @@
             <h2>Result</h2>
             <p>Distance: {Math.round($currentQuestion.distance.amount).toLocaleString()} {$currentQuestion.distance.unit}</p>
             <p>Score: {$currentQuestion.score}%</p>
+            <p class="subtext">Feel free to zoom in and explore</p>
           </div>
         {/if}
       {/if}

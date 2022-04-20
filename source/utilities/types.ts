@@ -50,6 +50,7 @@ export namespace Overpass {
     geometry: LatLng[];
     id: number;
     tags: {
+      loc_name?: string;
       name: string;
       "name:ga"?: string;
       old_name?: string;

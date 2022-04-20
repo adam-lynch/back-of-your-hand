@@ -19,6 +19,10 @@ const getAlternativeName = (
   if (isUsableAlternativeName(element.tags.old_name, mainName)) {
     return { name: element.tags.old_name };
   }
+
+  if (isUsableAlternativeName(element.tags.loc_name, mainName)) {
+    return { name: element.tags.loc_name };
+  }
 };
 
 // Up to two names

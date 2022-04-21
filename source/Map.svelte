@@ -59,7 +59,7 @@
   }
 
   const getSimpleTileLayer = (name: 'base' | 'labels') => {
-    const baseUrl = isProd || true ? "/carto/{s}" : "https://{s}.basemaps.cartocdn.com"
+    const baseUrl = isProd && false ? "/carto/{s}" : "https://{s}.basemaps.cartocdn.com"
     const nameToUrlMap = {
       base: `${baseUrl}/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png`,
       labels: `${baseUrl}/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png`,

@@ -163,10 +163,11 @@
     await waitForAnyOngoingZoomsToEnd();
 
     // This is used to compute the distance but we'll use it to visualize the distance
+    // TODO
     const { distance, latLng: nearestPointOnStreet } = await getNearestPointOnPolyLine(
       map,
       chosenLatLng,
-      $currentQuestion.street.points as Question["street"]["points"],
+      $currentQuestion.target.points as Question["target"]["points"],
     );
 
     let score = 0;
@@ -206,7 +207,7 @@
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
 
-    const { polyline: streetPolyline } = drawStreet({
+    const { target } = drawStreet({
       layer: resultFeatureGroup,
       question: { ...$currentQuestion, ...currentQuestionUpdates },
       shouldDrawCircle: true
@@ -225,7 +226,7 @@
     ).addTo(resultFeatureGroup);
 
     distancePolyline.bringToFront();
-    streetPolyline.bringToFront();
+    target.bringToFront();
 
     /* Zoom in on result and reveal street names */
 
@@ -359,16 +360,16 @@
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
 
     $round.questions.forEach((question) => {
-      const { polyline } = drawStreet({ color: "#ff2882", layer: resultFeatureGroup, question, });
+      const { target } = drawStreet({ color: "#ff2882", layer: resultFeatureGroup, question, });
       const tooltipContentElement = document.createElement("span");
       tooltipContentElement.classList.add("summary-street-tooltip");
       tooltipContentElement.classList.add("single-line-text-overflow");
-      tooltipContentElement.innerText = `${question.street.name}`;
-      if(question.street.alternativeName) {
-        tooltipContentElement.innerText += ` (${question.street.alternativeName})`;
+      tooltipContentElement.innerText = `${question.target.name}`;
+      if(question.target.alternativeName) {
+        tooltipContentElement.innerText += ` (${question.target.alternativeName})`;
       }
 
-      polyline.bindTooltip(tooltipContentElement, {
+      target.bindTooltip(tooltipContentElement, {
         direction: "top",
         permanent: true,
         // Accommodate larger font-size

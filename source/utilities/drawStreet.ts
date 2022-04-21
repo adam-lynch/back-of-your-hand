@@ -19,51 +19,59 @@ export default ({
   shouldDrawCircle?: boolean;
 }) => {
   const colorToUse = color || getColorFromDistance(question.distance.amount);
-  const polyline = leaflet
-    .polyline(question.street.points, {
+  let target: leaflet.Polygon | leaflet.Polyline;
+
+  if (question.target.isEnclosedArea) {
+    target = leaflet.polygon(question.target.points, {
+      color: colorToUse,
+      fillColor: colorToUse,
+      fillOpacity: 0.1,
+      opacity: 1,
+      weight: 3,
+    });
+  } else {
+    target = leaflet.polyline(question.target.points, {
       color: colorToUse,
       fillColor: "white",
       fillOpacity: 1,
-      weight: Math.max(Math.ceil(question.street.width || 0), 10),
-    })
-    .addTo(layer);
+      weight: Math.max(Math.ceil(question.target.width || 0), 10),
+    });
+  }
 
-  const streetPolylineBounds = polyline.getBounds();
+  target.addTo(layer);
 
-  const streetTurfPoints = question.street.points.reduce(
-    (result, streetPoints) => [
+  const targetBounds = target.getBounds();
+
+  const targetTurfPoints = question.target.points.reduce(
+    (result, targetPoints) => [
       ...result,
-      ...streetPoints.map((streetPoint) =>
-        createPoint(convertLatLngToCoordinates(streetPoint))
+      ...targetPoints.map((targetPoint) =>
+        createPoint(convertLatLngToCoordinates(targetPoint))
       ),
     ],
     []
   );
 
   let circle;
-  if (shouldDrawCircle) {
-    const streetPolylineCenterCoordinates = getCenter.default(
-      createFeatureCollection(streetTurfPoints)
+  if (!question.target.isEnclosedArea && shouldDrawCircle) {
+    const targetCenterCoordinates = getCenter.default(
+      createFeatureCollection(targetTurfPoints)
     ).geometry.coordinates as leaflet.LatLngExpression;
 
     circle = leaflet
-      .circle(streetPolylineCenterCoordinates, {
+      .circle(targetCenterCoordinates, {
         color: colorToUse,
         fillOpacity: 0.1,
         opacity: 0.2,
         radius:
           Math.max(
-            streetPolylineBounds
-              .getNorthWest()
-              .distanceTo(streetPolylineBounds.getSouthEast()),
-            streetPolylineBounds
-              .getNorthEast()
-              .distanceTo(streetPolylineBounds.getSouthWest())
+            targetBounds.getNorthWest().distanceTo(targetBounds.getSouthEast()),
+            targetBounds.getNorthEast().distanceTo(targetBounds.getSouthWest())
           ) * 0.8,
         weight: 1,
       })
       .addTo(layer);
   }
 
-  return { circle, polyline };
+  return { circle, target };
 };

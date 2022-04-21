@@ -13,7 +13,7 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(get(seed));
   }
-  const streets = await getData(
+  const targets = await getData(
     areaBounds,
     areaCenter as LatLng,
     radius,
@@ -21,8 +21,9 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
     numberOfStreets
   );
 
-  if (streets.length < numberOfStreets) {
+  if (targets.length < numberOfStreets) {
     await delay(200); // Make sure zoom-in has finished
+    // TODO
     alert(
       "There aren't enough streets in this area. Please select somewhere else"
     );
@@ -33,8 +34,8 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
 
   round.set({
     areaBounds: areaBounds,
-    questions: streets.map((street, index) => ({
-      street,
+    questions: targets.map((target, index) => ({
+      target,
       index,
       status: index === 0 ? "ongoing" : "pending",
     })),

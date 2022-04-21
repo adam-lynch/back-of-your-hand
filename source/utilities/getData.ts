@@ -7,28 +7,30 @@ import exclusions from "./exclusions";
 import capLng from "./capLng";
 import getNamesFromElement from "./getNamesFromElement";
 import roundNumber from "./roundNumber";
+import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
-  streetElement: Overpass.Element,
-  allStreetElements: Overpass.Element[]
-): Question["street"] => {
+  targetElement: Overpass.Element,
+  allTargetElements: Overpass.Element[]
+): Question["target"] => {
+  console.log(targetElement);
   // Group all streets with the same name
-  const equivalentStreets = [
-    streetElement,
-    ...allStreetElements.filter(
+  const equivalentTargets = [
+    targetElement,
+    ...allTargetElements.filter(
       (element) =>
-        element.id !== streetElement.id &&
-        element.tags.name === streetElement.tags.name
+        element.id !== targetElement.id &&
+        element.tags.name === targetElement.tags.name
     ),
   ];
 
-  const points = equivalentStreets.map(({ geometry }) =>
+  const points = equivalentTargets.map(({ geometry }) =>
     geometry.map(convertOverpassLatLngtoLatLng)
   );
 
   let width: number;
-  const widths = equivalentStreets.map(({ tags }) => {
+  const widths = equivalentTargets.map(({ tags }) => {
     // Parse width; see https://wiki.openstreetmap.org/wiki/Key:width
     const match = tags.width?.match(/^(\d+(\.\d+)?)( ?m)?$/);
     if (match) {
@@ -41,7 +43,8 @@ const adjustStreetDetails = (
   }
 
   return {
-    ...getNamesFromElement(streetElement),
+    ...getNamesFromElement(targetElement),
+    isEnclosedArea: isElementAnEnclosedArea(targetElement, points),
     points,
     width,
   };
@@ -63,6 +66,10 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
       numberOfDecimalPointsToConsider
     ),
   ].join(",");
+
+  const aroundValue = `${radius},${centerLatLng.lat},${capLng(
+    centerLatLng.lng
+  )}`;
 
   // We don't want highway=bus_stop, for example
   const highwayValuesAllowed = [
@@ -86,11 +93,14 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
     streets with a name within N metres around M center point. It also specifies the minimal
     properties we need in the response.
   */
-  const urlPath = `api/interpreter?data=[out:json][bbox:${bboxValue}];(way(around:${radius},${
-    centerLatLng.lat
-  },${capLng(
-    centerLatLng.lng
-  )})[highway~"${highwayRegex}"][name];);out%20tags%20geom;`;
+  const urlPath = [
+    `api/interpreter?data=[out:json][bbox:${bboxValue}];`,
+    `(`,
+    `way(around:${aroundValue})[highway~"${highwayRegex}"][name];`,
+    `way(around:${aroundValue})[name][tourism~"^(aquarium|museum|zoo)$"][wikidata];`,
+    `);`,
+    `out%20tags%20geom;`,
+  ].join("");
 
   // If the query changes, the "cache" is automatically skipped
   const localStorageKey = `overpass-response__${urlPath})`;
@@ -133,7 +143,7 @@ export default async (
   radius: number,
   getRandomNumber: () => number,
   numberOfStreets: number
-): Promise<Question["street"][]> => {
+): Promise<Question["target"][]> => {
   // Get the data
   const { elements } = (await load(
     areaBounds,
@@ -157,7 +167,13 @@ export default async (
     }
   }
 
-  for (let i = 0; i < numberOfStreets; i++) {
+  const example = elements.find(
+    (element) => element.tags.name === "Cork City Gaol"
+  );
+  results.push(example);
+
+  // TODO
+  for (let i = 0; i < numberOfStreets - 1; i++) {
     // Pick a random street from the pot.
     const key = getRandomItem(Object.keys(pot), getRandomNumber);
 

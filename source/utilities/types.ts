@@ -14,9 +14,10 @@ export type Question = {
   index: number;
   score?: number;
   status: "pending" | "ongoing" | "complete" | "skipped";
-  street: {
+  target: {
     alternativeName?: string | void;
     alternativeNameLanguageCode?: string | void;
+    isEnclosedArea: boolean;
     name: string;
     points: LatLng[][];
     width?: number;
@@ -50,6 +51,7 @@ export namespace Overpass {
     geometry: LatLng[];
     id: number;
     tags: {
+      area?: string;
       loc_name?: string;
       name: string;
       "name:ga"?: string;

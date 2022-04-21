@@ -17,9 +17,9 @@
     {#each $orderedQuestions as question}
       <li>
         <span class="results-list__street-name single-line-text-overflow">
-          {question.street.name} 
-          {#if question.street.alternativeName}
-            ({question.street.alternativeName})
+          {question.target.name} 
+          {#if question.target.alternativeName}
+            ({question.target.alternativeName})
           {/if}
         </span>
         <span class="hide-accessibly">(Score: </span>

@@ -59,10 +59,9 @@
   }
 
   const getSimpleTileLayer = (name: 'base' | 'labels') => {
-    const baseUrl = isProd && false ? "/carto/{s}" : "https://{s}.basemaps.cartocdn.com"
     const nameToUrlMap = {
-      base: `${baseUrl}/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png`,
-      labels: `${baseUrl}/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png`,
+      base: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+      labels: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
     };
     return leaflet.tileLayer(nameToUrlMap[name], {
       attribution: "\u003ca href=\"https://carto.com/legal/\" target=\"_blank\"\u003e\u0026copy; Carto\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",

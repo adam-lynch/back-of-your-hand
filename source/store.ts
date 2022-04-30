@@ -1,18 +1,21 @@
+import type leaflet from "leaflet";
 import { derived, writable } from "svelte/store";
+
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
 import getInitialAreaRadius from "./utilities/getInitialAreaRadius";
 import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
 import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
+import type { LatLng, Round } from "./utilities/types";
 
-export const areaBounds = writable(null);
-export const areaCenter = writable(getInitialAreaCenter());
-export const areaRadius = writable(getInitialAreaRadius());
+export const areaBounds = writable<leaflet.LatLngBounds>(null);
+export const areaCenter = writable<LatLng>(getInitialAreaCenter());
+export const areaRadius = writable<number>(getInitialAreaRadius());
 export const geolocationRequesterStatus = writable<
   null | "denied" | "pre-prompt" | "prompted"
 >(null);
-export const deviceBestScore = writable(
+export const deviceBestScore = writable<number | null>(
   parseInt(
     ignoreError(() => {
       let storedValue = localStorage.getItem("deviceBestScore");
@@ -44,8 +47,8 @@ export const ongoingZoomCount = writable(0);
 export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
 export const isSummaryShown = writable(false);
 export const numberOfStreets = writable(5);
-export const round = writable(null);
-export const seed = writable(seedFromUrl || getSeed());
+export const round = writable<Round>(null);
+export const seed = writable<string>(seedFromUrl || getSeed());
 
 export const orderedQuestions = derived(round, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {

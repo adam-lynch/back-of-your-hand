@@ -23,9 +23,8 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
 
   if (targets.length < numberOfStreets) {
     await delay(200); // Make sure zoom-in has finished
-    // TODO
     alert(
-      "There aren't enough streets in this area. Please select somewhere else"
+      "There aren't enough streets or points of interest in this area. Please select somewhere else"
     );
     isAreaConfirmed.set(false);
     isLoading.set(false);

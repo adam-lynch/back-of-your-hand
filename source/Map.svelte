@@ -1,16 +1,16 @@
 <script lang="ts">
   import leaflet from "leaflet";
   import "@maplibre/maplibre-gl-leaflet";
-  import debounce from "lodash-es/debounce.js";
+  import debounce from "lodash/debounce";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 
   import * as locateControl from "./locateControl";
-  import drawStreet from "./utilities/drawStreet";
+  import drawTarget from "./utilities/drawTarget";
   import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "./utilities/getViewportWidth";
   import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
-  import type { Question } from "./utilities/types";
+  import type { Question, Round } from "./utilities/types";
   import trackEvent from "./utilities/trackEvent";
   import delay from "./utilities/delay";
   import capLng from "./utilities/capLng";
@@ -201,8 +201,7 @@
 
     await waitForAnyOngoingZoomsToEnd();
 
-    // This is used to compute the distance but we'll use it to visualize the distance
-    // TODO
+    // This is used to compute the distance but we'll also use it to visualize the distance
     const { distance, latLng: nearestPointOnStreet } = await getNearestPointOnPolyLine(
       map,
       chosenLatLng,
@@ -217,7 +216,7 @@
 
     /* Then update the round / question state */
 
-    const currentQuestionUpdates = {
+    const currentQuestionUpdates: Partial<Question> = {
       distance: {
         amount: distance * 1000,
         unit: "metres",
@@ -226,7 +225,7 @@
       status: "complete",
     };
     round.update((value) => {
-      const result = {
+      const result: Round = {
         ...value,
         questions: value.questions.map((question) => {
           if(question === $currentQuestion) {
@@ -246,26 +245,28 @@
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
 
-    const { target } = drawStreet({
+    const { targetLayer } = drawTarget({
       layer: resultFeatureGroup,
       question: { ...$currentQuestion, ...currentQuestionUpdates },
       shouldDrawCircle: true
     });
 
-    const distancePolyline = leaflet.polyline(
-      [
-        chosenLatLng,
-        nearestPointOnStreet,
-      ],
-      {
-        color: "black",
-        dashArray: "10 10",
-        weight: 1,
-      }
-    ).addTo(resultFeatureGroup);
+    if(distance > 0) {
+      const distancePolyline = leaflet.polyline(
+        [
+          chosenLatLng,
+          nearestPointOnStreet,
+        ],
+        {
+          color: "black",
+          dashArray: "10 10",
+          weight: 1,
+        }
+      ).addTo(resultFeatureGroup);
+      distancePolyline.bringToFront();
+    }
 
-    distancePolyline.bringToFront();
-    target.bringToFront();
+    targetLayer.bringToFront();
 
     /* Zoom in on result and reveal street names */
 
@@ -398,7 +399,7 @@
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
 
     $round.questions.forEach((question) => {
-      const { target } = drawStreet({ color: "#ff2882", layer: resultFeatureGroup, question, });
+      const { targetLayer } = drawTarget({ color: "#ff2882", layer: resultFeatureGroup, question, });
       const tooltipContentElement = document.createElement("span");
       tooltipContentElement.classList.add("summary-street-tooltip");
       tooltipContentElement.classList.add("single-line-text-overflow");
@@ -407,7 +408,7 @@
         tooltipContentElement.innerText += ` (${question.target.alternativeName})`;
       }
 
-      target.bindTooltip(tooltipContentElement, {
+      targetLayer.bindTooltip(tooltipContentElement, {
         direction: "top",
         permanent: true,
         // Accommodate larger font-size

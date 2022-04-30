@@ -1,13 +1,14 @@
+import type leaflet from "leaflet";
+
 import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
-import type { LatLng, Overpass, Question } from "./types";
-
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
 import capLng from "./capLng";
+import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
 import roundNumber from "./roundNumber";
-import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
+import type { LatLng, Overpass, Question } from "./types";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
@@ -51,7 +52,11 @@ const adjustStreetDetails = (
 };
 
 // Actually get the data. Try localStorage, fallback to hitting OpenStreetMap's Overpass API
-const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
+const load = async (
+  areaBounds: leaflet.LatLngBounds,
+  centerLatLng: LatLng,
+  radius: number
+) => {
   // Setting the bounding box is important. It massively speeds up the query
   const numberOfDecimalPointsToConsider = 4;
   let bboxValue = [
@@ -138,7 +143,7 @@ const load = async (areaBounds, centerLatLng: LatLng, radius: number) => {
 };
 
 export default async (
-  areaBounds,
+  areaBounds: leaflet.LatLngBounds,
   centerLatlng: LatLng,
   radius: number,
   getRandomNumber: () => number,

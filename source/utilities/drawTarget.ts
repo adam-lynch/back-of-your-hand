@@ -19,10 +19,10 @@ export default ({
   shouldDrawCircle?: boolean;
 }) => {
   const colorToUse = color || getColorFromDistance(question.distance.amount);
-  let target: leaflet.Polygon | leaflet.Polyline;
+  let targetLayer: leaflet.Polygon | leaflet.Polyline;
 
   if (question.target.isEnclosedArea) {
-    target = leaflet.polygon(question.target.points, {
+    targetLayer = leaflet.polygon(question.target.points, {
       color: colorToUse,
       fillColor: colorToUse,
       fillOpacity: 0.1,
@@ -30,7 +30,7 @@ export default ({
       weight: 3,
     });
   } else {
-    target = leaflet.polyline(question.target.points, {
+    targetLayer = leaflet.polyline(question.target.points, {
       color: colorToUse,
       fillColor: "white",
       fillOpacity: 1,
@@ -38,9 +38,9 @@ export default ({
     });
   }
 
-  target.addTo(layer);
+  targetLayer.addTo(layer);
 
-  const targetBounds = target.getBounds();
+  const targetBounds = targetLayer.getBounds();
 
   const targetTurfPoints = question.target.points.reduce(
     (result, targetPoints) => [
@@ -73,5 +73,5 @@ export default ({
       .addTo(layer);
   }
 
-  return { circle, target };
+  return { circle, targetLayer };
 };

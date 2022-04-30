@@ -4,7 +4,12 @@ export type LatLng = {
   lat: number;
   lng: number;
 };
-export type Coordinates = number[];
+export type PotentiallyNestedLatLngs = (LatLng | (LatLng | LatLng[])[])[];
+export type Coordinates = [number, number];
+export type PotentiallyNestedCoordinates = (
+  | Coordinates
+  | (Coordinates | Coordinates[])[]
+)[];
 
 export type Question = {
   distance?: {

@@ -1,4 +1,4 @@
-import isArray from "lodash/isarray";
+import isArray from "lodash/isArray";
 import capLng from "./capLng";
 import type {
   Coordinates,

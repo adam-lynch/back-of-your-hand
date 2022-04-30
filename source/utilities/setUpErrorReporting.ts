@@ -12,7 +12,7 @@ export const initializeErrorReporting = () => {
       environment: "production",
       // @ts-ignore
       release: COMMIT_ID,
-      tracesSampleRate: 1.0,
+      tracesSampleRate: 0,
     })
   );
 };

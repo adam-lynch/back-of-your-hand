@@ -8,6 +8,7 @@ export const initializeErrorReporting = () => {
   }
   ignoreError(() =>
     Sentry.init({
+      autoSessionTracking: false,
       beforeSend(event) {
         if (event.exception) {
           return event;

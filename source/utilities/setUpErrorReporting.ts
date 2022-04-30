@@ -8,11 +8,18 @@ export const initializeErrorReporting = () => {
   }
   ignoreError(() =>
     Sentry.init({
+      autoSessionTracking: false,
+      beforeSend(event) {
+        if (event.exception) {
+          return event;
+        }
+        return null;
+      },
       dsn: "https://5218ea8159eb46fe953d19a4e7530e94@o1226957.ingest.sentry.io/6372553",
       environment: "production",
       // @ts-ignore
       release: COMMIT_ID,
-      tracesSampleRate: 1.0,
+      tracesSampleRate: 0,
     })
   );
 };

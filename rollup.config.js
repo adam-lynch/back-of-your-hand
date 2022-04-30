@@ -1,4 +1,3 @@
-import autoprefixer from "autoprefixer";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import resolve from "@rollup/plugin-node-resolve";
@@ -7,6 +6,8 @@ import replace from "@rollup/plugin-replace";
 import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 import typescript from "@rollup/plugin-typescript";
+import autoprefixer from "autoprefixer";
+import getCommitId from "git-commit-id";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -89,6 +90,7 @@ export default {
     production && terser(),
 
     replace({
+      COMMIT_ID: `"${getCommitId()?.toString() || "unknown"}"`,
       isProduction: production,
     }),
   ],

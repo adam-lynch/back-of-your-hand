@@ -1,4 +1,7 @@
 import "./utilities/goatcounter.js";
+import { initializeErrorReporting } from "./utilities/setUpErrorReporting";
+
+initializeErrorReporting();
 
 import App from "./App.svelte";
 import FatalErrorDisplay from "./FatalErrorDisplay.svelte";

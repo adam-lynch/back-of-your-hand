@@ -90,7 +90,7 @@ export default {
     production && terser(),
 
     replace({
-      COMMIT_ID: `"${getCommitId()?.toString() || "unknown"}"`,
+      COMMIT_ID: `"${getCommitId() || "unknown"}"`,
       isProduction: production,
     }),
   ],

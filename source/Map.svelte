@@ -1,7 +1,7 @@
 <script lang="ts">
   import leaflet from "leaflet";
   import "@maplibre/maplibre-gl-leaflet";
-  import debounce from "lodash/debounce";
+  import debounce from "lodash-es/debounce.js";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 

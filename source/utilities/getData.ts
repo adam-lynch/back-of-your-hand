@@ -172,13 +172,7 @@ export default async (
     }
   }
 
-  const example = elements.find(
-    (element) => element.tags.name === "Cork City Gaol"
-  );
-  results.push(example);
-
-  // TODO
-  for (let i = 0; i < numberOfStreets - 1; i++) {
+  for (let i = 0; i < numberOfStreets; i++) {
     // Pick a random street from the pot.
     const key = getRandomItem(Object.keys(pot), getRandomNumber);
 

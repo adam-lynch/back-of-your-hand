@@ -19,6 +19,8 @@
 
   // @ts-ignore
   const isProd = isProduction;
+  const shouldUseSimpleTileLayers = true;
+  const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
   const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
 
   let areaBoundsCircle: leaflet.Circle;
@@ -32,26 +34,52 @@
   let hasShownPredefinedAreaChangedWarning: boolean;
   let map: leaflet.Map;
   let mapElement: HTMLElement;
+  const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup;
-  const getTileLayer = (id: string) => {
+
+  const getMapTilerTileLayer = (name: 'base' | 'labels') => {
+    const nameToMapTilerIdMap = {
+      base: isProd ? "d5e820e5-567f-41f8-a7ae-4803e4392477" : "48e2a705-ab83-4285-a263-66e82dd5c500",
+      labels: isProd ? "96a024f1-e71a-48f3-8ea8-9e0744939308" : "530cdb39-2936-48ad-8995-08fbe6cb072b",
+    };
+
     let maptilerBaseUrl = 'https://api.maptiler.com';
     if(isProd) {
       maptilerBaseUrl = `${window.location.origin}/maptiler`;
     }
-    const styleUrl = `${maptilerBaseUrl}/maps/${id}/style.json?key=${isProd ? 'zm4JSszp5sVOISxewKum' : 'EkaPCzaxygV010mMpMr5'}`;
+    const styleUrl = `${maptilerBaseUrl}/maps/${nameToMapTilerIdMap[name]}/style.json?key=${isProd ? 'zm4JSszp5sVOISxewKum' : 'EkaPCzaxygV010mMpMr5'}`;
     // @ts-ignore
     return leaflet.maplibreGL({
       accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
       attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+      maxNativeZoom: 23, // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
+      maxZoom: maxMapZoom,
       style: styleUrl,
     });
   }
-  const tileLayers = {
-    base: getTileLayer(isProd ? "d5e820e5-567f-41f8-a7ae-4803e4392477" : "48e2a705-ab83-4285-a263-66e82dd5c500"),
-    streets: getTileLayer(isProd ? "96a024f1-e71a-48f3-8ea8-9e0744939308" : "530cdb39-2936-48ad-8995-08fbe6cb072b"),
+
+  const getSimpleTileLayer = (name: 'base' | 'labels') => {
+    const nameToUrlMap = {
+      base: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+      labels: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
+    };
+    return leaflet.tileLayer(nameToUrlMap[name], {
+      attribution: "\u003ca href=\"https://carto.com/legal/\" target=\"_blank\"\u003e\u0026copy; Carto\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+      maxNativeZoom: 18,
+      maxZoom: maxMapZoom,
+    })
   };
 
-  let isStreetsLayerShown = true;
+  const getTileLayer = (name: 'base' | 'labels') => {
+    return shouldUseSimpleTileLayers ? getSimpleTileLayer(name) : getMapTilerTileLayer(name);
+  }
+
+  const tileLayers = {
+    base: getTileLayer("base"),
+    labels: getTileLayer("labels"),
+  };
+
+  let areElementLabelsShown = true;
 
   // Used when intializing, plus when updating its style (when starting a new round)
   const areaBoundsCircleSelectionStyle = {
@@ -107,32 +135,43 @@
     areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
-  const hideStreetsLayer = () => {
-    if(!isStreetsLayerShown) {
+  const hideElementLabels = async (): Promise<void> => {
+    if(!areElementLabelsShown) {
       return;
     }
-    map.removeLayer(tileLayers.streets);
-    isStreetsLayerShown = false;
+
+    if(!shouldAlwaysShowBaseTileLayer) {
+      await new Promise<void>((resolve) => {
+        tileLayers.base
+          .once("add", () => resolve())
+          .addTo(map);
+      });
+    }
+
+    map.removeLayer(tileLayers.labels);
+    areElementLabelsShown = false;
   };
 
-  const showStreetsLayer = (): Promise<void> => {
-    return new Promise((resolve) => {
-      if(isStreetsLayerShown) {
-        resolve();
-        return;
-      }
-      tileLayers.streets
-        .once("add", () => {
-          isStreetsLayerShown = true;
-          resolve()
-        })
+  const showElementLabels = async (): Promise<void> => {
+    if(areElementLabelsShown) {
+      return;
+    }
+    
+    await new Promise<void>((resolve) => {
+      tileLayers.labels
+        .once("add", () => resolve())
         .addTo(map);
     });
+
+    if(!shouldAlwaysShowBaseTileLayer) {
+      map.removeLayer(tileLayers.base);
+    }
+    areElementLabelsShown = true;
   };
 
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
-    hideStreetsLayer();
+    hideElementLabels();
     locateControl.remove(map);
     map.fitBounds($areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
@@ -230,7 +269,7 @@
 
     /* Zoom in on result and reveal street names */
 
-    showStreetsLayer();
+    showElementLabels();
     await delay(100);
     if(!resultFeatureGroup) {
       return;
@@ -280,9 +319,9 @@
     const initialMapOptions = {
       boxZoom: false,
       doubleClickZoom: false,
-      layers: Object.values(tileLayers),
-      // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-      maxZoom: 23,
+      layers: shouldAlwaysShowBaseTileLayer
+        ? Object.values(tileLayers)
+        : tileLayers.labels,
       minZoom: defaultMinZoom,
       zoomControl: false,
       zoomSnap: 0.25,
@@ -333,10 +372,9 @@
   // Remove polylines, markers, etc. from map. Used when moving to a new street, etc.
   const resetMap = (shouldFitBounds = true, shouldShowStreets = false) => {
     if(shouldShowStreets) {
-      showStreetsLayer();
-    }
-    else {
-      hideStreetsLayer();
+      showElementLabels();
+    } else {
+      hideElementLabels();
     }
 
     if(resultFeatureGroup) {
@@ -434,12 +472,11 @@
 
       // Zoom in a litle to help them see how close they really are
       const currentZoom = map.getZoom();
-      const maxZoom = map.getMaxZoom();
       const minDesiredZoom = 17;
-      if(currentZoom < maxZoom - 5) {
+      if(currentZoom < 18) {
         // Keep the new zoom within the max and min zoom levels we'd like
         let newZoom = Math.max(
-          Math.min(currentZoom + 3, maxZoom),
+          Math.min(currentZoom + 3, maxMapZoom),
           minDesiredZoom,
         );
         setTimeout(() => {

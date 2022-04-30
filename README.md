@@ -6,6 +6,10 @@ How well do you know your area? Test your knowledge by locating streets.
 
 ---
 
+Sponsored by [MapTiler](https://maptiler.com)
+
+---
+
 This is a map-based game I made for my dad for Christmas. You're given random street names and have to locate them on the map.
 
 Try it out at [backofyourhand.com](https://backofyourhand.com)

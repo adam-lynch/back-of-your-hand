@@ -15,7 +15,6 @@ const adjustStreetDetails = (
   targetElement: Overpass.Element,
   allTargetElements: Overpass.Element[]
 ): Question["target"] => {
-  console.log(targetElement);
   // Group all streets with the same name
   const equivalentTargets = [
     targetElement,

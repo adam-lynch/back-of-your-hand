@@ -8,6 +8,7 @@ import { terser } from "rollup-plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import autoprefixer from "autoprefixer";
 import getCommitId from "git-commit-id";
+const { visualizer } = require("rollup-plugin-visualizer");
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -93,6 +94,8 @@ export default {
       COMMIT_ID: `"${getCommitId() || "unknown"}"`,
       isProduction: production,
     }),
+
+    production && visualizer(),
   ],
   watch: {
     clearScreen: false,

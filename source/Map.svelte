@@ -1,7 +1,6 @@
 <script lang="ts">
   import leaflet from "leaflet";
-  import "@maplibre/maplibre-gl-leaflet";
-  import debounce from "lodash-es/debounce.js";
+  import debounce from "lodash/debounce";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
 
@@ -17,8 +16,6 @@
   import roundNumber from "./utilities/roundNumber";
   import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
 
-  // @ts-ignore
-  const isProd = isProduction;
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
   const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
@@ -37,28 +34,7 @@
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup;
 
-  const getMapTilerTileLayer = (name: 'base' | 'labels') => {
-    const nameToMapTilerIdMap = {
-      base: isProd ? "d5e820e5-567f-41f8-a7ae-4803e4392477" : "48e2a705-ab83-4285-a263-66e82dd5c500",
-      labels: isProd ? "96a024f1-e71a-48f3-8ea8-9e0744939308" : "530cdb39-2936-48ad-8995-08fbe6cb072b",
-    };
-
-    let maptilerBaseUrl = 'https://api.maptiler.com';
-    if(isProd) {
-      maptilerBaseUrl = `${window.location.origin}/maptiler`;
-    }
-    const styleUrl = `${maptilerBaseUrl}/maps/${nameToMapTilerIdMap[name]}/style.json?key=${isProd ? 'zm4JSszp5sVOISxewKum' : 'EkaPCzaxygV010mMpMr5'}`;
-    // @ts-ignore
-    return leaflet.maplibreGL({
-      accessToken: "pk.eyJ1IjoiYWRhbWx5bmNoMDEwIiwiYSI6ImNsMG1zaGoyYjA0OW8zYm16cWR6cWUzd2cifQ.Sqpusys9EbyfRjsA7u85aw",
-      attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
-      maxNativeZoom: 23, // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-      maxZoom: maxMapZoom,
-      style: styleUrl,
-    });
-  }
-
-  const getSimpleTileLayer = (name: 'base' | 'labels') => {
+  const getTileLayer = (name: 'base' | 'labels') => {
     const nameToUrlMap = {
       base: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
       labels: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
@@ -69,10 +45,6 @@
       maxZoom: maxMapZoom,
     })
   };
-
-  const getTileLayer = (name: 'base' | 'labels') => {
-    return shouldUseSimpleTileLayers ? getSimpleTileLayer(name) : getMapTilerTileLayer(name);
-  }
 
   const tileLayers = {
     base: getTileLayer("base"),
@@ -322,7 +294,7 @@
       doubleClickZoom: false,
       layers: shouldAlwaysShowBaseTileLayer
         ? Object.values(tileLayers)
-        : tileLayers.labels,
+        : [tileLayers.labels],
       minZoom: defaultMinZoom,
       zoomControl: false,
       zoomSnap: 0.25,
@@ -543,11 +515,5 @@
     height: 100%;
     flex: 1;
     grid-area: map;
-  }
-
-  :global(.leaflet-gl-layer.maplibre-map),
-  :global(.leaflet-gl-layer.maplibregl-map) {
-    position: absolute;
-    inset: 0;
   }
 </style>

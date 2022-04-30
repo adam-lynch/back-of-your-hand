@@ -37,13 +37,11 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "@maplibre/maplibre-gl-leaflet": "^0.0.15",
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "@turf/center": "^6.0.1",
     "leaflet": "^1.7.1",
-    "lodash-es": "^4.17.15",
-    "maplibre-gl": "^2.1.7",
+    "lodash": "^4.17.15",
     "point-in-polygon": "^1.1.0",
     "turf-featurecollection": "^1.0.1",
     "turf-point": "^2.0.1",

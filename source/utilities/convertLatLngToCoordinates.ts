@@ -7,27 +7,23 @@ import type {
   PotentiallyNestedLatLngs,
 } from "./types";
 
-const convertLatLngToCoordinates = (
-  latlng: LatLng,
-  manipulator: (coordinate: number) => number = (input) => input
-): Coordinates => [manipulator(latlng.lat), manipulator(capLng(latlng.lng))];
+const convertLatLngToCoordinates = (latlng: LatLng): Coordinates => [
+  latlng.lat,
+  capLng(latlng.lng),
+];
 
 export const convertLatLngsToCoordinates = (
-  latLngs: PotentiallyNestedLatLngs,
-  manipulator: (coordinate: number) => number = (input) => input
+  latLngs: PotentiallyNestedLatLngs
 ): PotentiallyNestedCoordinates => {
   const result: PotentiallyNestedCoordinates = [];
 
   for (const item of latLngs) {
     if (isArray(item)) {
       result.push(
-        convertLatLngsToCoordinates(
-          item,
-          manipulator
-        ) as PotentiallyNestedCoordinates[0]
+        convertLatLngsToCoordinates(item) as PotentiallyNestedCoordinates[0]
       );
     } else {
-      result.push(convertLatLngToCoordinates(item, manipulator));
+      result.push(convertLatLngToCoordinates(item));
     }
   }
 

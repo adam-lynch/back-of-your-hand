@@ -4,7 +4,12 @@ export type LatLng = {
   lat: number;
   lng: number;
 };
-export type Coordinates = number[];
+export type PotentiallyNestedLatLngs = (LatLng | (LatLng | LatLng[])[])[];
+export type Coordinates = [number, number];
+export type PotentiallyNestedCoordinates = (
+  | Coordinates
+  | (Coordinates | Coordinates[])[]
+)[];
 
 export type Question = {
   distance?: {
@@ -14,9 +19,10 @@ export type Question = {
   index: number;
   score?: number;
   status: "pending" | "ongoing" | "complete" | "skipped";
-  street: {
+  target: {
     alternativeName?: string | void;
     alternativeNameLanguageCode?: string | void;
+    isEnclosedArea: boolean;
     name: string;
     points: LatLng[][];
     width?: number;
@@ -50,6 +56,7 @@ export namespace Overpass {
     geometry: LatLng[];
     id: number;
     tags: {
+      area?: string;
       loc_name?: string;
       name: string;
       "name:ga"?: string;

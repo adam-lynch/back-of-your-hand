@@ -5,6 +5,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "lint": "tsc --noEmit",
     "start": "sirv public --dev --host --port 49171 --single",
     "test": "echo 'No tests yet, but I'm open to it'",
     "validate": "svelte-check"
@@ -19,6 +20,7 @@
     "@rollup/plugin-typescript": "^6.0.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/leaflet": "^1.5.19",
+    "@types/lodash": "^4.14.182",
     "@types/turf": "^3.5.32",
     "autoprefixer": "^10.1.0",
     "git-commit-id": "^2.0.1",
@@ -39,7 +41,8 @@
     "@sentry/tracing": "^6.19.7",
     "@turf/center": "^6.0.1",
     "leaflet": "^1.7.1",
-    "lodash-es": "^4.17.15",
+    "lodash": "^4.17.15",
+    "point-in-polygon": "^1.1.0",
     "turf-featurecollection": "^1.0.1",
     "turf-point": "^2.0.1",
     "wrangler": "^0.0.17"

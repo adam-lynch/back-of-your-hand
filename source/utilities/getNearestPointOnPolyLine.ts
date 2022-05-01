@@ -1,5 +1,6 @@
 import leaflet from "leaflet";
 import convertLatLngToLayerPoint from "./convertLatLngToLayerPoint.ts";
+import isLatLngInsidePolygon from "./isLatLngInsidePolygon";
 
 import type { LatLng } from "./types";
 
@@ -7,7 +8,14 @@ export default async (
   map: leaflet.Map,
   latLng: LatLng,
   polyLinePoints: LatLng[][]
-): Promise<{ distance: number; latLng: leaflet.LatLng }> => {
+): Promise<
+  | { distance: number; latLng: leaflet.LatLng }
+  | { distance: 0; latLng?: leaflet.LatLng }
+> => {
+  if (isLatLngInsidePolygon(latLng, polyLinePoints)) {
+    return { distance: 0 };
+  }
+
   const point = await convertLatLngToLayerPoint(latLng, map);
   const flattenedPolyLinePoints = polyLinePoints.flat(1);
 

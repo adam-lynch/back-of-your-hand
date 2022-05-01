@@ -25,18 +25,21 @@ const getAlternativeName = (
   }
 };
 
-// Up to two names
-export default (
-  element: Overpass.Element
-): {
-  alternativeName: string | void;
-  alternativeNameLanguageCode: string | void;
+type Result = {
+  alternativeName?: string;
+  alternativeNameLanguageCode?: string;
   name: string;
-} => {
+};
+
+// Up to two names
+export default (element: Overpass.Element): Result => {
+  const result: Result = { name: element.tags.name };
+
   const alternativeNameDetails = getAlternativeName(element, element.tags.name);
-  return {
-    alternativeName: alternativeNameDetails?.name,
-    alternativeNameLanguageCode: alternativeNameDetails?.languageCode,
-    name: element.tags.name,
-  };
+  if (alternativeNameDetails) {
+    result.alternativeName = alternativeNameDetails.name;
+    result.alternativeNameLanguageCode = alternativeNameDetails.languageCode;
+  }
+
+  return result;
 };

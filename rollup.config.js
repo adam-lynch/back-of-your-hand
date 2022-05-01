@@ -11,6 +11,7 @@ import getCommitId from "git-commit-id";
 const { visualizer } = require("rollup-plugin-visualizer");
 
 const production = !process.env.ROLLUP_WATCH;
+const shouldOutputSourceMaps = true;
 
 function serve() {
   let server;
@@ -40,7 +41,7 @@ function serve() {
 export default {
   input: "source/index.ts",
   output: {
-    sourcemap: !production,
+    sourcemap: shouldOutputSourceMaps,
     format: "iife",
     name: "app",
     file: "public/build/bundle.js",
@@ -59,7 +60,7 @@ export default {
         postcss: {
           plugins: [autoprefixer()],
         },
-        sourceMap: !production,
+        sourceMap: shouldOutputSourceMaps,
       }),
     }),
 
@@ -74,8 +75,8 @@ export default {
     }),
     commonjs(),
     typescript({
-      sourceMap: !production,
-      inlineSources: !production,
+      sourceMap: shouldOutputSourceMaps,
+      inlineSources: shouldOutputSourceMaps,
     }),
 
     // In dev mode, call `npm run start` once

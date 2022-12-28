@@ -61,6 +61,7 @@
     await waitForAnyOngoingZoomsToEnd();
 
     isAreaConfirmed.set(true);
+    areSettingsShown.set(false);
     trackEvent({ name: "start", title: "Start" });
   };
 
@@ -221,16 +222,39 @@
     display: flex;
     flex-direction: column;
     grid-area: context-panel;
+    padding: 1rem;
     max-height: 68vh;
     overflow-x: hidden;
     z-index: 999999;
     background: #37003c;
     box-shadow: 0 -2px 2px rgba(0,0,0,0.3);
     color: #e6e4e4;
+
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+    scrollbar-width: thin;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar {
+    height: 14px;
+    width: 14px;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.6);
+    background-clip: padding-box;
+    border: 5px solid rgba(0,0,0,0);
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.8);
   }
 
   .context-panel {
-    margin: 1rem;
     min-width: 40vw;
   }
 
@@ -257,7 +281,7 @@
   (min-width: 350px) and (max-height: 237px),
   (min-width: 300px) and (max-height: 198px) {
     .context-panel-wrapper {
-      max-height: auto;
+      max-height: none;
     }
     .context-panel {
       min-width: auto;
@@ -303,17 +327,17 @@
 
   .call-to-action {
     flex: 1;
-    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
   a:focus,
   button:focus {
     /* Better contrast */
     box-shadow: 0 0 0 3px #ff0, 0 0 0 4px rgba(0,0,0,.2);
-  }
-  .call-to-action > a,
-  .call-to-action > button {
-    margin: 1.5rem 1rem 0;
   }
 
   .call-to-action > a {
@@ -325,20 +349,6 @@
     position: relative;
     bottom: 1px;
     text-decoration: underline;
-  }
-
-  .call-to-action > button {
-    margin-left: 0;
-  }
-
-  .call-to-action > button + a,
-  .call-to-action > button + button {
-    margin-right: 0;
-  }
-
-  .call-to-action > button ~ a,
-  .call-to-action > button ~ button {
-    margin-top: 1rem;
   }
 
   .settings-button span {
@@ -353,6 +363,7 @@
 
   .subtext {
     display: block;
+    min-width: 100%;
     font-size: 0.7rem;
     line-height: 1.2;
     margin: 0.5rem 0 0 0;

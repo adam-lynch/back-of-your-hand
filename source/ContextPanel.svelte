@@ -1,8 +1,13 @@
 <script lang="ts">
-  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, numberOfStreets, round } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
+
+  const onNumberOFQuestionsUpdated = () => {
+    const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
+    numberOfStreets.update(() => amount);
+  };
 
   const onRadiusChanged = () => {
     const radius = parseInt((document.getElementById("radiusSlider") as HTMLInputElement).value);
@@ -141,7 +146,7 @@
 
       <div>
         <label for="radiusSlider">Radius of area</label>
-        <div class="subtext" id="radius">{$areaRadius} m</div>
+        <div class="subtext">{$areaRadius} m</div>
         <input
           type="range"
           min="100"
@@ -151,6 +156,20 @@
           class="slider"
           id="radiusSlider"
           on:input={onRadiusChanged}>
+      </div>
+
+      <div>
+        <label for="numberOfQuestionsSlider">Questions per round</label>
+        <div class="subtext">{$numberOfStreets}</div>
+        <input
+          type="range"
+          min="5"
+          max="30"
+          value="{$numberOfStreets}"
+          step="5"
+          class="slider"
+          id="numberOfQuestionsSlider"
+          on:input={onNumberOFQuestionsUpdated}>
       </div>
 
       <div class="call-to-action">
@@ -175,15 +194,16 @@
     display: flex;
     flex-direction: column;
     grid-area: context-panel;
-    overflow: hidden;
+    max-height: 48vh;
+    overflow-x: hidden;
     z-index: 999999;
-    padding: 1rem;
     background: #37003c;
     box-shadow: 0 -2px 2px rgba(0,0,0,0.3);
     color: #e6e4e4;
   }
 
   .context-panel {
+    margin: 1rem;
     min-width: 40vw;
   }
 
@@ -209,6 +229,9 @@
   (min-width: 400px) and (max-height: 277px),
   (min-width: 350px) and (max-height: 237px),
   (min-width: 300px) and (max-height: 198px) {
+    .context-panel-wrapper {
+      max-height: auto;
+    }
     .context-panel {
       min-width: auto;
     }
@@ -258,14 +281,13 @@
 
   a:focus,
   button:focus {
-    /* Better constrast */
+    /* Better contrast */
     box-shadow: 0 0 0 3px #ff0, 0 0 0 4px rgba(0,0,0,.2);
   }
 
   .call-to-action > a {
     color: white;
     text-decoration: none;
-    display: none;
   }
 
   .call-to-action > a:hover {

@@ -31,6 +31,7 @@
     url.pathname = '/game';
     url.searchParams.set('lat', $areaCenter.lat.toString());
     url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
     url.searchParams.set('radius', $areaRadius.toString());
     url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
@@ -50,6 +51,14 @@
   })
 
   areaRadius.subscribe((value: number) => {
+    if (!value) {
+      return;
+    }
+
+    updateUrl();
+  })
+
+  numberOfStreets.subscribe((value: number) => {
     if (!value) {
       return;
     }

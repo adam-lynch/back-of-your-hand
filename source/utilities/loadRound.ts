@@ -23,9 +23,15 @@ export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
 
   if (targets.length < numberOfStreets) {
     await delay(200); // Make sure zoom-in has finished
-    alert(
-      "There aren't enough streets or points of interest in this area. Please select somewhere else"
-    );
+    if (targets.length < 5) {
+      alert(
+        "There aren't enough streets or points of interest in this area (minimum 5 required). Please select somewhere else"
+      );
+    } else {
+      alert(
+        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfStreets})`
+      );
+    }
     isAreaConfirmed.set(false);
     isLoading.set(false);
     return;

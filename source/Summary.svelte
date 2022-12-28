@@ -7,7 +7,7 @@
 <div class="summary">
   <h2 class="hide-accessibly">Summary</h2>
   <p class="points-total">
-    <span>Total score: {computeTotalScore($totalScore, $round)}%</span>
+    <span>Overall score: {computeTotalScore($totalScore, $round)}%</span>
     {#if $round.didSetNewDeviceBestScore}
       <span class="tada">New personal best!</span>
     {/if}

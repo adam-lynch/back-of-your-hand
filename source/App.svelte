@@ -1015,7 +1015,7 @@
     border-radius: 2rem;
     font-size: 1.2rem;
     background: #f0f0f0;
-    background: rgba(240, 240, 240, 0.9);
+    background: rgba(240, 240, 240, 0.85);
     text-shadow: 0 1px 2px white;
     cursor: pointer;
   }

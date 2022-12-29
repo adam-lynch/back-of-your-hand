@@ -1,8 +1,16 @@
 <script lang="ts">
-  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, round } from './store';
+  import { writable } from 'svelte/store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, numberOfStreets, round } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
+
+  const areSettingsShown = writable(false);
+
+  const onNumberOFQuestionsUpdated = () => {
+    const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
+    numberOfStreets.update(() => amount);
+  };
 
   const onRadiusChanged = () => {
     const radius = parseInt((document.getElementById("radiusSlider") as HTMLInputElement).value);
@@ -53,7 +61,22 @@
     await waitForAnyOngoingZoomsToEnd();
 
     isAreaConfirmed.set(true);
+    areSettingsShown.set(false);
     trackEvent({ name: "start", title: "Start" });
+  };
+
+  areSettingsShown.subscribe((value) => {
+    if (!value) {
+      return;
+    }
+    // 10 is arbitrary
+    setTimeout(() => {
+      document.getElementById('start-call-to-action').scrollIntoView(true);
+    }, 10);
+  })
+
+  const onSettingsButtonClicked = () => {
+    areSettingsShown.update((previous) => !previous);
   };
 </script>
 
@@ -139,25 +162,17 @@
         <p class="subtext">Personal best score: {$deviceBestScore}%</p>
       {/if}
 
-      <div>
-        <label for="radiusSlider">Radius of area</label>
-        <div class="subtext" id="radius">{$areaRadius} m</div>
-        <input
-          type="range"
-          min="100"
-          max="5000"
-          value="{$areaRadius}"
-          step="100"
-          class="slider"
-          id="radiusSlider"
-          on:input={onRadiusChanged}>
-      </div>
-
-      <div class="call-to-action">
+      <div class="call-to-action" id="start-call-to-action">
         <button
           class="button--primary"
           on:click={onStartClicked}>
           Start
+        </button>
+
+        <button
+          class="button--secondary settings-button"
+          on:click={onSettingsButtonClicked}>
+          Settings {#if $areSettingsShown}<span>&times;</span>{/if}
         </button>
 
         <a
@@ -166,6 +181,38 @@
           <span class="hide-accessibly"> (how to play, etc)</span>
         </a>
       </div>
+
+      {#if $areSettingsShown}
+        <div class="settings">
+          <div>
+            <label for="radiusSlider">Radius of area</label>
+            <div class="subtext">{$areaRadius} m</div>
+            <input
+              type="range"
+              min="100"
+              max="5000"
+              value="{$areaRadius}"
+              step="100"
+              class="slider"
+              id="radiusSlider"
+              on:input={onRadiusChanged}>
+          </div>
+    
+          <div>
+            <label for="numberOfQuestionsSlider">Questions per round</label>
+            <div class="subtext">{$numberOfStreets}</div>
+            <input
+              type="range"
+              min="5"
+              max="30"
+              value="{$numberOfStreets}"
+              step="5"
+              class="slider"
+              id="numberOfQuestionsSlider"
+              on:input={onNumberOFQuestionsUpdated}>
+          </div>
+        </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -175,12 +222,36 @@
     display: flex;
     flex-direction: column;
     grid-area: context-panel;
-    overflow: hidden;
-    z-index: 999999;
     padding: 1rem;
+    max-height: 68vh;
+    overflow-x: hidden;
+    z-index: 999999;
     background: #37003c;
     box-shadow: 0 -2px 2px rgba(0,0,0,0.3);
     color: #e6e4e4;
+
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+    scrollbar-width: thin;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar {
+    height: 14px;
+    width: 14px;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.6);
+    background-clip: padding-box;
+    border: 5px solid rgba(0,0,0,0);
+  }
+
+  .context-panel-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.8);
   }
 
   .context-panel {
@@ -209,6 +280,9 @@
   (min-width: 400px) and (max-height: 277px),
   (min-width: 350px) and (max-height: 237px),
   (min-width: 300px) and (max-height: 198px) {
+    .context-panel-wrapper {
+      max-height: none;
+    }
     .context-panel {
       min-width: auto;
     }
@@ -253,48 +327,58 @@
 
   .call-to-action {
     flex: 1;
-    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
   a:focus,
   button:focus {
-    /* Better constrast */
+    /* Better contrast */
     box-shadow: 0 0 0 3px #ff0, 0 0 0 4px rgba(0,0,0,.2);
   }
 
   .call-to-action > a {
-    color: white;
+    color: rgba(255,255,255,0.85);
     text-decoration: none;
-    display: none;
   }
-
+  
   .call-to-action > a:hover {
     position: relative;
     bottom: 1px;
     text-decoration: underline;
   }
 
-  .call-to-action > a,
-  .call-to-action > button {
-    margin: 1.5rem 1rem 0 0;
-  }
-
-  .call-to-action > button + a,
-  .call-to-action > button + button {
-    margin-right: 0;
-  }
-
-  .call-to-action > button ~ a,
-  .call-to-action > button ~ button {
-    margin-top: 1rem;
+  .settings-button span {
+    position: relative;
+    top: 1px;
+    opacity: 0.5;
+    margin-left: 0.25rem;
+    font-size: 1.3rem;
+    line-height: 0;
+    text-shadow: none;
   }
 
   .subtext {
     display: block;
+    min-width: 100%;
     font-size: 0.7rem;
     line-height: 1.2;
     margin: 0.5rem 0 0 0;
     color: rgba(255,255,255,0.5);
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .settings > * {
+    flex: 1;
   }
 
   .street-sign-wrapper {

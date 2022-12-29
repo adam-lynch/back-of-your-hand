@@ -31,6 +31,7 @@
     url.pathname = '/game';
     url.searchParams.set('lat', $areaCenter.lat.toString());
     url.searchParams.set('lng', $areaCenter.lng.toString());
+    url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
     url.searchParams.set('radius', $areaRadius.toString());
     url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
@@ -50,6 +51,14 @@
   })
 
   areaRadius.subscribe((value: number) => {
+    if (!value) {
+      return;
+    }
+
+    updateUrl();
+  })
+
+  numberOfStreets.subscribe((value: number) => {
     if (!value) {
       return;
     }
@@ -1006,7 +1015,7 @@
     border-radius: 2rem;
     font-size: 1.2rem;
     background: #f0f0f0;
-    background: rgba(240, 240, 240, 0.9);
+    background: rgba(240, 240, 240, 0.85);
     text-shadow: 0 1px 2px white;
     cursor: pointer;
   }

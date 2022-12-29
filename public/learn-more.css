@@ -508,3 +508,7 @@ img {
 header {
   border-bottom: 2px dashed gray;
 }
+
+.table-of-contents li > * {
+  vertical-align: top;
+}

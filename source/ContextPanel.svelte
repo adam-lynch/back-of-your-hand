@@ -370,6 +370,17 @@
     color: rgba(255,255,255,0.5);
   }
 
+  .settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .settings > * {
+    flex: 1;
+  }
+
   .street-sign-wrapper {
     margin-top: 1rem;
   }

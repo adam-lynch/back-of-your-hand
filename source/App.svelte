@@ -1,4 +1,6 @@
 <script lang="ts">
+  import debounce from "lodash/debounce";
+
   import GeolocationRequester from "./GeolocationRequester.svelte";
   import HUD from "./HUD.svelte";
   import ContextPanel from "./ContextPanel.svelte";
@@ -27,7 +29,7 @@
   export let unhandledError = null;
 
   let lastSeenSeed;
-  const updateUrl = () => {
+  const updateUrl = debounce(() => {
     const url = new URL(window.location.origin);
     url.pathname = '/game';
     url.searchParams.set('difficulty', $difficulty);
@@ -37,7 +39,7 @@
     url.searchParams.set('radius', $areaRadius.toString());
     url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
-  }
+  }, 250, { trailing: true });
 
   // Update the URL path when the area center changes
   areaCenter.subscribe((value: LatLng) => {

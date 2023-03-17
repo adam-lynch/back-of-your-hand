@@ -9,6 +9,7 @@ import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
 import roundNumber from "./roundNumber";
 import type { LatLng, Overpass, Question } from "./types";
+import { Difficulty } from "./types";
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
@@ -51,11 +52,17 @@ const adjustStreetDetails = (
 };
 
 // Actually get the data. Try localStorage, fallback to hitting OpenStreetMap's Overpass API
-const load = async (
-  areaBounds: leaflet.LatLngBounds,
-  centerLatLng: LatLng,
-  radius: number
-) => {
+const load = async ({
+  areaBounds,
+  centerLatLng,
+  difficulty,
+  radius,
+}: {
+  areaBounds: leaflet.LatLngBounds;
+  centerLatLng: LatLng;
+  difficulty: Difficulty;
+  radius: number;
+}) => {
   // Setting the bounding box is important. It massively speeds up the query
   const numberOfDecimalPointsToConsider = 4;
   let bboxValue = [
@@ -76,20 +83,30 @@ const load = async (
   )}`;
 
   // We don't want highway=bus_stop, for example
-  const highwayValuesAllowed = [
-    "cycleway",
-    "living_street",
-    "motorway",
-    "pedestrian",
-    "primary",
-    "residential",
-    "secondary",
-    "service",
-    "steps",
-    "tertiary",
-    "trunk",
-    "unclassified",
-  ];
+  const highwayValuesAllowed = ["motorway", "primary", "secondary", "trunk"];
+
+  /*
+    Kift's Lane in Cork is broken into two ways in OSM; one highway=service and the other highway=cycleway.
+    This particular case just be a mistake (I think the cycleway one could safely be deleted). To be safe,
+    we exclude [access=private] for highways unless the difficulty is set to the maximum level (where both
+    would be returned from the query and joined together). It makes sense that tourists/residents wouldn't
+    know of inaccessible ways anyway.
+  */
+  let highwayQuerySuffix = '[access!="private"]';
+  if (difficulty !== Difficulty.Tourist) {
+    highwayValuesAllowed.push("cycleway", "tertiary");
+    if (difficulty === Difficulty.TaxiDriver) {
+      highwayQuerySuffix = "";
+      highwayValuesAllowed.push(
+        "living_street",
+        "pedestrian",
+        "residential",
+        "service",
+        "steps",
+        "unclassified"
+      );
+    }
+  }
   const highwayRegex = `^(${highwayValuesAllowed.join("||")})$`;
 
   /*
@@ -100,14 +117,16 @@ const load = async (
   const urlPath = [
     `api/interpreter?data=[out:json][bbox:${bboxValue}];`,
     `(`,
-    `way(around:${aroundValue})[highway~"${highwayRegex}"][name];`,
-    `way(around:${aroundValue})[name][tourism~"^(aquarium|museum|zoo)$"][wikidata];`,
+    `way(around:${aroundValue})[highway~"${highwayRegex}"][name]${highwayQuerySuffix};`,
+    `way(around:${aroundValue})[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
+    `way(around:${aroundValue})[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
     `);`,
     `out%20tags%20geom;`,
   ].join("");
 
   // If the query changes, the "cache" is automatically skipped
-  const localStorageKey = `overpass-response__${urlPath})`;
+  const localStorageKeyPrefix = `overpass-response--${difficulty}__`;
+  const localStorageKey = `${localStorageKeyPrefix}${urlPath})`;
   const responseFromLocalStorage = ignoreError(() =>
     localStorage.getItem(localStorageKey)
   );
@@ -116,7 +135,9 @@ const load = async (
   Object.entries(localStorage)
     .map(([key]) => key)
     .filter(
-      (key) => key !== localStorageKey && key.startsWith("overpass-response__")
+      (key) =>
+        (key !== localStorageKey && key.startsWith(localStorageKeyPrefix)) ||
+        key.startsWith("overpass-response__") // the old format before difficulty was introduced
     )
     .forEach((key) => ignoreError(() => localStorage.removeItem(key)));
 
@@ -141,19 +162,28 @@ const load = async (
   return result;
 };
 
-export default async (
-  areaBounds: leaflet.LatLngBounds,
-  centerLatlng: LatLng,
-  radius: number,
-  getRandomNumber: () => number,
-  numberOfStreets: number
-): Promise<Question["target"][]> => {
+export default async ({
+  areaBounds,
+  centerLatLng,
+  difficulty,
+  radius,
+  getRandomNumber,
+  numberOfStreets,
+}: {
+  areaBounds: leaflet.LatLngBounds;
+  centerLatLng: LatLng;
+  difficulty: Difficulty;
+  radius: number;
+  getRandomNumber: () => number;
+  numberOfStreets: number;
+}): Promise<Question["target"][]> => {
   // Get the data
-  const { elements } = (await load(
+  const { elements } = (await load({
     areaBounds,
-    centerLatlng,
-    radius
-  )) as Overpass.Response;
+    centerLatLng,
+    difficulty,
+    radius,
+  })) as Overpass.Response;
 
   const results = [];
   const namesToExclude = exclusions;

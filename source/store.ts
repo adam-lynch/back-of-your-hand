@@ -2,16 +2,52 @@ import type leaflet from "leaflet";
 import { derived, writable } from "svelte/store";
 
 import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
-import getInitialAreaRadius from "./utilities/getInitialAreaRadius";
+import getInitialSettingValue from "./utilities/getInitialSettingValue";
 import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
 import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
-import type { LatLng, Round } from "./utilities/types";
+import { Difficulty, LatLng, Round } from "./utilities/types";
+
+const initialUrlSearchParams = new URLSearchParams(window.location.search);
 
 export const areaBounds = writable<leaflet.LatLngBounds>(null);
-export const areaCenter = writable<LatLng>(getInitialAreaCenter());
-export const areaRadius = writable<number>(getInitialAreaRadius());
+export const areaCenter = writable<LatLng>(
+  getInitialAreaCenter(initialUrlSearchParams)
+);
+export const areaRadius = writable(
+  getInitialSettingValue<number>({
+    defaultValue: 2000,
+    name: "radius",
+    parse: (input) => {
+      if (input) {
+        return parseInt(input);
+      }
+    },
+    urlSearchParams: initialUrlSearchParams,
+  })
+);
+
+export const difficulty = writable(
+  getInitialSettingValue<Difficulty>({
+    defaultValue: Difficulty.TaxiDriver,
+    name: "difficulty",
+    parse: (input) => {
+      if (input && Object.values(Difficulty).includes(input as Difficulty)) {
+        return input as Difficulty;
+      }
+    },
+    urlSearchParams: initialUrlSearchParams,
+  })
+);
+
+export const settingsLastOpenedAt = writable<number | null>(
+  ignoreError(() => {
+    const unparsed = localStorage.getItem("settingsLastOpenedAt");
+    return parseInt(unparsed);
+  }) || null
+);
+
 export const geolocationRequesterStatus = writable<
   null | "denied" | "pre-prompt" | "prompted"
 >(null);

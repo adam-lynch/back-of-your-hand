@@ -2,8 +2,10 @@ import capLng from "./capLng";
 import ignoreError from "./ignoreError";
 import type { LatLng } from "./types";
 
-const getAreaCenterFromUrl = (regExpToRemove?: RegExp): LatLng | void => {
-  const urlSearchParams = new URLSearchParams(window.location.search);
+const getAreaCenterFromUrl = (
+  urlSearchParams: URLSearchParams,
+  regExpToRemove?: RegExp
+): LatLng | void => {
   if (urlSearchParams.has("lat") && urlSearchParams.has("lng")) {
     const lat = urlSearchParams.get("lat");
     const lng = urlSearchParams.get("lng");
@@ -44,8 +46,11 @@ const getAreaCenterFromUrl = (regExpToRemove?: RegExp): LatLng | void => {
         return;
       }
 
-      if (/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(
-        unparsedAreaCenter)) {
+      if (
+        /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(
+          unparsedAreaCenter
+        )
+      ) {
         const areaCenterPieces = unparsedAreaCenter.split(",");
 
         if (areaCenterPieces.length) {
@@ -69,14 +74,14 @@ const getAreaCenterFromStorage = (): LatLng | void => {
   }
 };
 
-export default () => {
+export default (urlSearchParams: URLSearchParams) => {
   // Did the user provide one in the URL?
   const result =
-    getAreaCenterFromUrl() ||
+    getAreaCenterFromUrl(urlSearchParams) ||
     // Did they play previously?
     getAreaCenterFromStorage() ||
     // Did the edge handler provide one?
-    getAreaCenterFromUrl(/^\/?geo-lookup-done/) ||
+    getAreaCenterFromUrl(urlSearchParams, /^\/?geo-lookup-done/) ||
     ({ lat: 51.89863, lng: -8.47039 } as LatLng);
   result.lng = capLng(result.lng);
   return result;

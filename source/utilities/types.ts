@@ -69,3 +69,9 @@ export namespace Overpass {
     elements: Element[];
   };
 }
+
+export enum Difficulty {
+  Tourist = "tourist",
+  Resident = "resident",
+  TaxiDriver = "taxi-driver",
+}

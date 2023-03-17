@@ -12,6 +12,7 @@
     areaRadius,
     currentQuestion,
     deviceBestScore,
+    difficulty,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
@@ -29,6 +30,7 @@
   const updateUrl = () => {
     const url = new URL(window.location.origin);
     url.pathname = '/game';
+    url.searchParams.set('difficulty', $difficulty);
     url.searchParams.set('lat', $areaCenter.lat.toString());
     url.searchParams.set('lng', $areaCenter.lng.toString());
     url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
@@ -58,6 +60,8 @@
     updateUrl();
   })
 
+  difficulty.subscribe(() => updateUrl())
+
   numberOfStreets.subscribe((value: number) => {
     if (!value) {
       return;
@@ -75,6 +79,7 @@
     loadRound({
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
+      difficulty: $difficulty,
       numberOfStreets: $numberOfStreets,
       radius: $areaRadius,
     });
@@ -85,6 +90,7 @@
         JSON.stringify($areaCenter)
       );
 
+      localStorage.setItem("difficulty", $difficulty)
       localStorage.setItem("radius", $areaRadius.toString())
     });
   });
@@ -964,6 +970,14 @@
   ol,
   ul {
     list-style: none;
+  }
+
+  fieldset {
+    all: unset;
+  }
+
+  input {
+    accent-color: #DF206F;
   }
 
   .single-line-text-overflow {

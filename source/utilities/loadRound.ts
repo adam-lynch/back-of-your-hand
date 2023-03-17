@@ -4,32 +4,43 @@ import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import { isAreaConfirmed, isLoading, round, seed } from "../store";
-import type { LatLng } from "./types";
+import { Difficulty, LatLng } from "./types";
 
 let getRandomNumber;
-export default async ({ areaCenter, areaBounds, numberOfStreets, radius }) => {
+export default async ({
+  areaCenter,
+  areaBounds,
+  difficulty,
+  numberOfStreets,
+  radius,
+}) => {
   isLoading.set(true);
 
   if (!getRandomNumber) {
     getRandomNumber = getRandomNumberGenerator(get(seed));
   }
-  const targets = await getData(
+  const targets = await getData({
     areaBounds,
-    areaCenter as LatLng,
+    centerLatLng: areaCenter as LatLng,
+    difficulty,
     radius,
     getRandomNumber,
-    numberOfStreets
-  );
+    numberOfStreets,
+  });
 
   if (targets.length < numberOfStreets) {
     await delay(200); // Make sure zoom-in has finished
+    let errorSuffix = "";
+    if (difficulty !== Difficulty.Tourist) {
+      errorSuffix = " or increase the difficulty so more streets are included";
+    }
     if (targets.length < 5) {
       alert(
-        "There aren't enough streets or points of interest in this area (minimum 5 required). Please select somewhere else"
+        `There aren't enough streets or points of interest in this area (minimum 5 required). Please select another area${errorSuffix}`
       );
     } else {
       alert(
-        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfStreets})`
+        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfStreets})${errorSuffix}`
       );
     }
     isAreaConfirmed.set(false);

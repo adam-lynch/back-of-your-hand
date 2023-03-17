@@ -1,8 +1,9 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, numberOfStreets, round } from './store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, nextQuestion, numberOfStreets, round, settingsLastOpenedAt } from './store';
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
+  import { Difficulty } from './utilities/types';
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
 
   const areSettingsShown = writable(false);
@@ -75,9 +76,19 @@
     }, 10);
   })
 
+  const timestampOfLastSettingsUpdate = 1679088005110;
   const onSettingsButtonClicked = () => {
     areSettingsShown.update((previous) => !previous);
+    const now = Date.now();
+    settingsLastOpenedAt.set(now);
+    localStorage.setItem('settingsLastOpenedAt', now.toString());
   };
+  
+  let formDifficultyGroup = $difficulty;
+  function onDifficultyInput(event) {
+    trackEvent({ name: `difficulty-updated-to-${event.currentTarget.value}`, title: `difficulty-updated-to-${event.currentTarget.value}`});
+    difficulty.set(event.currentTarget.value as Difficulty);
+  }
 </script>
 
 <div class="context-panel-wrapper">
@@ -171,6 +182,7 @@
 
         <button
           class="button--secondary settings-button"
+          class:hasUnseenSetting={!$settingsLastOpenedAt || $settingsLastOpenedAt < timestampOfLastSettingsUpdate}
           on:click={onSettingsButtonClicked}>
           Settings {#if $areSettingsShown}<span>&times;</span>{/if}
         </button>
@@ -184,6 +196,42 @@
 
       {#if $areSettingsShown}
         <div class="settings">
+          <div class="wideSetting">
+            <p class="radioButtonGroupTitle">Difficulty</p>
+            <fieldset class="difficultyRadioButtonGroup">
+              <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.Tourist}">
+                <input 
+                  bind:group={formDifficultyGroup}
+                  on:input={onDifficultyInput}
+                  type=radio
+                  value={Difficulty.Tourist}>
+                <span class="difficultyLabelTextWrapper">
+                  <span class="difficultyLabelMainText">Tourist</span> <span class="difficultyLabelDescription">Main streets and landmarks only</span>
+                </span>
+              </label>
+              <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.Resident}">
+                <input 
+                  bind:group={formDifficultyGroup}
+                  on:input={onDifficultyInput}
+                  type=radio
+                  value={Difficulty.Resident}>
+                <span class="difficultyLabelTextWrapper">
+                  <span class="difficultyLabelMainText">Resident</span> <span class="difficultyLabelDescription">"Tourist" plus some smaller streets</span>
+                </span>
+              </label>
+              <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.TaxiDriver}">
+                <input 
+                  bind:group={formDifficultyGroup}
+                  on:input={onDifficultyInput}
+                  type=radio
+                  value={Difficulty.TaxiDriver}>
+                <span class="difficultyLabelTextWrapper">
+                  <span class="difficultyLabelMainText">Taxi driver</span> <span class="difficultyLabelDescription">Every nook and cranny</span>
+                </span>
+              </label>
+            </fieldset>
+          </div>
+
           <div>
             <label for="radiusSlider">Radius of area</label>
             <div class="subtext">{$areaRadius} m</div>
@@ -346,9 +394,11 @@
   }
   
   .call-to-action > a:hover {
-    position: relative;
-    bottom: 1px;
     text-decoration: underline;
+  }
+
+  .settings-button {
+    position: relative;
   }
 
   .settings-button span {
@@ -359,6 +409,19 @@
     font-size: 1.3rem;
     line-height: 0;
     text-shadow: none;
+  }
+
+  .settings-button.hasUnseenSetting::before {
+    content: ' ';
+    position: absolute;
+    top: -4px;
+    right: -2px;
+    background: red;
+    border-radius: 10px;
+    text-shadow: none;
+    padding: 7px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    border: 1px solid #37033C;
   }
 
   .subtext {
@@ -377,8 +440,56 @@
     gap: 2rem;
   }
 
-  .settings > * {
+  .settings > *:not(.wideSetting) {
     flex: 1;
+  }
+
+  .wideSetting {
+    min-width: 100%;
+  }
+
+  .difficultyRadioButtonGroup {
+    align-items: center;
+  }
+
+  .difficultyRadioButtonGroup label {
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+  }
+
+  .difficultyRadioButtonGroup label:not(:last-of-type) {
+    margin-bottom: 0.5rem;
+  }
+
+  .difficultyLabelTextWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5rem;
+    color: #7E6180;
+  }
+  
+  .difficultyLabelMainText {
+    padding-right: 1.5rem;
+    font-size: 14px;
+  }
+
+  .difficultyLabelDescription {
+    display: block;
+    font-size: 12px;
+    opacity: 0.75;
+  }
+
+  .difficultyRadioButtonGroup label:not(.selectedRadioButtonLabel):hover .difficultyLabelTextWrapper {
+    color: #947D95;
+  }
+
+  .selectedRadioButtonLabel .difficultyLabelTextWrapper {
+    color: white;
+  }
+
+  .radioButtonGroupTitle {
+    margin-bottom: 0.5rem;
   }
 
   .street-sign-wrapper {

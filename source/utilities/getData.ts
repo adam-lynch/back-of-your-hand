@@ -132,7 +132,7 @@ const load = async ({
   );
 
   // Prune localStorage
-  Object.entries(localStorage)
+  Object.entries(ignoreError(() => localStorage) || {})
     .map(([key]) => key)
     .filter(
       (key) =>

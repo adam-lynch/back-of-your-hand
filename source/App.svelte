@@ -1049,6 +1049,9 @@
 
   button:focus {
     outline: none;
+  }
+
+  button:focus-visible {
     box-shadow: 0 0 0 3px #000, 0 0 0 4px rgba(0,0,0,.2);
     transition: box-shadow 0.6s linear;
   }

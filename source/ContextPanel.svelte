@@ -384,6 +384,11 @@
 
   a:focus,
   button:focus {
+    outline: none;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
     /* Better contrast */
     box-shadow: 0 0 0 3px #ff0, 0 0 0 4px rgba(0,0,0,.2);
   }

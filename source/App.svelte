@@ -25,8 +25,10 @@
   import loadRound from './utilities/loadRound';
   import type { LatLng } from './utilities/types';
   import trackEvent from "./utilities/trackEvent";
+  import { writable } from "svelte/store";
 
   export let unhandledError = null;
+  let areSettingsShown = writable(false);
 
   let lastSeenSeed;
   const updateUrl = debounce(() => {
@@ -147,8 +149,8 @@
     <FatalErrorDisplay error={unhandledError}/>
   {:else}
     <!-- This is like a sidebar (but not really), I couldn't think of a better name -->
-    <ContextPanel />
-    <Map />
+    <ContextPanel bind:areSettingsShown />
+    <Map {areSettingsShown} />
     <p class="hide-accessibly"><a href="#context-panel">Back to context panel</a></p>
     <HUD />
     <GeolocationRequester />

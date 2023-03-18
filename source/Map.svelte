@@ -510,13 +510,13 @@
   });
 
   const closeSettingsForSmallDevices = () => {
-    if (innerWidth <= 1100) {
-      areSettingsShown.update((previous) => !previous);
+    if (window.innerWidth <= 1100) {
+      areSettingsShown.set(false);
     }
   };
 </script>
 
-<div on:click={closeSettingsForSmallDevices} bind:this={mapElement} id="map" />
+<div on:pointerdown={closeSettingsForSmallDevices} bind:this={mapElement} id="map" />
 
 <style>
   #map {

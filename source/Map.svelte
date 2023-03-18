@@ -15,10 +15,12 @@
   import capLng from "./utilities/capLng";
   import roundNumber from "./utilities/roundNumber";
   import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
+  import { writable } from "svelte/store";
 
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
   const getBoundsPaddingWhenMarkingBounds = () => getViewportWidth() >= 800 ? 0.2 : 0;
+  export let areSettingsShown = writable(false);
 
   let areaBoundsCircle: leaflet.Circle;
   let areaBoundsCenterMarker: leaflet.Circle;
@@ -128,7 +130,7 @@
     if(areElementLabelsShown) {
       return;
     }
-    
+
     await new Promise<void>((resolve) => {
       tileLayers.labels
         .once("add", () => resolve())
@@ -506,9 +508,15 @@
       }
     });
   });
+
+  const checkIfSettingsIsOpen = () => {
+    if (innerWidth <= 1100) {
+      areSettingsShown.update((previous) => !previous);
+    }
+  };
 </script>
 
-<div bind:this={mapElement} id="map"></div>
+<div on:click={checkIfSettingsIsOpen} bind:this={mapElement} id="map" />
 
 <style>
   #map {

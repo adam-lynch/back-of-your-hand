@@ -6,7 +6,7 @@
   import { Difficulty } from './utilities/types';
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
 
-  const areSettingsShown = writable(false);
+  export let areSettingsShown = writable(false);
 
   const onNumberOFQuestionsUpdated = () => {
     const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
@@ -83,7 +83,7 @@
     settingsLastOpenedAt.set(now);
     localStorage.setItem('settingsLastOpenedAt', now.toString());
   };
-  
+
   let formDifficultyGroup = $difficulty;
   function onDifficultyInput(event) {
     trackEvent({ name: `difficulty-updated-to-${event.currentTarget.value}`, title: `difficulty-updated-to-${event.currentTarget.value}`});
@@ -200,7 +200,7 @@
             <p class="radioButtonGroupTitle">Difficulty</p>
             <fieldset class="difficultyRadioButtonGroup">
               <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.Tourist}">
-                <input 
+                <input
                   bind:group={formDifficultyGroup}
                   on:input={onDifficultyInput}
                   type=radio
@@ -210,7 +210,7 @@
                 </span>
               </label>
               <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.Resident}">
-                <input 
+                <input
                   bind:group={formDifficultyGroup}
                   on:input={onDifficultyInput}
                   type=radio
@@ -220,7 +220,7 @@
                 </span>
               </label>
               <label class:selectedRadioButtonLabel="{formDifficultyGroup === Difficulty.TaxiDriver}">
-                <input 
+                <input
                   bind:group={formDifficultyGroup}
                   on:input={onDifficultyInput}
                   type=radio
@@ -245,7 +245,7 @@
               id="radiusSlider"
               on:input={onRadiusChanged}>
           </div>
-    
+
           <div>
             <label for="numberOfQuestionsSlider">Questions per round</label>
             <div class="subtext">{$numberOfStreets}</div>
@@ -397,7 +397,7 @@
     color: rgba(255,255,255,0.85);
     text-decoration: none;
   }
-  
+
   .call-to-action > a:hover {
     text-decoration: underline;
   }
@@ -473,7 +473,7 @@
     margin-left: 0.5rem;
     color: #7E6180;
   }
-  
+
   .difficultyLabelMainText {
     padding-right: 1.5rem;
     font-size: 14px;
@@ -526,7 +526,7 @@
     letter-spacing: 0.1rem;
     text-transform: uppercase;
   }
-  
+
   .street-name-alternative {
     font-style: italic;
     font-size: 0.9rem;

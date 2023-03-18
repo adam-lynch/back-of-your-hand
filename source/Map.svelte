@@ -509,14 +509,14 @@
     });
   });
 
-  const checkIfSettingsIsOpen = () => {
+  const closeIfSettingsIsOpen = () => {
     if (innerWidth <= 1100) {
       areSettingsShown.update((previous) => !previous);
     }
   };
 </script>
 
-<div on:click={checkIfSettingsIsOpen} bind:this={mapElement} id="map" />
+<div on:click={closeIfSettingsIsOpen} bind:this={mapElement} id="map" />
 
 <style>
   #map {

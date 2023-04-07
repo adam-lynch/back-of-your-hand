@@ -11,6 +11,24 @@ import roundNumber from "./roundNumber";
 import type { LatLng, Overpass, Question } from "./types";
 import { Difficulty } from "./types";
 
+const difficultiesToHighwayCategories: { [difficulty: string]: string[] } = {
+  [Difficulty.Tourist]: ["motorway", "primary", "secondary", "trunk"],
+};
+difficultyToHighwayCategories[Difficulty.Resident] = [
+  ...difficultyToHighwayCategories[Difficulty.Tourist],
+  "cycleway",
+  "tertiary",
+];
+difficultyToHighwayCategories[Difficulty.TaxiDriver] = [
+  ...difficultyToHighwayCategories[Difficulty.Resident],
+  "living_street",
+  "pedestrian",
+  "residential",
+  "service",
+  "steps",
+  "unclassified",
+];
+
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
   targetElement: Overpass.Element,
@@ -55,12 +73,10 @@ const adjustStreetDetails = (
 const load = async ({
   areaBounds,
   centerLatLng,
-  difficulty,
   radius,
 }: {
   areaBounds: leaflet.LatLngBounds;
   centerLatLng: LatLng;
-  difficulty: Difficulty;
   radius: number;
 }) => {
   // Setting the bounding box is important. It massively speeds up the query
@@ -82,32 +98,10 @@ const load = async ({
     centerLatLng.lng
   )}`;
 
-  // We don't want highway=bus_stop, for example
-  const highwayValuesAllowed = ["motorway", "primary", "secondary", "trunk"];
-
-  /*
-    Kift's Lane in Cork is broken into two ways in OSM; one highway=service and the other highway=cycleway.
-    This particular case just be a mistake (I think the cycleway one could safely be deleted). To be safe,
-    we exclude [access=private] for highways unless the difficulty is set to the maximum level (where both
-    would be returned from the query and joined together). It makes sense that tourists/residents wouldn't
-    know of inaccessible ways anyway.
-  */
-  let highwayQuerySuffix = '[access!="private"]';
-  if (difficulty !== Difficulty.Tourist) {
-    highwayValuesAllowed.push("cycleway", "tertiary");
-    if (difficulty === Difficulty.TaxiDriver) {
-      highwayQuerySuffix = "";
-      highwayValuesAllowed.push(
-        "living_street",
-        "pedestrian",
-        "residential",
-        "service",
-        "steps",
-        "unclassified"
-      );
-    }
-  }
-  const highwayRegex = `^(${highwayValuesAllowed.join("||")})$`;
+  const highwayCategories = Object.values(difficultiesToHighwayCategories)
+    .map((categories) => categories)
+    .flat();
+  const highwayRegex = `^(${highwayCategories.join("||")})$`;
 
   /*
     This queries Overpass using the Overpass query lanaguage. It's basically saying give me all
@@ -117,7 +111,7 @@ const load = async ({
   const urlPath = [
     `api/interpreter?data=[out:json][bbox:${bboxValue}];`,
     `(`,
-    `way(around:${aroundValue})[highway~"${highwayRegex}"][name]${highwayQuerySuffix};`,
+    `way(around:${aroundValue})[highway~"${highwayRegex}"][name];`,
     `way(around:${aroundValue})[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
     `way(around:${aroundValue})[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
     `);`,
@@ -125,8 +119,7 @@ const load = async ({
   ].join("");
 
   // If the query changes, the "cache" is automatically skipped
-  const localStorageKeyPrefix = `overpass-response--${difficulty}__`;
-  const localStorageKey = `${localStorageKeyPrefix}${urlPath})`;
+  const localStorageKey = `overpass-response__${urlPath})`;
   const responseFromLocalStorage = ignoreError(() =>
     localStorage.getItem(localStorageKey)
   );
@@ -135,9 +128,7 @@ const load = async ({
   Object.entries(ignoreError(() => localStorage) || {})
     .map(([key]) => key)
     .filter(
-      (key) =>
-        (key !== localStorageKey && key.startsWith(localStorageKeyPrefix)) ||
-        key.startsWith("overpass-response__") // the old format before difficulty was introduced
+      (key) => key !== localStorageKey && key.startsWith("overpass-response")
     )
     .forEach((key) => ignoreError(() => localStorage.removeItem(key)));
 
@@ -181,7 +172,6 @@ export default async ({
   const { elements } = (await load({
     areaBounds,
     centerLatLng,
-    difficulty,
     radius,
   })) as Overpass.Response;
 
@@ -189,16 +179,26 @@ export default async ({
   const namesToExclude = exclusions;
 
   // Pot for drawing streets from.
-  const pot = {};
+  const pot: { [key: string]: Overpass.Element } = {};
 
   // Iterate through all items, filter them based on the exclusion criteria
   // and add them to the pot without duplicates.
   for (let element of elements) {
     const key = element.tags.name?.toLowerCase();
 
-    if (!namesToExclude.includes(key)) {
-      pot[key] = element;
+    if (
+      namesToExclude.includes(key) ||
+      (element.tags.highway &&
+        !difficultiesToHighwayCategories[difficulty].includes(
+          element.tags.highway
+        )) ||
+      (difficulty !== Difficulty.TaxiDriver &&
+        element.tags.access === "private")
+    ) {
+      continue;
     }
+
+    pot[key] = element;
   }
 
   for (let i = 0; i < numberOfStreets; i++) {

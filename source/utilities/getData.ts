@@ -14,13 +14,13 @@ import { Difficulty } from "./types";
 const difficultiesToHighwayCategories: { [difficulty: string]: string[] } = {
   [Difficulty.Tourist]: ["motorway", "primary", "secondary", "trunk"],
 };
-difficultyToHighwayCategories[Difficulty.Resident] = [
-  ...difficultyToHighwayCategories[Difficulty.Tourist],
+difficultiesToHighwayCategories[Difficulty.Resident] = [
+  ...difficultiesToHighwayCategories[Difficulty.Tourist],
   "cycleway",
   "tertiary",
 ];
-difficultyToHighwayCategories[Difficulty.TaxiDriver] = [
-  ...difficultyToHighwayCategories[Difficulty.Resident],
+difficultiesToHighwayCategories[Difficulty.TaxiDriver] = [
+  ...difficultiesToHighwayCategories[Difficulty.Resident],
   "living_street",
   "pedestrian",
   "residential",

@@ -84,7 +84,7 @@
 
   const copyMultiplayerUrl = () => {
     if (window.location.protocol === 'http:') {
-      alert('Only supported on HTTPS');
+      alert(`Only supported on HTTPS (seed: ${$seed})`);
       return;
     }
     navigator.clipboard.writeText(multiplayerSessionJoinUrl);

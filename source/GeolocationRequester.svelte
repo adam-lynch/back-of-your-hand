@@ -66,7 +66,6 @@
             class="button--primary"
             on:click={prompt}>Continue</button>
           <button
-            class="button--secondary"
             on:click={cancel}>Cancel</button>
         </div>
 
@@ -92,7 +91,6 @@
             class="button--primary"
             on:click={retry}>Retry</button>
           <button
-            class="button--secondary"
             on:click={cancel}>Cancel</button>
         </div>
 

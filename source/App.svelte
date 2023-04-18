@@ -39,7 +39,6 @@
     url.searchParams.set('lng', $areaCenter.lng.toString());
     url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
     url.searchParams.set('radius', $areaRadius.toString());
-    url.searchParams.set('seed', $seed);
     history.replaceState(null, "", url);
   }, 250, { trailing: true });
 
@@ -1069,8 +1068,20 @@
     background: #d11563;
   }
 
-  .button--primary:active {
+  .button--primary:active,
+  .button--secondary:active {
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  }
+
+  .button--secondary {
+    background: #922b56;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .button--secondary:hover,
+  .button--secondary:active {
+    background: #a22257;
   }
 
   button:disabled,

@@ -31,7 +31,7 @@
   let areSettingsShown = writable(false);
 
   let lastSeenSeed;
-  
+
   const updateUrl = debounce(() => {
     history.replaceState(null, "", $gameUrl);
   }, 250, { trailing: true });
@@ -1027,6 +1027,7 @@
     font-size: 1.2rem;
     background: #f0f0f0;
     background: rgba(240, 240, 240, 0.85);
+    color: #000;
     text-shadow: 0 1px 2px white;
     cursor: pointer;
   }

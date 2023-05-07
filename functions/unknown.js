@@ -1,6 +1,12 @@
 export async function onRequestGet({ request }) {
   const parsedUrl = new URL(request.url);
+
   parsedUrl.pathname = "/geo-lookup-done";
+  if (parsedUrl.searchParams.has("lat")) {
+    // Somehow we're in a redirect loop (/unknown -> /geo-lookup-done -> /unknown)
+    parsedUrl.pathname += "2";
+  }
+
   if (request.cf.latitude && request.cf.longitude) {
     /*
       It incorrectly resolves to Dublin sporadically.

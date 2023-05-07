@@ -94,6 +94,25 @@ export const seed = writable<string>(
   (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed()
 );
 
+export const gameUrl = derived(
+  [areaCenter, areaRadius, difficulty, numberOfStreets],
+  ([$areaCenter, $areaRadius, $difficulty, $numberOfStreets]) => {
+    const url = new URL(window.location.origin);
+    url.pathname = "/game";
+    url.searchParams.set("difficulty", $difficulty);
+    url.searchParams.set("lat", $areaCenter.lat.toString());
+    url.searchParams.set("lng", $areaCenter.lng.toString());
+    url.searchParams.set("numberOfQuestions", $numberOfStreets.toString());
+    url.searchParams.set("radius", $areaRadius.toString());
+    return url.toString();
+  }
+);
+
+export const multiplayerSessionJoinUrl = derived(
+  [gameUrl, seed],
+  ([$gameUrl, $seed]) => `${$gameUrl}&sharedSeed=${$seed}`
+);
+
 export const orderedQuestions = derived(round, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {
     return null;

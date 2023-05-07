@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, nextQuestion, numberOfStreets, round, seed, settingsLastOpenedAt, sidebarState } from './store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, multiplayerSessionJoinUrl, nextQuestion, numberOfStreets, round, seed, settingsLastOpenedAt, sidebarState } from './store';
   import ignoreError from "./utilities/ignoreError";
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
@@ -8,7 +8,6 @@
   import waitForAnyOngoingZoomsToEnd from './utilities/waitForAnyOngoingZoomsToEnd';
 
   export let areSettingsShown = writable(false);
-  let multiplayerSessionJoinUrl: string | null = null;
 
   const onNumberOFQuestionsUpdated = () => {
     const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
@@ -65,7 +64,6 @@
     isChosenPointConfirmed.set(false);
     isAreaConfirmed.set(false);
     round.set(null);
-    multiplayerSessionJoinUrl = null;
     didOpenMultiplayerSessionUrl.set(false);
     sidebarState.set('default');
   };
@@ -76,7 +74,6 @@
     
     isAreaConfirmed.set(true);
     areSettingsShown.set(false);
-    multiplayerSessionJoinUrl = null;
   }
 
   const onStartClicked = async () => {
@@ -85,9 +82,6 @@
   };
 
   const onStartMultiplayerClicked = async () => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('sharedSeed', $seed);
-    multiplayerSessionJoinUrl = url.toString();
     sidebarState.set('creating-multiplayer-session');
   };
 
@@ -96,14 +90,14 @@
       alert(`Only supported on HTTPS (seed: ${$seed})`);
       return;
     }
-    navigator.clipboard.writeText(multiplayerSessionJoinUrl);
+    navigator.clipboard.writeText($multiplayerSessionJoinUrl);
   }
 
   // navigator.share can throw when the share dialog is exited without sharing
   const shareMultiplayerUrl = () => ignoreError(() => navigator.share({
     text: "How well do you know your area? Join my game and test your knowledge by locating streets.",
     title: "Back Of Your Hand",
-    url: multiplayerSessionJoinUrl
+    url: $multiplayerSessionJoinUrl,
   }));
 
   areSettingsShown.subscribe((value) => {
@@ -154,7 +148,7 @@
 
       <div class="multiplayer-link-wrapper">
         <span class="multiplayer-link-url-wrapper">
-          <span class="multiplayer-link-url">{multiplayerSessionJoinUrl}</span>
+          <span class="multiplayer-link-url">{$multiplayerSessionJoinUrl}</span>
         </span>
         <div class="multiplayer-link-buttons">
           <button

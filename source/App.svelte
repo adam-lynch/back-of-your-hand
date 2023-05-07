@@ -15,11 +15,11 @@
     currentQuestion,
     deviceBestScore,
     difficulty,
+    gameUrl,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
     round,
-    seed,
     totalScore
   } from './store';
   import loadRound from './utilities/loadRound';
@@ -31,15 +31,9 @@
   let areSettingsShown = writable(false);
 
   let lastSeenSeed;
+  
   const updateUrl = debounce(() => {
-    const url = new URL(window.location.origin);
-    url.pathname = '/game';
-    url.searchParams.set('difficulty', $difficulty);
-    url.searchParams.set('lat', $areaCenter.lat.toString());
-    url.searchParams.set('lng', $areaCenter.lng.toString());
-    url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
-    url.searchParams.set('radius', $areaRadius.toString());
-    history.replaceState(null, "", url);
+    history.replaceState(null, "", $gameUrl);
   }, 250, { trailing: true });
 
   // Update the URL path when the area center changes

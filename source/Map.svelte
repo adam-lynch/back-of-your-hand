@@ -2,7 +2,7 @@
   import leaflet from "leaflet";
   import debounce from "lodash/debounce";
   import { onMount } from 'svelte';
-  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, gotInitialSeedFromUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, isSummaryShown, ongoingZoomCount, round } from './store';
+  import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, didOpenMultiplayerSessionUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, ongoingZoomCount, round, sidebarState } from './store';
 
   import * as locateControl from "./locateControl";
   import drawTarget from "./utilities/drawTarget";
@@ -264,7 +264,7 @@
       const updateCenter = () => areaCenter.set(reduceLatLngPrecision(latLng));
 
       // If they came in with a seed and then change the area, warn them
-      if(!$round && $gotInitialSeedFromUrl && !hasShownPredefinedAreaChangedWarning) {
+      if(!$round && $didOpenMultiplayerSessionUrl && !hasShownPredefinedAreaChangedWarning) {
         hasShownPredefinedAreaChangedWarning = true;
         trackEvent({ name: "change-prefined-area-seed_attempted", title: "Change predefined area-seed: attempted" });
         if(confirm("The link you opened contains a pre-defined area and set of streets. A friend may have given you the URL so you could compete. \n\nChange the area anyway?")) {
@@ -491,8 +491,8 @@
     });
 
     // Show summary
-    isSummaryShown.subscribe((value) => {
-      if(value) {
+    sidebarState.subscribe((value) => {
+      if(value === 'summary') {
         showSummary();
       }
       else if($isAreaConfirmed) {

@@ -6,7 +6,6 @@ import getInitialSettingValue from "./utilities/getInitialSettingValue";
 import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
-import parseSeedFromUrl from "./utilities/parseSeedFromUrl";
 import { Difficulty, LatLng, Round } from "./utilities/types";
 
 const initialUrlSearchParams = new URLSearchParams(window.location.search);
@@ -72,8 +71,13 @@ export const deviceBestScore = writable<number | null>(
 );
 export const chosenPoint = writable(null);
 
-const seedFromUrl = parseSeedFromUrl();
-export const gotInitialSeedFromUrl = writable(Boolean(seedFromUrl));
+const sharedSeedFromUrl = initialUrlSearchParams.get("sharedSeed");
+if (sharedSeedFromUrl) {
+  initialUrlSearchParams.delete("sharedSeed");
+}
+export const didOpenMultiplayerSessionUrl = writable(
+  Boolean(sharedSeedFromUrl)
+);
 
 export const isAreaConfirmed = writable(false);
 export const isChosenPointConfirmed = writable(false);
@@ -81,10 +85,33 @@ export const interactionVerb = writable(isTouchDevice() ? "Tap" : "Click");
 export const isLoading = writable(false);
 export const ongoingZoomCount = writable(0);
 export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
-export const isSummaryShown = writable(false);
+export const sidebarState = writable<
+  "default" | "creating-multiplayer-session" | "summary"
+>("default");
 export const numberOfStreets = writable(5);
 export const round = writable<Round>(null);
-export const seed = writable<string>(seedFromUrl || getSeed());
+export const seed = writable<string>(
+  (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed()
+);
+
+export const gameUrl = derived(
+  [areaCenter, areaRadius, difficulty, numberOfStreets],
+  ([$areaCenter, $areaRadius, $difficulty, $numberOfStreets]) => {
+    const url = new URL(window.location.origin);
+    url.pathname = "/game";
+    url.searchParams.set("difficulty", $difficulty);
+    url.searchParams.set("lat", $areaCenter.lat.toString());
+    url.searchParams.set("lng", $areaCenter.lng.toString());
+    url.searchParams.set("numberOfQuestions", $numberOfStreets.toString());
+    url.searchParams.set("radius", $areaRadius.toString());
+    return url.toString();
+  }
+);
+
+export const multiplayerSessionJoinUrl = derived(
+  [gameUrl, seed],
+  ([$gameUrl, $seed]) => `${$gameUrl}&sharedSeed=${$seed}`
+);
 
 export const orderedQuestions = derived(round, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {

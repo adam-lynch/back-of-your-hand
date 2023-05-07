@@ -15,11 +15,11 @@
     currentQuestion,
     deviceBestScore,
     difficulty,
+    gameUrl,
     isAreaConfirmed,
     nextQuestion,
     numberOfStreets,
     round,
-    seed,
     totalScore
   } from './store';
   import loadRound from './utilities/loadRound';
@@ -31,16 +31,9 @@
   let areSettingsShown = writable(false);
 
   let lastSeenSeed;
+
   const updateUrl = debounce(() => {
-    const url = new URL(window.location.origin);
-    url.pathname = '/game';
-    url.searchParams.set('difficulty', $difficulty);
-    url.searchParams.set('lat', $areaCenter.lat.toString());
-    url.searchParams.set('lng', $areaCenter.lng.toString());
-    url.searchParams.set('numberOfQuestions', $numberOfStreets.toString());
-    url.searchParams.set('radius', $areaRadius.toString());
-    url.searchParams.set('seed', $seed);
-    history.replaceState(null, "", url);
+    history.replaceState(null, "", $gameUrl);
   }, 250, { trailing: true });
 
   // Update the URL path when the area center changes
@@ -1034,6 +1027,7 @@
     font-size: 1.2rem;
     background: #f0f0f0;
     background: rgba(240, 240, 240, 0.85);
+    color: #000;
     text-shadow: 0 1px 2px white;
     cursor: pointer;
   }
@@ -1069,8 +1063,20 @@
     background: #d11563;
   }
 
-  .button--primary:active {
+  .button--primary:active,
+  .button--secondary:active {
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  }
+
+  .button--secondary {
+    background: #922b56;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .button--secondary:hover,
+  .button--secondary:active {
+    background: #a22257;
   }
 
   button:disabled,

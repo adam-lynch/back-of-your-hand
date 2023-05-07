@@ -1,6 +1,7 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
   import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, nextQuestion, numberOfStreets, round, seed, settingsLastOpenedAt, sidebarState } from './store';
+  import ignoreError from "./utilities/ignoreError";
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
   import { Difficulty } from './utilities/types';
@@ -97,11 +98,13 @@
     }
     navigator.clipboard.writeText(multiplayerSessionJoinUrl);
   }
-  const shareMultiplayerUrl = () => navigator.share({
+
+  // navigator.share can throw when the share dialog is exited without sharing
+  const shareMultiplayerUrl = () => ignoreError(() => navigator.share({
     text: "How well do you know your area? Join my game and test your knowledge by locating streets.",
     title: "Back Of Your Hand",
     url: multiplayerSessionJoinUrl
-  });
+  }));
 
   areSettingsShown.subscribe((value) => {
     if (!value) {

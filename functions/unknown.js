@@ -1,5 +1,5 @@
 export async function onRequestGet({ request }) {
-  const parsedUrl = new URL(request);
+  const parsedUrl = new URL(request.url);
 
   parsedUrl.pathname = "/geo-lookup-done";
 

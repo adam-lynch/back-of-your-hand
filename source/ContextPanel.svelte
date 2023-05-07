@@ -506,6 +506,12 @@
     text-decoration: underline;
   }
 
+  @media (min-width: 242px) and (max-width: 546px) {
+    #start-call-to-action > a {
+      margin-left: 10px;
+    }
+  }
+
   .multiplayer-link-wrapper {
     flex: 1;
     display: flex;

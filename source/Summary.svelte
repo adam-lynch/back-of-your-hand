@@ -2,6 +2,7 @@
   import { orderedQuestions, round, totalScore } from './store';
   import computeTotalScore from './utilities/computeTotalScore';
   export let onRestartClicked: () => void;
+  export let reset: () => void;
 </script>
 
 <div class="summary">
@@ -35,6 +36,11 @@
       on:click={onRestartClicked}>
       Start a new round
     </button>
+
+    <button
+      on:click={reset}>
+      Reset
+    </button>
   </div>
 </div>
 
@@ -56,6 +62,14 @@
   .results-list__street-name {
     flex: 1;
     padding-right: 1rem;
+  }
+
+  .call-to-action {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
   }
 
   .points-total {
@@ -82,6 +96,7 @@
       animation: none;
     }
   }
+  
 
   @keyframes Shimmer {
     0% { background-position: 0% 50% }

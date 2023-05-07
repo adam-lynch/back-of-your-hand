@@ -45,13 +45,12 @@
   }
 
   const onRestartClicked = () => {
-    // Reset a lot of stuff
-    chosenPoint.set(null);
-    isAreaConfirmed.set(false);
-    isChosenPointConfirmed.set(false);
-    sidebarState.set('default');
-    round.set(null);
     trackEvent({ name: "restart", title: "Restart" });
+    reset();
+
+    // It's required to set it to false and then true again
+    isAreaConfirmed.set(true);
+    return start();
   }
 
   const onSummaryRequested = () => {
@@ -59,20 +58,29 @@
     trackEvent({ name: "view-summary", title: "View summary" });
   };
 
-  const reset = async () => {
+  const reset = () => {
+    areSettingsShown.set(false);
+    chosenPoint.set(null);
+    isChosenPointConfirmed.set(false);
+    isAreaConfirmed.set(false);
+    round.set(null);
     multiplayerSessionJoinUrl = null;
     didOpenMultiplayerSessionUrl.set(false);
     sidebarState.set('default');
   };
 
-  const onStartClicked = async () => {
+  const start = async () => {
     sidebarState.set('default');
     await waitForAnyOngoingZoomsToEnd();
     
     isAreaConfirmed.set(true);
     areSettingsShown.set(false);
-    trackEvent({ name: "start", title: "Start" });
     multiplayerSessionJoinUrl = null;
+  }
+
+  const onStartClicked = async () => {
+    await start();
+    trackEvent({ name: "start", title: "Start" });
   };
 
   const onStartMultiplayerClicked = async () => {
@@ -103,7 +111,11 @@
     setTimeout(() => {
       document.getElementById('start-call-to-action').scrollIntoView(true);
     }, 10);
-  })
+  });
+
+  isAreaConfirmed.subscribe(() => {
+    areSettingsShown.set(false);
+  });
 
   const timestampOfLastSettingsUpdate = 1679088005110;
   const onSettingsButtonClicked = () => {
@@ -129,10 +141,13 @@
     </h1>
 
     {#if $sidebarState === 'summary'}
-      <Summary onRestartClicked={onRestartClicked} />
+      <Summary
+        onRestartClicked={onRestartClicked}
+        reset={reset}
+      />
     {:else if $sidebarState === 'creating-multiplayer-session'}
       <h2 class="hide-accessibly">Create multiplayer session</h2>
-      <p>Multiple people can play along on their own devices, just give the URL below to the other players.</p>
+      <p>Your friends can play along on their own devices, just give them the URL below:</p>
 
       <div class="multiplayer-link-wrapper">
         <span class="multiplayer-link-url-wrapper">
@@ -150,7 +165,7 @@
         </div>
       </div>
 
-      <p>They will be given the same set of randomized streets to find as you.</p>
+      <p>They will be given the same set of streets to find as you.</p>
 
       <div class="call-to-action" id="start-call-to-action">
         <button
@@ -170,7 +185,6 @@
         </a>
       </div>
     {:else if ["ongoing", "complete"].includes($round && $round.status)}
-
       <!-- Just to be safe-->
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
@@ -221,14 +235,19 @@
             </button>
 
             <button
+              class="button--secondary"
               on:click={onSummaryRequested}>
               View summary
+            </button>
+
+            <button
+              on:click={reset}>
+              Reset
             </button>
           {/if}
 
         {/if}
       </div>
-
     {:else if !$round} <!-- No summary shown, no active round -->
       <p>
         How well do you know your area? Test your knowledge by locating streets.

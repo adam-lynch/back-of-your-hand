@@ -94,11 +94,13 @@
   }
 
   // navigator.share can throw when the share dialog is exited without sharing
-  const shareMultiplayerUrl = () => ignoreError(() => navigator.share({
-    text: "How well do you know your area? Join my game and test your knowledge by locating streets.",
-    title: "Back Of Your Hand",
-    url: $multiplayerSessionJoinUrl,
-  }));
+  const shareMultiplayerUrl = () => ignoreError(async () => {
+    await navigator.share({
+      text: "How well do you know your area? Join my game and test your knowledge by locating streets.",
+      title: "Back Of Your Hand",
+      url: $multiplayerSessionJoinUrl,
+    });
+  });
 
   areSettingsShown.subscribe((value) => {
     if (!value) {

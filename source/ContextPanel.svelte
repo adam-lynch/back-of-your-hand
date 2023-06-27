@@ -444,7 +444,7 @@
 
   @media(min-width: 600px) {
     .context-panel {
-      max-width: 600px;
+      max-width: 100%;
       margin: 0 auto;
     }
   }

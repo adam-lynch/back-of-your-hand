@@ -119,7 +119,7 @@ const load = async ({
   ].join("");
 
   // If the query changes, the "cache" is automatically skipped
-  const localStorageKey = `overpass-response__${urlPath})`;
+  const localStorageKey = `overpass-response2__${urlPath})`;
   const responseFromLocalStorage = ignoreError(() =>
     localStorage.getItem(localStorageKey)
   );

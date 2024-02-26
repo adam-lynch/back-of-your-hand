@@ -159,14 +159,14 @@ export default async ({
   difficulty,
   radius,
   getRandomNumber,
-  numberOfStreets,
+  numberOfQuestions,
 }: {
   areaBounds: leaflet.LatLngBounds;
   centerLatLng: LatLng;
   difficulty: Difficulty;
   radius: number;
   getRandomNumber: () => number;
-  numberOfStreets: number;
+  numberOfQuestions: number;
 }): Promise<Question["target"][]> => {
   // Get the data
   const { elements } = (await load({
@@ -201,7 +201,7 @@ export default async ({
     pot[key] = element;
   }
 
-  for (let i = 0; i < numberOfStreets; i++) {
+  for (let i = 0; i < numberOfQuestions; i++) {
     // Pick a random street from the pot.
     const key = getRandomItem(Object.keys(pot), getRandomNumber);
 

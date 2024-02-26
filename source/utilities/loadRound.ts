@@ -11,7 +11,7 @@ export default async ({
   areaCenter,
   areaBounds,
   difficulty,
-  numberOfStreets,
+  numberOfQuestions,
   radius,
 }) => {
   isLoading.set(true);
@@ -25,10 +25,10 @@ export default async ({
     difficulty,
     radius,
     getRandomNumber,
-    numberOfStreets,
+    numberOfQuestions,
   });
 
-  if (targets.length < numberOfStreets) {
+  if (targets.length < numberOfQuestions) {
     await delay(200); // Make sure zoom-in has finished
     let errorSuffix = "";
     if (difficulty !== Difficulty.Tourist) {
@@ -40,7 +40,7 @@ export default async ({
       );
     } else {
       alert(
-        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfStreets})${errorSuffix}`
+        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfQuestions})${errorSuffix}`
       );
     }
     isAreaConfirmed.set(false);

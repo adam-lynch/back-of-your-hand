@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, multiplayerSessionJoinUrl, nextQuestion, numberOfStreets, round, seed, settingsLastOpenedAt, sidebarState } from './store';
+  import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, multiplayerSessionJoinUrl, nextQuestion, numberOfQuestions, round, seed, settingsLastOpenedAt, sidebarState } from './store';
   import ignoreError from "./utilities/ignoreError";
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
@@ -11,7 +11,7 @@
 
   const onNumberOFQuestionsUpdated = () => {
     const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
-    numberOfStreets.update(() => amount);
+    numberOfQuestions.update(() => amount);
   };
 
   const onRadiusChanged = () => {
@@ -352,12 +352,12 @@
 
           <div>
             <label for="numberOfQuestionsSlider">Questions per round</label>
-            <div class="subtext">{$numberOfStreets}</div>
+            <div class="subtext">{$numberOfQuestions}</div>
             <input
               type="range"
               min="5"
               max="30"
-              value="{$numberOfStreets}"
+              value="{$numberOfQuestions}"
               step="5"
               class="slider"
               id="numberOfQuestionsSlider"

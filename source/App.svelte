@@ -18,7 +18,7 @@
     gameUrl,
     isAreaConfirmed,
     nextQuestion,
-    numberOfStreets,
+    numberOfQuestions,
     round,
     totalScore
   } from './store';
@@ -59,7 +59,7 @@
 
   difficulty.subscribe(() => updateUrl())
 
-  numberOfStreets.subscribe((value: number) => {
+  numberOfQuestions.subscribe((value: number) => {
     if (!value) {
       return;
     }
@@ -77,7 +77,7 @@
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
       difficulty: $difficulty,
-      numberOfStreets: $numberOfStreets,
+      numberOfQuestions: $numberOfQuestions,
       radius: $areaRadius,
     });
 

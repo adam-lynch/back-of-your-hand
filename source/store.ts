@@ -40,7 +40,7 @@ export const difficulty = writable(
   })
 );
 
-export const numberOfStreets = writable(
+export const numberOfQuestions = writable(
   getInitialSettingValue<number>({
     defaultValue: 5,
     name: "numberOfQuestions",
@@ -107,14 +107,14 @@ export const seed = writable<string>(
 );
 
 export const gameUrl = derived(
-  [areaCenter, areaRadius, difficulty, numberOfStreets],
-  ([$areaCenter, $areaRadius, $difficulty, $numberOfStreets]) => {
+  [areaCenter, areaRadius, difficulty, numberOfQuestions],
+  ([$areaCenter, $areaRadius, $difficulty, $numberOfQuestions]) => {
     const url = new URL(window.location.origin);
     url.pathname = "/game";
     url.searchParams.set("difficulty", $difficulty);
     url.searchParams.set("lat", $areaCenter.lat.toString());
     url.searchParams.set("lng", $areaCenter.lng.toString());
-    url.searchParams.set("numberOfQuestions", $numberOfStreets.toString());
+    url.searchParams.set("numberOfQuestions", $numberOfQuestions.toString());
     url.searchParams.set("radius", $areaRadius.toString());
     return url.toString();
   }

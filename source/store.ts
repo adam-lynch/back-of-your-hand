@@ -40,6 +40,19 @@ export const difficulty = writable(
   })
 );
 
+export const numberOfStreets = writable(
+  getInitialSettingValue<number>({
+    defaultValue: 5,
+    name: "numberOfQuestions",
+    parse: (input) => {
+      if (input) {
+        return parseInt(input);
+      }
+    },
+    urlSearchParams: initialUrlSearchParams,
+  })
+);
+
 export const settingsLastOpenedAt = writable<number | null>(
   ignoreError(() => {
     const unparsed = localStorage.getItem("settingsLastOpenedAt");
@@ -88,7 +101,6 @@ export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
 export const sidebarState = writable<
   "default" | "creating-multiplayer-session" | "summary"
 >("default");
-export const numberOfStreets = writable(5);
 export const round = writable<Round>(null);
 export const seed = writable<string>(
   (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed()

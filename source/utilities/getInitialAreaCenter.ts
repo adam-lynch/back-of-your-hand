@@ -77,7 +77,7 @@ const getAreaCenterFromStorage = (): LatLng | void => {
 export default (urlSearchParams: URLSearchParams) => {
   // Did the user provide one in the URL?
   const result =
-    getAreaCenterFromUrl(urlSearchParams) ||
+    getAreaCenterFromUrl(urlSearchParams, /^(?!\/?geo-lookup-done)/) ||
     // Did they play previously?
     getAreaCenterFromStorage() ||
     // Did the edge handler provide one?

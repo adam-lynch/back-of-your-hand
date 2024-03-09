@@ -1,7 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
   import { areaRadius, chosenPoint, currentQuestion, deviceBestScore, didOpenMultiplayerSessionUrl, difficulty, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, multiplayerSessionJoinUrl, nextQuestion, numberOfQuestions, round, seed, settingsLastOpenedAt, sidebarState } from './store';
-  import ignoreError from "./utilities/ignoreError";
   import Summary from './Summary.svelte';
   import trackEvent from './utilities/trackEvent';
   import { Difficulty } from './utilities/types';
@@ -9,8 +8,8 @@
 
   export let areSettingsShown = writable(false);
 
-  const onNumberOFQuestionsUpdated = () => {
-    const amount = parseInt((document.getElementById("numberOfQuestionsSlider") as HTMLInputElement).value);
+  const onNumberOfQuestionsUpdated: EventListener = (event) => {
+    const amount = parseInt((event.target as HTMLInputElement).value);
     numberOfQuestions.update(() => amount);
   };
 
@@ -351,17 +350,17 @@
           </div>
 
           <div>
-            <label for="numberOfQuestionsSlider">Questions per round</label>
+            <label for="numberOfQuestionsInput">Questions per round</label>
             <div class="subtext">{$numberOfQuestions}</div>
             <input
               type="range"
               min="5"
-              max="30"
+              max="50"
               value="{$numberOfQuestions}"
               step="5"
               class="slider"
-              id="numberOfQuestionsSlider"
-              on:input={onNumberOFQuestionsUpdated}>
+              id="numberOfQuestionsInput"
+              on:input={onNumberOfQuestionsUpdated}>
           </div>
         </div>
       {/if}

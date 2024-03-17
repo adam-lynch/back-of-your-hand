@@ -28,6 +28,12 @@
   import { writable } from "svelte/store";
 
   export let unhandledError = null;
+
+  const isSafari = 'safari' in window;
+  if (isSafari) {
+    document.body.classList.add('is-safari');
+  }
+
   let areSettingsShown = writable(false);
 
   let lastSeenSeed;
@@ -953,6 +959,18 @@
   .leaflet-tooltip {
     color: black;
     opacity: 0.8 !important;
+  }
+
+  .leaflet-tile-container {
+    filter: grayscale(0.8);
+  }
+
+  .is-safari .leaflef-tile-container {
+    filter: grayscale(0.9);
+  }
+
+  .leaflet-tile {
+    filter: saturate(8) hue-rotate(-10deg);
   }
 
   .hide-accessibly {

@@ -959,11 +959,11 @@
     opacity: 0.8 !important;
   }
 
-  .leaflet-tile-pane .leaflet-layer {
+  #map:not(.leaflet-safari) .leaflet-tile-container {
     filter: grayscale(0.8);
   }
 
-  .leaflet-tile-container {
+  #map:not(.leaflet-safari) .leaflet-tile {
     filter: saturate(8) hue-rotate(-10deg);
   }
 

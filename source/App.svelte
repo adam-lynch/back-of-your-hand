@@ -30,11 +30,6 @@
 
   export let unhandledError = null;
 
-  const isSafari = 'safari' in window;
-  if (isSafari) {
-    document.body.classList.add('is-safari');
-  }
-
   defineCustomElements();
 
   let areSettingsShown = writable(false);
@@ -964,16 +959,20 @@
     opacity: 0.8 !important;
   }
 
-  .leaflet-tile-container {
+  .leaflet-tile-pane .leaflet-layer {
     filter: grayscale(0.8);
   }
 
-  .is-safari .leaflef-tile-container {
-    filter: grayscale(0.9);
+  .leaflet-tile-container {
+    filter: saturate(8) hue-rotate(-10deg);
   }
 
-  .leaflet-tile {
-    filter: saturate(8) hue-rotate(-10deg);
+  /* Safari filters are broken */
+  .leaflet-safari .leaflet-tile-pane .leaflet-layer {
+    filter: grayscale(0.9);
+  }
+  .leaflet-safari .leaflet-tile-container {
+    filter: saturate(4) hue-rotate(-10deg);
   }
 
   sharp-img {

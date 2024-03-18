@@ -16,6 +16,7 @@
   import roundNumber from "./utilities/roundNumber";
   import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
+  import type { HTMLSharpImage } from "./customElements";
 
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
@@ -36,16 +37,33 @@
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup;
 
+  const CustomTileLayer = leaflet.TileLayer.extend({
+    createTile: function(coords, done) {
+      const tile = document.createElement('sharp-img') as HTMLSharpImage;
+      // @ts-ignore
+      tile.onload = leaflet.bind(this._tileOnLoad, this, done, tile);
+      // @ts-ignore
+      tile.onerror = leaflet.bind(this._tileOnError, this, done, tile);
+
+      tile.alt = '';
+      tile.src = this.getTileUrl(coords);
+      tile.setAttribute('role', 'presentation');
+
+      return tile;
+    },
+  }) as unknown as typeof leaflet.TileLayer;
+
   const getTileLayer = (name: 'base' | 'labels') => {
     const nameToUrlMap = {
       base: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
       labels: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
     };
-    return leaflet.tileLayer(nameToUrlMap[name], {
+
+    return new CustomTileLayer(nameToUrlMap[name], {
       attribution: "\u003ca href=\"https://carto.com/legal/\" target=\"_blank\"\u003e\u0026copy; Carto\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
       maxNativeZoom: 18,
       maxZoom: maxMapZoom,
-    })
+    });
   };
 
   const tileLayers = {

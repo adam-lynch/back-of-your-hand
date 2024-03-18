@@ -26,6 +26,7 @@
   import type { LatLng } from './utilities/types';
   import trackEvent from "./utilities/trackEvent";
   import { writable } from "svelte/store";
+  import { defineCustomElements } from "./customElements";
 
   export let unhandledError = null;
 
@@ -33,6 +34,8 @@
   if (isSafari) {
     document.body.classList.add('is-safari');
   }
+
+  defineCustomElements();
 
   let areSettingsShown = writable(false);
 
@@ -971,6 +974,42 @@
 
   .leaflet-tile {
     filter: saturate(8) hue-rotate(-10deg);
+  }
+
+  sharp-img {
+    position: relative;
+    overflow: hidden;
+  }
+
+  sharp-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  sharp-img .sharpen {
+    mix-blend-mode: hard-light;
+  }
+
+  sharp-img .sharpen,
+  sharp-img .sharpen::before,
+  sharp-img .sharpen::after {
+    position: absolute;
+    inset: 0;
+  }
+
+  sharp-img .sharpen::before,
+  sharp-img .sharpen::after {
+    content: '';
+    background-image: var(--sharp-img-css-background-image);
+    background-repeat: no-repeat;
+  }
+
+  sharp-img .sharpen::after {
+    filter: invert(1);
+    opacity: 0.5;
+    top: -1px;
+    left: -1px;
   }
 
   .hide-accessibly {

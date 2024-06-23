@@ -7,11 +7,19 @@ import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import autoprefixer from "autoprefixer";
+import fs from "fs";
 import getCommitId from "git-commit-id";
 const { visualizer } = require("rollup-plugin-visualizer");
 
 const production = !process.env.ROLLUP_WATCH;
 const shouldOutputSourceMaps = true;
+let httpsDetails = null;
+if (process.env.BOYH_HTTPS_CERT && process.env.BOYH_HTTPS_KEY) {
+  httpsDetails = {
+    cert: process.env.BOYH_HTTPS_CERT,
+    key: process.env.BOYH_HTTPS_KEY,
+  };
+}
 
 function serve() {
   let server;
@@ -23,9 +31,17 @@ function serve() {
   return {
     writeBundle() {
       if (server) return;
+
+      let startCommand = "npm run start -- --dev";
+      if (httpsDetails) {
+        startCommand += ` --cert "${httpsDetails.cert}" --http2 --key "${httpsDetails.key}"`;
+      }
+
+      const startCommandPieces = startCommand.split(" ");
+
       server = require("child_process").spawn(
-        "npm",
-        ["run", "start", "--", "--dev"],
+        startCommandPieces[0],
+        startCommandPieces.slice(1),
         {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,
@@ -35,6 +51,16 @@ function serve() {
       process.on("SIGTERM", toExit);
       process.on("exit", toExit);
     },
+  };
+}
+
+const livereloadConfig = {
+  watch: "public",
+};
+if (httpsDetails) {
+  livereloadConfig.https = {
+    cert: fs.readFileSync(httpsDetails.cert),
+    key: fs.readFileSync(httpsDetails.key),
   };
 }
 
@@ -85,7 +111,7 @@ export default {
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
-    !production && livereload("public"),
+    !production && livereload(livereloadConfig),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

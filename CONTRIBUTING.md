@@ -20,6 +20,15 @@ This recompiles and live-reloads the app as you make changes.
 
 Warning: I think this might be slightly broken since I introduced Babel. At least for me, it sometimes requires a manual reload.
 
+## HTTPS
+
+To set up HTTPS, set these environment variables: 
+
+- `BOYH_HTTPS_CERT`
+- `BOYH_HTTPS_KEY`
+
+Both should be absolute paths to files. They will be passed to [sirv-cli](https://github.com/lukeed/sirv/tree/master/packages/sirv-cli) (see `--cert` and `--key`).
+
 ## Edge handlers
 
 To run the [edge handlers](./functions) in dev mode, additionally run `npx wrangler pages dev public --port 8788`.

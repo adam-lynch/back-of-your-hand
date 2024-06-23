@@ -11,6 +11,8 @@ import fs from "fs";
 import getCommitId from "git-commit-id";
 const { visualizer } = require("rollup-plugin-visualizer");
 
+const pkgJson = require("./package.json");
+
 const production = !process.env.ROLLUP_WATCH;
 const shouldOutputSourceMaps = true;
 let httpsDetails = null;
@@ -36,6 +38,11 @@ function serve() {
       if (httpsDetails) {
         startCommand += ` --cert "${httpsDetails.cert}" --http2 --key "${httpsDetails.key}"`;
       }
+
+      // Pass on any arbitrary arguments
+      startCommand += process.argv
+        .join(" ")
+        .replace(new RegExp(`^.*?${pkgJson.scripts.dev}`), "");
 
       const startCommandPieces = startCommand.split(" ");
 

@@ -3,6 +3,7 @@ const exclusions: {
   name: string | RegExp; // must be lowercase
 }[] = [
   { name: "alley" },
+  { name: "buses and taxis" },
   { name: "drive thru" },
   { name: "escalator" },
   { name: "treppe tiefgarage" }, // Stairs to the underground parking garage

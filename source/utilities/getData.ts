@@ -176,7 +176,6 @@ export default async ({
   })) as Overpass.Response;
 
   const results = [];
-  const namesToExclude = exclusions;
 
   // Pot for drawing streets from.
   const pot: { [key: string]: Overpass.Element } = {};
@@ -187,7 +186,18 @@ export default async ({
     const key = element.tags.name?.toLowerCase();
 
     if (
-      namesToExclude.includes(key) ||
+      exclusions.some((exclusion) => {
+        if (
+          exclusion.highways &&
+          !exclusion.highways.includes(element.tags.highway)
+        ) {
+          return false;
+        }
+        if (exclusion.name instanceof RegExp) {
+          return exclusion.name.test(key);
+        }
+        return exclusion.name === key;
+      }) ||
       (element.tags.highway &&
         !difficultiesToHighwayCategories[difficulty].includes(
           element.tags.highway

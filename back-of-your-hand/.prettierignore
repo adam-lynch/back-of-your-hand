@@ -3,4 +3,6 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
+goatcounter.js
 static/gc.js
+static/leaflet.css

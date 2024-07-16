@@ -10,14 +10,14 @@ export class HTMLSharpImage extends HTMLElement {
   }
 
   get alt(): HTMLImageElement["alt"] {
-    return this.getAttribute("alt");
+    return this.getAttribute("alt") as string;
   }
 
   set alt(value: HTMLImageElement["alt"]) {
     this.setAttribute("alt", value);
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (["alt", "src"].includes(name)) {
       this._img.setAttribute(name, newValue);
     }
@@ -39,14 +39,14 @@ export class HTMLSharpImage extends HTMLElement {
   }
 
   get src(): HTMLImageElement["src"] {
-    return this.getAttribute("src");
+    return this.getAttribute("src") as string;
   }
 
   set src(value: HTMLImageElement["src"]) {
     this.setAttribute("src", value);
     this.style.setProperty(
       "--sharp-img-css-background-image",
-      this.src ? `url("${this.src}")` : "none"
+      this.src ? `url("${this.src}")` : "none",
     );
   }
 
@@ -56,7 +56,7 @@ export class HTMLSharpImage extends HTMLElement {
       this._img.addEventListener(eventType, (event) => {
         event.stopImmediatePropagation();
         // Clone the event to re-dispatch it. Note that this doesn't clone the event's path.
-        // @ts-ignore
+        // @ts-expect-error ...
         const clonedEvent = new event.constructor(event.type, event);
         this.dispatchEvent(clonedEvent);
       });

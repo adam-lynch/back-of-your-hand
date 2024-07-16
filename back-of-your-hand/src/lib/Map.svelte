@@ -1,5 +1,5 @@
 <script lang="ts">
-  import leaflet from "leaflet";
+  import leaflet, { type LeafletMouseEventHandlerFn } from "leaflet";
   import debounce from "lodash/debounce";
   import { onMount } from 'svelte';
   import { areaBounds, areaCenter, areaRadius, chosenPoint, currentQuestion, currentQuestionIndex, didOpenMultiplayerSessionUrl, interactionVerb, isAreaConfirmed, isChosenPointConfirmed, ongoingZoomCount, round, sidebarState } from './store';
@@ -38,7 +38,7 @@
   let resultFeatureGroup: leaflet.FeatureGroup;
 
   const CustomTileLayer = leaflet.TileLayer.extend({
-    createTile: function(coords, done) {
+    createTile: function(coords: unknown, done: () => void) {
       const tile = document.createElement('sharp-img') as HTMLSharpImage;
       // @ts-ignore
       tile.onload = leaflet.bind(this._tileOnLoad, this, done, tile);
@@ -163,6 +163,9 @@
 
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
+    if (!$areaBounds) {
+      throw new Error('No areaBounds');
+    }
     hideElementLabels();
     locateControl.remove(map);
     map.fitBounds($areaBounds)
@@ -187,6 +190,10 @@
 
   // When they've confirmed their guess, compute and draw result
   const onChosenPointConfirmed = async () => {
+    if (!$currentQuestion) {
+      throw new Error('No currentQuestion');
+    }
+
     /* First, compute the distance / score */
 
     const chosenLatLng = chosenPointMarker.getLatLng();
@@ -217,6 +224,10 @@
       status: "complete",
     };
     round.update((value) => {
+      if (!value) {
+        throw new Error('round is falsy');
+      }
+
       const result: Round = {
         ...value,
         questions: value.questions.map((question) => {
@@ -271,7 +282,7 @@
     map.fitBounds(resultFeatureGroup.getBounds().pad(0.2));
   }
 
-  const onMapClick = (e) => {
+  const onMapClick: LeafletMouseEventHandlerFn = (e) => {
     const latLng = {
       ...e.latlng,
       lng: capLng(e.latlng.lng),

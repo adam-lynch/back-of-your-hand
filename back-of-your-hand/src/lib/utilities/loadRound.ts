@@ -4,7 +4,8 @@ import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import { isAreaConfirmed, isLoading, round, seed } from "../store";
-import { Difficulty, LatLng } from "./types";
+import { Difficulty } from "./types";
+import type { LatLng } from "./types";
 
 let getRandomNumber;
 export default async ({
@@ -36,11 +37,11 @@ export default async ({
     }
     if (targets.length < 5) {
       alert(
-        `There aren't enough streets or points of interest in this area (minimum 5 required). Please select another area${errorSuffix}`
+        `There aren't enough streets or points of interest in this area (minimum 5 required). Please select another area${errorSuffix}`,
       );
     } else {
       alert(
-        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfQuestions})${errorSuffix}`
+        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfQuestions})${errorSuffix}`,
       );
     }
     isAreaConfirmed.set(false);

@@ -9,7 +9,7 @@ let control: leaflet.Control | null = null;
 let container: HTMLElement;
 
 const onClick = async () => {
-  let permissionState: string;
+  let permissionState: string | undefined;
 
   if ("permissions" in navigator && "query" in navigator.permissions) {
     const permission = await navigator.permissions.query({
@@ -20,11 +20,12 @@ const onClick = async () => {
     // Doesn't support querying permissions :(
     try {
       const storedValue = localStorage.getItem(
-        "lastKnownWebGeolocationPermissionState"
+        "lastKnownWebGeolocationPermissionState",
       );
       if (storedValue) {
         permissionState = storedValue;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       // Ignore
     }
@@ -49,7 +50,7 @@ const onClick = async () => {
       await setAreaCenterUsingWebGeolocationApi();
     } catch (e) {
       ignoreError(() =>
-        localStorage.removeItem("lastKnownWebGeolocationPermissionState")
+        localStorage.removeItem("lastKnownWebGeolocationPermissionState"),
       );
       throw e;
     }
@@ -63,7 +64,7 @@ const onClick = async () => {
         "Locate button clicked (web geolocation persmission state: prompt)",
     });
     ignoreError(() =>
-      localStorage.removeItem("lastKnownWebGeolocationPermissionState")
+      localStorage.removeItem("lastKnownWebGeolocationPermissionState"),
     );
     geolocationRequesterStatus.set("pre-prompt");
     return;
@@ -76,7 +77,7 @@ const onClick = async () => {
         "Locate button clicked (web geolocation persmission state: denied)",
     });
     ignoreError(() =>
-      localStorage.setItem("lastKnownWebGeolocationPermissionState", "denied")
+      localStorage.setItem("lastKnownWebGeolocationPermissionState", "denied"),
     );
     geolocationRequesterStatus.set("denied");
     return;
@@ -89,7 +90,7 @@ export const add = (map: leaflet.Map) => {
   }
 
   if (!("Locate" in leaflet.Control)) {
-    // @ts-ignore
+    // @ts-expect-error API not in type
     leaflet.Control.Locate = leaflet.Control.extend({
       version: "1.0.1",
       options: { position: "topright" },
@@ -122,8 +123,11 @@ export const add = (map: leaflet.Map) => {
     });
   }
 
-  // @ts-ignore
+  // @ts-expect-error custom control
   control = new leaflet.Control.Locate();
+  if (!control) {
+    throw new Error("Locate control creation failed");
+  }
   map.addControl(control);
 };
 

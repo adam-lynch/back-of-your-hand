@@ -25,6 +25,9 @@
   const onNextClicked = () => {
     // Activate next question
     round.update((value) => {
+      if (!value) {
+        throw new Error('round is falsy');
+      }
       return {
         ...value,
         questions: value.questions.map((question) => {
@@ -110,7 +113,7 @@
     }
     // 10 is arbitrary
     setTimeout(() => {
-      document.getElementById('start-call-to-action').scrollIntoView(true);
+      (document.getElementById('start-call-to-action') as HTMLElement).scrollIntoView(true);
     }, 10);
   });
 
@@ -127,7 +130,7 @@
   };
 
   let formDifficultyGroup = $difficulty;
-  function onDifficultyInput(event) {
+  function onDifficultyInput(event: Event & { currentTarget: EventTarget & HTMLInputElement; }) {
     trackEvent({ name: `difficulty-updated-to-${event.currentTarget.value}`, title: `difficulty-updated-to-${event.currentTarget.value}`});
     difficulty.set(event.currentTarget.value as Difficulty);
   }
@@ -185,7 +188,7 @@
           <span class="hide-accessibly"> (how to play, etc)</span>
         </a>
       </div>
-    {:else if ["ongoing", "complete"].includes($round && $round.status)}
+    {:else if $round?.status && ["ongoing", "complete"].includes($round.status)}
       <!-- Just to be safe-->
       {#if $currentQuestion}
         <p><span class="question-index">{$currentQuestion.index+1} / {$round.questions.length}</span> Find the following:</p>
@@ -200,7 +203,7 @@
           </div>
         </div>
 
-        {#if $currentQuestion.status === "complete"}
+        {#if $currentQuestion.status === "complete" && $currentQuestion.distance}
           <div>
             <h2>Result</h2>
             <p>Distance: {Math.round($currentQuestion.distance.amount).toLocaleString()} {$currentQuestion.distance.unit}</p>

@@ -1,38 +1,21 @@
-# create-svelte
+# Back Of Your Hand
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+How well do you know your area? Test your knowledge by locating streets.
 
-## Creating a project
+![Screenshots of the game; one narrow / mobile sized, one desktop sized. In one, the user is asked to find a particular street, but they haven't placed a marker / guess on the map yet. The other is an example where the result of a guess is being shown (i.e. the street is revealed and the distance is shown, etc.)](./public/images/combined-screenshots.png)
 
-If you're seeing this, you've probably already done this step. Congrats!
+---
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+This is a map-based game I made for my dad for Christmas. You're given random street names and have to locate them on the map.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Try it out at [backofyourhand.com](https://backofyourhand.com)
 
-## Developing
+To get more detail on why and how I made it, read [Introducing Back Of Your Hand](https://adamlynch.com/back-of-your-hand).
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+The game itself also has documentation within; [backofyourhand.com/learn-more](https://backofyourhand.com/learn-more)
 
-```bash
-npm run dev
+The "Show HN" Hacker News post (rank #2 globally): https://news.ycombinator.com/item?id=30733339
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## Contributing
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+You'd like to improve it? Nice! Thanks. See [CONTRIBUTING.md](./CONTRIBUTING.md).

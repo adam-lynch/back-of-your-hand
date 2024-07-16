@@ -6,13 +6,14 @@ import getInitialSettingValue from "./utilities/getInitialSettingValue";
 import getSeed from "./utilities/getSeed";
 import ignoreError from "./utilities/ignoreError";
 import isTouchDevice from "./utilities/isTouchDevice";
-import { Difficulty, LatLng, Round } from "./utilities/types";
+import { Difficulty } from "./utilities/types";
+import type { LatLng, Round } from "./utilities/types";
 
 const initialUrlSearchParams = new URLSearchParams(window.location.search);
 
-export const areaBounds = writable<leaflet.LatLngBounds>(null);
+export const areaBounds = writable<leaflet.LatLngBounds | null>(null);
 export const areaCenter = writable<LatLng>(
-  getInitialAreaCenter(initialUrlSearchParams)
+  getInitialAreaCenter(initialUrlSearchParams),
 );
 export const areaRadius = writable(
   getInitialSettingValue<number>({
@@ -24,7 +25,7 @@ export const areaRadius = writable(
       }
     },
     urlSearchParams: initialUrlSearchParams,
-  })
+  }),
 );
 
 export const difficulty = writable(
@@ -37,7 +38,7 @@ export const difficulty = writable(
       }
     },
     urlSearchParams: initialUrlSearchParams,
-  })
+  }),
 );
 
 export const numberOfQuestions = writable(
@@ -50,14 +51,16 @@ export const numberOfQuestions = writable(
       }
     },
     urlSearchParams: initialUrlSearchParams,
-  })
+  }),
 );
 
 export const settingsLastOpenedAt = writable<number | null>(
   ignoreError(() => {
     const unparsed = localStorage.getItem("settingsLastOpenedAt");
-    return parseInt(unparsed);
-  }) || null
+    if (unparsed) {
+      return parseInt(unparsed);
+    }
+  }) || null,
 );
 
 export const geolocationRequesterStatus = writable<
@@ -66,7 +69,7 @@ export const geolocationRequesterStatus = writable<
 export const deviceBestScore = writable<number | null>(
   parseInt(
     ignoreError(() => {
-      let storedValue = localStorage.getItem("deviceBestScore");
+      const storedValue = localStorage.getItem("deviceBestScore");
       if (!storedValue) {
         return;
       }
@@ -75,21 +78,21 @@ export const deviceBestScore = writable<number | null>(
       if (score > 100) {
         score = Math.round(score / 5);
         ignoreError(() =>
-          localStorage.setItem("deviceBestScore", score.toString())
+          localStorage.setItem("deviceBestScore", score.toString()),
         );
       }
       return score;
-    }) as unknown as string
-  ) || null
+    }) as unknown as string,
+  ) || null,
 );
-export const chosenPoint = writable(null);
+export const chosenPoint = writable<LatLng | null>(null);
 
 const sharedSeedFromUrl = initialUrlSearchParams.get("sharedSeed");
 if (sharedSeedFromUrl) {
   initialUrlSearchParams.delete("sharedSeed");
 }
 export const didOpenMultiplayerSessionUrl = writable(
-  Boolean(sharedSeedFromUrl)
+  Boolean(sharedSeedFromUrl),
 );
 
 export const isAreaConfirmed = writable(false);
@@ -101,9 +104,9 @@ export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
 export const sidebarState = writable<
   "default" | "creating-multiplayer-session" | "summary"
 >("default");
-export const round = writable<Round>(null);
+export const round = writable<Round | null>(null);
 export const seed = writable<string>(
-  (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed()
+  (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed(),
 );
 
 export const gameUrl = derived(
@@ -117,12 +120,12 @@ export const gameUrl = derived(
     url.searchParams.set("numberOfQuestions", $numberOfQuestions.toString());
     url.searchParams.set("radius", $areaRadius.toString());
     return url.toString();
-  }
+  },
 );
 
 export const multiplayerSessionJoinUrl = derived(
   [gameUrl, seed],
-  ([$gameUrl, $seed]) => `${$gameUrl}&sharedSeed=${$seed}`
+  ([$gameUrl, $seed]) => `${$gameUrl}&sharedSeed=${$seed}`,
 );
 
 export const orderedQuestions = derived(round, ($value) => {
@@ -130,7 +133,7 @@ export const orderedQuestions = derived(round, ($value) => {
     return null;
   }
   return $value.questions.sort(
-    (questionA, questionB) => questionA.index - questionB.index
+    (questionA, questionB) => questionA.index - questionB.index,
   );
 });
 
@@ -163,5 +166,8 @@ export const totalScore = derived(round, ($value) => {
   if (!$value) {
     return null;
   }
-  return $value.questions.reduce((sum, question) => sum + question.score, 0);
+  return $value.questions.reduce(
+    (sum, question) => sum + (question.score ?? 0),
+    0,
+  );
 });

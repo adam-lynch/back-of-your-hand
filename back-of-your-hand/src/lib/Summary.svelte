@@ -7,15 +7,17 @@
 
 <div class="summary">
   <h2 class="hide-accessibly">Summary</h2>
-  <p class="points-total">
-    <span>Overall score: {computeTotalScore($totalScore, $round)}%</span>
-    {#if $round.didSetNewDeviceBestScore}
-      <span class="tada">New personal best!</span>
-    {/if}
-  </p>
+  {#if $round && $totalScore}
+    <p class="points-total">
+      <span>Overall score: {computeTotalScore($totalScore, $round)}%</span>
+      {#if $round.didSetNewDeviceBestScore}
+        <span class="tada">New personal best!</span>
+      {/if}
+    </p>
+  {/if}
 
   <ol class="results-list">
-    {#each $orderedQuestions as question}
+    {#each $orderedQuestions ?? [] as question}
       <li>
         <span class="results-list__street-name single-line-text-overflow">
           {question.target.name} 

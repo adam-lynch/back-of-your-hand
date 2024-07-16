@@ -1,10 +1,12 @@
 <script lang="ts">
-  export let error = null;
+  export let error: Error | null = null;
 
   const onFeedbackClicked = () => {
+    // @ts-expect-error ...
     window.location = window.location.origin + "/learn-more#feedback";
   };
   const onRefreshClicked = () => {
+    // @ts-expect-error ...
     window.location = window.location.origin;
   };
 </script>

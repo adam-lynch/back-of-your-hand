@@ -1,4 +1,4 @@
-name: lint
+name: lint-old
 on: [push]
 jobs:
   lint:
@@ -8,5 +8,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-      - run: cd back-of-your-hand && npm install
-      - run: cd back-of-your-hand && npm run lint--no-fix
+      - run: npm install
+      - run: npm run lint

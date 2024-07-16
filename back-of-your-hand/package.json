@@ -23,10 +23,13 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/eslint": "^8.56.7",
+    "@types/leaflet": "^1.9.12",
+    "@types/turf": "^3.5.32",
     "browserslist-to-esbuild": "^2.1.1",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.36.0",
+    "git-commit-id": "^2.0.1",
     "globals": "^15.0.0",
     "prettier": "^3.1.1",
     "prettier-plugin-svelte": "^3.1.2",
@@ -38,5 +41,15 @@
     "vite": "^5.0.3",
     "vitest": "^1.2.0"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@sentry/browser": "^6.19.7",
+    "@sentry/tracing": "^6.19.7",
+    "@turf/center": "^6.5.0",
+    "leaflet": "^1.9.4",
+    "lodash": "^4.17.21",
+    "point-in-polygon": "^1.1.0",
+    "turf-featurecollection": "^1.0.1",
+    "turf-point": "^2.0.1"
+  }
 }

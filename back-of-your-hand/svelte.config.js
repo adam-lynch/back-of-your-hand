@@ -7,9 +7,9 @@ const config = {
 
 	kit: {
 		adapter: adapter({
-			assets: 'build/dist',
+			assets: 'build/svelte-build-output',
 			fallback: 'app.html',
-			pages: 'build/dist',
+			pages: 'build/svelte-build-output',
 			precompress: true,
 			strict: true
 		})

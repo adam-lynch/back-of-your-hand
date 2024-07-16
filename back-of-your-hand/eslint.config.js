@@ -28,6 +28,6 @@ export default [
 		}
 	},
 	{
-		ignores: ['build/svelte-build-output', '.svelte-kit/', 'dist/']
+		ignores: ['.svelte-kit/', 'build/svelte-build-output', 'dist/', 'static/gc.js']
 	}
 ];

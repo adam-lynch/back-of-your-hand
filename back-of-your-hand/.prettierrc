@@ -1,9 +1,7 @@
 {
   "htmlWhitespaceSensitivity": "strict",
   "singleAttributePerLine": true,
-  "plugins": [
-    "prettier-plugin-svelte"
-  ],
+  "plugins": ["prettier-plugin-svelte"],
   "overrides": [
     {
       "files": "*.svelte",

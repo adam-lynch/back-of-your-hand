@@ -44,6 +44,6 @@ export default <T>({
       // Did they play previously?
       getFromStorage<T>({ name, parse: safeParse }) ||
       // Return the default value.
-      defaultValue
+      defaultValue,
   );
 };

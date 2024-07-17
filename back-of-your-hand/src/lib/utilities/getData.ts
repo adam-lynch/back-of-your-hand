@@ -32,7 +32,7 @@ difficultiesToHighwayCategories[Difficulty.TaxiDriver] = [
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
   targetElement: Overpass.Element,
-  allTargetElements: Overpass.Element[]
+  allTargetElements: Overpass.Element[],
 ): Question["target"] => {
   // Group all streets with the same name
   const equivalentTargets = [
@@ -40,12 +40,12 @@ const adjustStreetDetails = (
     ...allTargetElements.filter(
       (element) =>
         element.id !== targetElement.id &&
-        element.tags.name === targetElement.tags.name
+        element.tags.name === targetElement.tags.name,
     ),
   ];
 
   const points = equivalentTargets.map(({ geometry }) =>
-    geometry.map(convertOverpassLatLngtoLatLng)
+    geometry.map(convertOverpassLatLngtoLatLng),
   );
 
   let width: number;
@@ -85,17 +85,17 @@ const load = async ({
     roundNumber(areaBounds.getNorthWest().lat, numberOfDecimalPointsToConsider),
     roundNumber(
       capLng(areaBounds.getNorthWest().lng),
-      numberOfDecimalPointsToConsider
+      numberOfDecimalPointsToConsider,
     ),
     roundNumber(areaBounds.getSouthEast().lat, numberOfDecimalPointsToConsider),
     roundNumber(
       capLng(areaBounds.getSouthEast().lng),
-      numberOfDecimalPointsToConsider
+      numberOfDecimalPointsToConsider,
     ),
   ].join(",");
 
   const aroundValue = `${radius},${centerLatLng.lat},${capLng(
-    centerLatLng.lng
+    centerLatLng.lng,
   )}`;
 
   const highwayCategories = Object.values(difficultiesToHighwayCategories)
@@ -121,14 +121,14 @@ const load = async ({
   // If the query changes, the "cache" is automatically skipped
   const localStorageKey = `overpass-response2__${urlPath})`;
   const responseFromLocalStorage = ignoreError(() =>
-    localStorage.getItem(localStorageKey)
+    localStorage.getItem(localStorageKey),
   );
 
   // Prune localStorage
   Object.entries(ignoreError(() => localStorage) || {})
     .map(([key]) => key)
     .filter(
-      (key) => key !== localStorageKey && key.startsWith("overpass-response")
+      (key) => key !== localStorageKey && key.startsWith("overpass-response"),
     )
     .forEach((key) => ignoreError(() => localStorage.removeItem(key)));
 
@@ -148,7 +148,7 @@ const load = async ({
     throw new Error("Cannot parse Overpass API response");
   }
   ignoreError(() =>
-    localStorage.setItem(localStorageKey, JSON.stringify(result))
+    localStorage.setItem(localStorageKey, JSON.stringify(result)),
   );
   return result;
 };
@@ -200,7 +200,7 @@ export default async ({
       }) ||
       (element.tags.highway &&
         !difficultiesToHighwayCategories[difficulty].includes(
-          element.tags.highway
+          element.tags.highway,
         )) ||
       (difficulty !== Difficulty.TaxiDriver &&
         element.tags.access === "private")

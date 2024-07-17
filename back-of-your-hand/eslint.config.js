@@ -32,7 +32,7 @@ export default [
       ".svelte-kit/",
       "build/svelte-build-output",
       "dist/",
-      "goatcounter.js",
+      "**/goatcounter.js",
       "static/gc.js",
     ],
   },

@@ -14,13 +14,13 @@ export default async (): Promise<LatLng> => {
       },
       (e) => {
         ignoreError(() =>
-          localStorage.removeItem("lastKnownWebGeolocationPermissionState")
+          localStorage.removeItem("lastKnownWebGeolocationPermissionState"),
         );
         reject(e);
       },
       {
         enableHighAccuracy: true,
-      }
+      },
     );
   });
 };

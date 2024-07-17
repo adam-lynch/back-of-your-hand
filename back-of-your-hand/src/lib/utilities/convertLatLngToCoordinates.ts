@@ -13,14 +13,14 @@ const convertLatLngToCoordinates = (latlng: LatLng): Coordinates => [
 ];
 
 export const convertLatLngsToCoordinates = (
-  latLngs: PotentiallyNestedLatLngs
+  latLngs: PotentiallyNestedLatLngs,
 ): PotentiallyNestedCoordinates => {
   const result: PotentiallyNestedCoordinates = [];
 
   for (const item of latLngs) {
     if (isArray(item)) {
       result.push(
-        convertLatLngsToCoordinates(item) as PotentiallyNestedCoordinates[0]
+        convertLatLngsToCoordinates(item) as PotentiallyNestedCoordinates[0],
       );
     } else {
       result.push(convertLatLngToCoordinates(item));

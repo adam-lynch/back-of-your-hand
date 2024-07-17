@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { orderedQuestions, round, totalScore } from './store';
-  import computeTotalScore from './utilities/computeTotalScore';
+  import { orderedQuestions, round, totalScore } from "./store";
+  import computeTotalScore from "./utilities/computeTotalScore";
   export let onRestartClicked: () => void;
   export let reset: () => void;
 </script>
@@ -20,7 +20,7 @@
     {#each $orderedQuestions ?? [] as question}
       <li>
         <span class="results-list__street-name single-line-text-overflow">
-          {question.target.name} 
+          {question.target.name}
           {#if question.target.alternativeName}
             ({question.target.alternativeName})
           {/if}
@@ -35,14 +35,12 @@
   <div class="call-to-action">
     <button
       class="button--primary"
-      on:click={onRestartClicked}>
+      on:click={onRestartClicked}
+    >
       Start a new round
     </button>
 
-    <button
-      on:click={reset}>
-      Reset
-    </button>
+    <button on:click={reset}> Reset </button>
   </div>
 </div>
 
@@ -88,7 +86,13 @@
     border-radius: 5px;
     color: black;
     background: white;
-    background: linear-gradient(135deg, white 30%, #ff0 50%, #ffe300, white 70%);
+    background: linear-gradient(
+      135deg,
+      white 30%,
+      #ff0 50%,
+      #ffe300,
+      white 70%
+    );
     background-size: 400% 400%;
     animation: Shimmer 1s ease infinite reverse;
   }
@@ -98,10 +102,13 @@
       animation: none;
     }
   }
-  
 
   @keyframes Shimmer {
-    0% { background-position: 0% 50% }
-    100% { background-position: 100% 50% }
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
   }
 </style>

@@ -17,10 +17,12 @@
     <p>There was an unexpected error. Sorry about this.</p>
     <button
       class="button--primary"
-      on:click={onRefreshClicked}>Reset</button>
+      on:click={onRefreshClicked}>Reset</button
+    >
     <button
       class="button"
-      on:click={onFeedbackClicked}>Send feedback</button>
+      on:click={onFeedbackClicked}>Send feedback</button
+    >
 
     {#if error}
       <h2>Error details</h2>

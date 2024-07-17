@@ -46,16 +46,16 @@ export default ({
     (result, targetPoints) => [
       ...result,
       ...targetPoints.map((targetPoint) =>
-        createPoint(convertLatLngToCoordinates(targetPoint))
+        createPoint(convertLatLngToCoordinates(targetPoint)),
       ),
     ],
-    []
+    [],
   );
 
   let circle;
   if (!question.target.isEnclosedArea && shouldDrawCircle) {
     const targetCenterCoordinates = getCenter.default(
-      createFeatureCollection(targetTurfPoints)
+      createFeatureCollection(targetTurfPoints),
     ).geometry.coordinates as leaflet.LatLngExpression;
 
     circle = leaflet
@@ -66,7 +66,7 @@ export default ({
         radius:
           Math.max(
             targetBounds.getNorthWest().distanceTo(targetBounds.getSouthEast()),
-            targetBounds.getNorthEast().distanceTo(targetBounds.getSouthWest())
+            targetBounds.getNorthEast().distanceTo(targetBounds.getSouthWest()),
           ) * 0.8,
         weight: 1,
       })

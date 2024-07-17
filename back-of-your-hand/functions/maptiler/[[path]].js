@@ -10,6 +10,6 @@ export async function onRequestGet({ request }) {
   return fetch(
     new Request(parsedUrl.toString(), {
       headers: request.headers,
-    })
+    }),
   );
 }

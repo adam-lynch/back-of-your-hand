@@ -11,8 +11,7 @@ export default async (): Promise<void> => {
   }
 
   await new Promise<void>((resolve) => {
-    let unsubscribe: ReturnType<typeof isZooming.subscribe>;
-    unsubscribe = isZooming.subscribe((value) => {
+    const unsubscribe = isZooming.subscribe((value) => {
       if (value) {
         return;
       }

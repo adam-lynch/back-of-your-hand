@@ -2,12 +2,12 @@ import type { Overpass } from "./types";
 
 const isUsableAlternativeName = (
   alternativeName: string | void,
-  mainName: string
+  mainName: string,
 ): boolean => alternativeName && alternativeName !== mainName;
 
 const getAlternativeName = (
   element: Overpass.Element,
-  mainName: string
+  mainName: string,
 ): { languageCode?: string; name: string } | void => {
   if (isUsableAlternativeName(element.tags["name:ga"], mainName)) {
     return {

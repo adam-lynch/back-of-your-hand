@@ -1,0 +1,205 @@
+:global(.hide-accessibly) {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+:global(ol),
+:global(ul) {
+  list-style: none;
+}
+
+:global(fieldset) {
+  all: unset;
+}
+
+:global(input) {
+  accent-color: #df206f;
+}
+
+:global(.single-line-text-overflow) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:global(.slider) {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+:global(.slider::-webkit-slider-thumb) {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #df206f;
+  cursor: pointer;
+}
+
+:global(.slider::-webkit-slider-thumb:hover) {
+  background: #d11563;
+}
+
+:global(.slider::-moz-range-thumb) {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #df206f;
+  cursor: pointer;
+}
+
+:global(.slider::-moz-range-thumb:hover) {
+  background: #d11563;
+}
+
+:global(button) {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  background: #f0f0f0;
+  background: rgba(240, 240, 240, 0.85);
+  color: #000;
+  text-shadow: 0 1px 2px white;
+  cursor: pointer;
+}
+
+:global(button:hover),
+:global(button:active) {
+  background: #d8d8d8;
+}
+
+:global(button:active) {
+  position: relative;
+  top: 1px;
+  text-shadow: 0 0 2px white;
+}
+
+:global(button:focus) {
+  outline: none;
+}
+
+:global(button:focus-visible) {
+  box-shadow:
+    0 0 0 3px #000,
+    0 0 0 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.6s linear;
+}
+
+:global(.button--primary) {
+  background: #df206f;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+:global(.button--primary:hover),
+:global(.button--primary:active) {
+  background: #d11563;
+}
+
+:global(.button--primary:active),
+:global(.button--secondary:active) {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+:global(.button--secondary) {
+  background: #922b56;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+:global(.button--secondary:hover),
+:global(.button--secondary:active) {
+  background: #a22257;
+}
+
+:global(button:disabled),
+:global(button:disabled:active),
+:global(button:disabled:hover) {
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+:global(button:disabled:active) {
+  position: relative;
+  top: 1px;
+}
+
+:global(.button-group) {
+  display: flex;
+  justify-content: flex-end;
+}
+
+:global(.button-group button + button) {
+  margin-left: 20px;
+}
+
+:global(.summary-street-tooltip) {
+  max-width: 250px;
+  display: block;
+  color: black;
+}
+
+@media (min-width: 800px) {
+  :global(.summary-street-tooltip) {
+    font-size: 1.25rem;
+  }
+}
+
+:global(.full-screen-display) {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999999;
+
+  overflow-y: auto;
+  background: white;
+}
+
+:global(.full-screen-display__inner) {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+:global(.full-screen-display__inner > *) {
+  margin-top: 1.5rem;
+}
+
+:global(.full-screen-display__innerbutton:first-of-type) {
+  margin-right: 0.75rem;
+}
+
+:global(.full-screen-display__inner h2) {
+  font-size: 1.2rem;
+}
+
+:global(.full-screen-display__innerpre) {
+  padding: 0.5rem;
+  overflow: auto;
+  background: #f3f3f3;
+  font-size: 0.7rem;
+}
+
+:global(.unstyled-link),
+:global(.unstyled-link:active),
+:global(.unstyled-link:focus),
+:global(.unstyled-link:hover) {
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}

@@ -605,6 +605,175 @@
 />
 
 <style>
+  .leaflet-control-container .leaflet-top.leaflet-right {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .leaflet-bar a,
+  .leaflet-touch .leaflet-bar a {
+    height: auto !important;
+    width: auto !important;
+    padding: 2px 10px !important;
+  }
+
+  .leaflet-bar a,
+  .leaflet-bar button,
+  .leaflet-touch .leaflet-bar a {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    text-align: left !important;
+  }
+
+  @media (min-width: 800px) {
+    .leaflet-bar a,
+    .leaflet-bar button,
+    .leaflet-touch .leaflet-right a {
+      padding: 2px 7px 2px 10px !important;
+      font-size: 1rem !important;
+    }
+  }
+
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    user-select: none;
+  }
+
+  .leaflet-control-zoom-in:active,
+  .leaflet-control-zoom-in:hover,
+  .leaflet-control-zoom-out:active,
+  .leaflet-control-zoom-out:hover {
+    opacity: 1;
+  }
+
+  .leaflet-control-zoom-in.leaflet-disabled,
+  .leaflet-control-zoom-out.leaflet-disabled {
+    /* Just hide it rather than have an inaccessible colour contrast */
+    display: none;
+  }
+
+  .leaflet-locate-control {
+    display: flex;
+    background: #fff;
+    cursor: pointer;
+    /* Copied from leaflet zoom control */
+    font:
+      bold 18px "Lucida Console",
+      Monaco,
+      monospace;
+  }
+
+  .leaflet-locate-control:hover {
+    background: #f4f4f4;
+  }
+
+  .leaflet-locate-control button,
+  .leaflet-locate-control button:active,
+  .leaflet-locate-control button:focus,
+  .leaflet-locate-control :hover {
+    all: unset;
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    line-height: 30px;
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  @media (min-width: 800px) {
+    .leaflet-locate-control button,
+    .leaflet-locate-control button:active,
+    .leaflet-locate-control button:focus,
+    .leaflet-locate-control button:hover {
+      padding-left: 5px !important;
+    }
+  }
+
+  .leaflet-locate-control svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+  }
+
+  @media (min-width: 800px) {
+    .leaflet-locate-control svg {
+      position: static;
+      transform: none;
+    }
+  }
+
+  .leaflet-locate-control span {
+    position: relative;
+    top: 1px;
+    margin-left: 6px;
+  }
+
+  .leaflet-container a.leaflet-popup-close-button {
+    /* For better colour contrast */
+    color: #636363;
+  }
+
+  .leaflet-tooltip {
+    color: black;
+    opacity: 0.8 !important;
+  }
+
+  #map:not(.leaflet-safari) .leaflet-tile-container {
+    filter: grayscale(0.8);
+  }
+
+  #map:not(.leaflet-safari) .leaflet-tile {
+    filter: saturate(8) hue-rotate(-10deg);
+  }
+
+  /* Safari filters are broken */
+  .leaflet-safari .leaflet-tile-pane .leaflet-layer {
+    filter: grayscale(0.9);
+  }
+  .leaflet-safari .leaflet-tile-container {
+    filter: saturate(4) hue-rotate(-10deg);
+  }
+
+  :global(sharp-img) {
+    position: relative;
+    overflow: hidden;
+  }
+
+  :global(sharp-img img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(sharp-img .sharpen) {
+    mix-blend-mode: hard-light;
+  }
+
+  :global(sharp-img .sharpen),
+  :global(sharp-img .sharpen::before),
+  :global(sharp-img .sharpen::after) {
+    position: absolute;
+    inset: 0;
+  }
+
+  :global(sharp-img .sharpen::before),
+  :global(sharp-img .sharpen::after) {
+    content: "";
+    background-image: var(--sharp-img-css-background-image);
+    background-repeat: no-repeat;
+  }
+
+  :global(sharp-img .sharpen::after) {
+    filter: invert(1);
+    opacity: 0.5;
+    top: -1px;
+    left: -1px;
+  }
+  
   #map {
     height: 100%;
     flex: 1;

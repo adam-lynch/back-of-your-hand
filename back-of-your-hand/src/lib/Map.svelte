@@ -55,9 +55,7 @@
   const CustomTileLayer = leaflet.TileLayer.extend({
     createTile: function (coords: unknown, done: () => void) {
       const tile = document.createElement("sharp-img") as HTMLSharpImage;
-      // @ts-ignore
       tile.onload = leaflet.bind(this._tileOnLoad, this, done, tile);
-      // @ts-ignore
       tile.onerror = leaflet.bind(this._tileOnError, this, done, tile);
 
       tile.alt = "";
@@ -402,7 +400,7 @@
     if (window.ResizeObserver !== undefined) {
       new ResizeObserver(
         debounce(
-          (...args) => {
+          () => {
             if (map) {
               map.invalidateSize();
             }

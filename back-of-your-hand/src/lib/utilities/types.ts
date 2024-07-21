@@ -46,6 +46,7 @@ export type State = {
   round?: Round;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Overpass {
   export type LatLng = {
     lat: number;

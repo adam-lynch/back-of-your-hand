@@ -9,7 +9,7 @@ export default (
   latLng: LatLng,
   polygonPoints: PotentiallyNestedLatLngs
 ): boolean => {
-  let polygonCoordinates = convertLatLngsToCoordinates(polygonPoints);
+  const polygonCoordinates = convertLatLngsToCoordinates(polygonPoints);
   let safePolygonCoordinates: Parameters<typeof isPointInPolygon>[1];
 
   /*

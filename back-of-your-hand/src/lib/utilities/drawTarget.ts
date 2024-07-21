@@ -16,7 +16,7 @@ export default ({
   shouldDrawCircle, // The summary doesn't have circles around each street
 }: {
   color?: string;
-  layer: leaflet.Map | leaflet.LayerGroup<any>;
+  layer: leaflet.Map | leaflet.LayerGroup<unknown>;
   question: Question;
   shouldDrawCircle?: boolean;
 }) => {

@@ -29,11 +29,9 @@ export default [
   },
   {
     ignores: [
-      ".svelte-kit/",
-      "build/svelte-build-output",
-      "dist/",
-      "**/goatcounter.js",
-      "static/gc.js",
+      "public/build",
+      "public/gc.js",
+      "src/lib/third-party",
     ],
   },
 ];

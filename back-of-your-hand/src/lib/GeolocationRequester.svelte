@@ -20,7 +20,7 @@
         title: "Web geolocation prompt flow complete",
       });
     } catch (e) {
-      if (!(e instanceof GeolocationPositionError)) {
+      if (!(e instanceof window.GeolocationPositionError)) {
         ignoreError(() =>
           localStorage.removeItem("lastKnownWebGeolocationPermissionState"),
         );
@@ -53,7 +53,7 @@
     ignoreError(() =>
       localStorage.removeItem("lastKnownWebGeolocationPermissionState"),
     );
-    // @ts-ignore
+    // @ts-expect-error this is valid
     window.location = window.location.href;
   };
 </script>

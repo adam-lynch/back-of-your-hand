@@ -1,8 +1,7 @@
-// @ts-nocheck
 /* eslint-disable */
 // https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
 
-const xmur3 = (str) => {
+const xmur3 = (str: string): (() => number) => {
   for (var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
     (h = Math.imul(h ^ str.charCodeAt(i), 3432918353)),
       (h = (h << 13) | (h >>> 19));
@@ -13,7 +12,7 @@ const xmur3 = (str) => {
   };
 };
 
-const sfc32 = (a, b, c, d): (() => number) => {
+const sfc32 = (a: number, b: number, c: number, d: number): (() => number) => {
   return function () {
     a >>>= 0;
     b >>>= 0;

@@ -82,7 +82,7 @@ const load = async ({
 }) => {
   // Setting the bounding box is important. It massively speeds up the query
   const numberOfDecimalPointsToConsider = 4;
-  let bboxValue = [
+  const bboxValue = [
     roundNumber(areaBounds.getNorthWest().lat, numberOfDecimalPointsToConsider),
     roundNumber(
       capLng(areaBounds.getNorthWest().lng),
@@ -183,7 +183,7 @@ export default async ({
 
   // Iterate through all items, filter them based on the exclusion criteria
   // and add them to the pot without duplicates.
-  for (let element of elements) {
+  for (const element of elements) {
     const key = element.tags.name?.toLowerCase();
 
     if (

@@ -8,10 +8,10 @@ initializeErrorReporting();
 import App from "./lib/App.svelte";
 import FatalErrorDisplay from "./lib/FatalErrorDisplay.svelte";
 
-let app: any;
+let app: App | FatalErrorDisplay;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onUnhandledError = (e: any) => {
-  // @ts-ignore
   if (import.meta.env.DEV) {
     console.error("Unhandled error");
     console.error(e);

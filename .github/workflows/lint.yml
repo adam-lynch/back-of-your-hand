@@ -8,5 +8,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
+      # TODO: remove cd
       - run: cd back-of-your-hand && npm install
       - run: cd back-of-your-hand && npm run lint--no-fix

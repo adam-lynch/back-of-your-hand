@@ -6,9 +6,13 @@
   "browserslist": "> 0.25%, not dead",
   "scripts": {
     "build": "vite build",
-    "check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
     "dev": "vite",
-    "preview": "vite preview"
+    "format": "prettier --write .",
+    "lint": "npm run format && npm run svelte-check && eslint --fix .",
+    "lint--no-fix": "eslint . && prettier --check .",
+    "preview": "vite preview",
+    "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
+    "test": "echo 'No tests yet, but I'm open to it'"
   },
   "dependencies": {
     "@sentry/browser": "^6.19.7",
@@ -29,11 +33,18 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
+    "@types/eslint": "^8.56.10",
     "@types/point-in-polygon": "^1.1.5",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-svelte": "^2.43.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.6",
     "svelte": "^4.2.18",
     "svelte-check": "^3.8.4",
     "tslib": "^2.6.3",
     "typescript": "^5.2.2",
+    "typescript-eslint": "^7.16.1",
     "vite": "^5.3.4"
   }
 }

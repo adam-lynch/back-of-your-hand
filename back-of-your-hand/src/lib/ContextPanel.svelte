@@ -25,7 +25,7 @@
 
   export let areSettingsShown = writable(false);
 
-  const onNumberOfQuestionsUpdated: EventListener = (event) => {
+  const onNumberOfQuestionsUpdated = (event: Event) => {
     const amount = parseInt((event.target as HTMLInputElement).value);
     numberOfQuestions.update(() => amount);
   };

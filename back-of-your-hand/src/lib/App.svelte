@@ -28,7 +28,7 @@
   import trackEvent from "./utilities/trackEvent";
   import { defineCustomElements } from "./customElements";
 
-  export let unhandledError = null;
+  export let unhandledError: Error | null = null;
 
   defineCustomElements();
 
@@ -129,10 +129,10 @@
     }
 
     // TODO: fix and remove ts comments on seed
-    // @ts-ignore
+    // @ts-expect-error ...
     if (value.seed && value.seed !== lastSeenSeed) {
       updateUrl();
-      // @ts-ignore
+      // @ts-expect-error ...
       lastSeenSeed = value.seed;
     }
 

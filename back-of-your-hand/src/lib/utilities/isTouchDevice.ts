@@ -2,7 +2,7 @@
 export default () => {
   if ("ontouchstart" in window || window.TouchEvent) return true;
 
-  // @ts-ignore
+  // @ts-expect-error ...
   if (window.DocumentTouch && document instanceof DocumentTouch) {
     return true;
   }

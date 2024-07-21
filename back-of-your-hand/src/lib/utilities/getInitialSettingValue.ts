@@ -10,7 +10,10 @@ function getFromUrl<T>({
   urlSearchParams: URLSearchParams;
 }): T | void {
   if (urlSearchParams.has(name)) {
-    return parse(ignoreError(() => urlSearchParams.get(name)));
+    const unparsedValue = ignoreError(() => urlSearchParams.get(name));
+    if (unparsedValue !== null) {
+      return parse(unparsedValue);
+    }
   }
 }
 
@@ -21,10 +24,13 @@ function getFromStorage<T>({
   name: string;
   parse: (input: string | void) => T | void;
 }): T | void {
-  return parse(ignoreError(() => localStorage.getItem(name)));
+  const unparsedValue = ignoreError(() => localStorage.getItem(name));
+  if (unparsedValue !== null) {
+    return parse(unparsedValue);
+  }
 }
 
-export default <T>({
+export default <T extends number | object | string>({
   defaultValue,
   name,
   parse = (input: string | void) => input as unknown as T,
@@ -44,6 +50,6 @@ export default <T>({
       // Did they play previously?
       getFromStorage<T>({ name, parse: safeParse }) ||
       // Return the default value.
-      defaultValue,
+      defaultValue
   );
 };

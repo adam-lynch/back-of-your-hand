@@ -43,3 +43,25 @@ This project uses TypeScript, but the actual amount of it used is very little. T
 # Deploying to production
 
 This automatically happens when a pull-request is merged / a commit is pushed to the main branch.
+
+
+## VSCode
+
+Add this to your workspace-level settings:
+
+```
+"svelte.plugin.svelte.compilerWarnings": {
+  "css-unused-selector": "ignore",
+}
+```
+
+
+# TODO: keep or not?
+
+**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+
+Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+
+**Why enable `allowJs` in the TS template?**
+
+While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.

@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { goto, replaceState } from "$app/navigation";
   import debounce from "lodash/debounce";
   import { writable } from "svelte/store";
 
-  import GeolocationRequester from "$lib/GeolocationRequester.svelte";
-  import HUD from "$lib/HUD.svelte";
-  import ContextPanel from "$lib/ContextPanel.svelte";
-  import FatalErrorDisplay from "$lib/FatalErrorDisplay.svelte";
-  import Map from "$lib/Map.svelte";
-  import computeTotalScore from "$lib/utilities/computeTotalScore";
-  import ignoreError from "$lib/utilities/ignoreError";
+  import GeolocationRequester from "./GeolocationRequester.svelte";
+  import HUD from "./HUD.svelte";
+  import ContextPanel from "./ContextPanel.svelte";
+  import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
+  import Map from "./Map.svelte";
+  import computeTotalScore from "./utilities/computeTotalScore";
+  import ignoreError from "./utilities/ignoreError";
   import {
     areaBounds,
     areaCenter,
@@ -23,11 +22,11 @@
     numberOfQuestions,
     round,
     totalScore,
-  } from "$lib/store";
-  import loadRound from "$lib/utilities/loadRound";
-  import type { LatLng } from "$lib/utilities/types";
-  import trackEvent from "$lib/utilities/trackEvent";
-  import { defineCustomElements } from "$lib/customElements";
+  } from "./store";
+  import loadRound from "./utilities/loadRound";
+  import type { LatLng } from "./utilities/types";
+  import trackEvent from "./utilities/trackEvent";
+  import { defineCustomElements } from "./customElements";
 
   export let unhandledError = null;
 
@@ -39,9 +38,7 @@
 
   const updateUrl = debounce(
     () => {
-      // goto($gameUrl, { replaceState: true, noScroll: true, });
       history.replaceState(null, '', $gameUrl);
-      // replaceState($gameUrl, {});
     },
     250,
     { trailing: true },
@@ -82,6 +79,10 @@
   isAreaConfirmed.subscribe(async (isConfirmed) => {
     if (!isConfirmed) {
       return;
+    }
+
+    if (!$areaBounds) {
+      throw new Error('no areaBounds');
     }
 
     loadRound({
@@ -127,9 +128,11 @@
       return;
     }
 
-    // TODO
-    if (value.seed !== lastSeenSeed) {
+    // TODO: fix and remove ts comments on seed
+    // @ts-ignore
+    if (value.seed && value.seed !== lastSeenSeed) {
       updateUrl();
+      // @ts-ignore
       lastSeenSeed = value.seed;
     }
 
@@ -174,7 +177,7 @@
   {:else}
     <!-- This is like a sidebar (but not really), I couldn't think of a better name -->
     <ContextPanel bind:areSettingsShown />
-    <!-- <Map {areSettingsShown} /> -->
+    <Map {areSettingsShown} />
     <p class="hide-accessibly"
       ><a href="#context-panel">Back to context panel</a></p
     >
@@ -183,19 +186,8 @@
   {/if}
 </main>
 
-<!-- Disable unused CSS selector warnings -->
-<!-- eslint-disable svelte/valid-compile -->
-<style global>
-  @import './root.css';
-  @import './common.css';
-
-  /*
-  * ---------------------------------------------------------------------------------
-  * App component styles below
-  * ---------------------------------------------------------------------------------
-  */
-
-  :global(main) {
+<style global lang="postcss">
+  main {
     height: 100%;
     display: grid;
     grid-template-columns: auto;
@@ -229,7 +221,7 @@
     (min-width: 400px) and (max-height: 277px),
     (min-width: 350px) and (max-height: 237px),
     (min-width: 300px) and (max-height: 198px) {
-    :global(main) {
+    main {
       grid-template-columns: minmax(auto, 33%) 1fr;
       grid-template-rows: auto;
       grid-template-areas: "context-panel map";

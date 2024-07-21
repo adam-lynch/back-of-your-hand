@@ -1,6 +1,6 @@
 import ignoreError from "./ignoreError";
 
-export default ({ name, title }) => {
+export default ({ name, title }: { name: string; title: string }) => {
   ignoreError(() => {
     // @ts-ignore
     window.goatcounter.count({

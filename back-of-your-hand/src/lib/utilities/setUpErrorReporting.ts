@@ -1,10 +1,9 @@
-import { dev } from "$app/environment";
 import * as Sentry from "@sentry/browser";
 import ignoreError from "./ignoreError";
 
 export const initializeErrorReporting = () => {
   // @ts-ignore
-  if (dev) {
+  if (import.meta.env.DEV) {
     return;
   }
   ignoreError(() =>
@@ -21,13 +20,13 @@ export const initializeErrorReporting = () => {
       // @ts-ignore
       release: COMMIT_ID,
       tracesSampleRate: 0,
-    }),
+    })
   );
 };
 
 export const reportError = (error: Error) => {
   // @ts-ignore
-  if (dev) {
+  if (import.meta.env.DEV) {
     return;
   }
   ignoreError(() => Sentry.captureException(error));

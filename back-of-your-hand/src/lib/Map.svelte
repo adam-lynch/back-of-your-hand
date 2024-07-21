@@ -45,12 +45,12 @@
     shouldShowAreaBoundsPopup: true,
   };
   const defaultMinZoom = 3.5;
-  let chosenPointMarker: leaflet.Marker;
+  let chosenPointMarker: leaflet.Marker | null;
   let hasShownPredefinedAreaChangedWarning: boolean;
   let map: leaflet.Map;
   let mapElement: HTMLElement;
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
-  let resultFeatureGroup: leaflet.FeatureGroup;
+  let resultFeatureGroup: leaflet.FeatureGroup | null;
 
   const CustomTileLayer = leaflet.TileLayer.extend({
     createTile: function (coords: unknown, done: () => void) {
@@ -211,6 +211,10 @@
       throw new Error("No currentQuestion");
     }
 
+    if (!chosenPointMarker) {
+      throw new Error('chosenPointMarker is falsy');
+    }
+
     /* First, compute the distance / score */
 
     const chosenLatLng = chosenPointMarker.getLatLng();
@@ -272,7 +276,7 @@
       shouldDrawCircle: true,
     });
 
-    if (distance > 0) {
+    if (distance > 0 && nearestPointOnStreet) {
       const distancePolyline = leaflet
         .polyline([chosenLatLng, nearestPointOnStreet], {
           color: "black",
@@ -395,12 +399,10 @@
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)
-    // @ts-ignore
     if (window.ResizeObserver !== undefined) {
-      // @ts-ignore
       new ResizeObserver(
         debounce(
-          () => {
+          (...args) => {
             if (map) {
               map.invalidateSize();
             }
@@ -424,7 +426,7 @@
       map.removeLayer(resultFeatureGroup);
       resultFeatureGroup = null;
     }
-    if (shouldFitBounds) {
+    if (shouldFitBounds && $areaBounds) {
       map.fitBounds($areaBounds).once("zoomend", () => {
         // This prevents the map going (and staying gray) on Firefox for Android sometimes
         map.panBy([1, 1]);
@@ -434,6 +436,9 @@
 
   // Draw all streets on the map, etc.
   const showSummary = debounce(() => {
+    if (!$round) {
+      throw new Error('No round');
+    }
     chosenPoint.set(null);
     resetMap(false, true);
 
@@ -442,7 +447,7 @@
     $round.questions.forEach((question) => {
       const { targetLayer } = drawTarget({
         color: "#ff2882",
-        layer: resultFeatureGroup,
+        layer: resultFeatureGroup as NonNullable<typeof resultFeatureGroup>,
         question,
       });
       const tooltipContentElement = document.createElement("span");
@@ -535,6 +540,10 @@
           minDesiredZoom,
         );
         setTimeout(() => {
+          if (!chosenPointMarker) {
+            console.warn('No chosenPointMarker, skipping map.flyTo');
+            return;
+          }
           map.flyTo(chosenPointMarker.getLatLng(), newZoom, {
             animate: true,
             duration: 0.5,
@@ -560,7 +569,9 @@
     isAreaConfirmed.subscribe((isConfirmed) => {
       // They've chosen to start a new round, back to area selection
       if (!isConfirmed) {
-        map.setMaxBounds(null).setMinZoom(defaultMinZoom);
+        // @ts-expect-error I don't see any other way to do this
+        map.setMaxBounds(null)
+          .setMinZoom(defaultMinZoom);
         resetMap(false, true);
         locateControl.add(map);
         markBounds(areaSelectionMarkBoundsOptions);
@@ -604,179 +615,181 @@
   id="map"
 />
 
-<style>
-  .leaflet-control-container .leaflet-top.leaflet-right {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .leaflet-bar a,
-  .leaflet-touch .leaflet-bar a {
-    height: auto !important;
-    width: auto !important;
-    padding: 2px 10px !important;
-  }
-
-  .leaflet-bar a,
-  .leaflet-bar button,
-  .leaflet-touch .leaflet-bar a {
-    font-size: 1.2rem !important;
-    font-weight: bold !important;
-    text-align: left !important;
-  }
-
-  @media (min-width: 800px) {
-    .leaflet-bar a,
-    .leaflet-bar button,
-    .leaflet-touch .leaflet-right a {
-      padding: 2px 7px 2px 10px !important;
-      font-size: 1rem !important;
+<style global lang="postcss">
+  :global(body) {
+    & .leaflet-control-container .leaflet-top.leaflet-right {
+      display: flex;
+      flex-direction: column;
     }
-  }
 
-  .leaflet-control-zoom-in,
-  .leaflet-control-zoom-out {
-    user-select: none;
-  }
-
-  .leaflet-control-zoom-in:active,
-  .leaflet-control-zoom-in:hover,
-  .leaflet-control-zoom-out:active,
-  .leaflet-control-zoom-out:hover {
-    opacity: 1;
-  }
-
-  .leaflet-control-zoom-in.leaflet-disabled,
-  .leaflet-control-zoom-out.leaflet-disabled {
-    /* Just hide it rather than have an inaccessible colour contrast */
-    display: none;
-  }
-
-  .leaflet-locate-control {
-    display: flex;
-    background: #fff;
-    cursor: pointer;
-    /* Copied from leaflet zoom control */
-    font:
-      bold 18px "Lucida Console",
-      Monaco,
-      monospace;
-  }
-
-  .leaflet-locate-control:hover {
-    background: #f4f4f4;
-  }
-
-  .leaflet-locate-control button,
-  .leaflet-locate-control button:active,
-  .leaflet-locate-control button:focus,
-  .leaflet-locate-control :hover {
-    all: unset;
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    min-height: 34px;
-    line-height: 30px;
-    box-shadow: none;
-    cursor: pointer;
-  }
-
-  @media (min-width: 800px) {
-    .leaflet-locate-control button,
-    .leaflet-locate-control button:active,
-    .leaflet-locate-control button:focus,
-    .leaflet-locate-control button:hover {
-      padding-left: 5px !important;
+    & .leaflet-bar a,
+    & .leaflet-touch .leaflet-bar a {
+      height: auto !important;
+      width: auto !important;
+      padding: 2px 10px !important;
     }
-  }
 
-  .leaflet-locate-control svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-  }
-
-  @media (min-width: 800px) {
-    .leaflet-locate-control svg {
-      position: static;
-      transform: none;
+    & .leaflet-bar a,
+    & .leaflet-bar button,
+    & .leaflet-touch .leaflet-bar a {
+      font-size: 1.2rem !important;
+      font-weight: bold !important;
+      text-align: left !important;
     }
-  }
 
-  .leaflet-locate-control span {
-    position: relative;
-    top: 1px;
-    margin-left: 6px;
-  }
+    @media (min-width: 800px) {
+      & .leaflet-bar a,
+      & .leaflet-bar button,
+      & .leaflet-touch .leaflet-right a {
+        padding: 2px 7px 2px 10px !important;
+        font-size: 1rem !important;
+      }
+    }
 
-  .leaflet-container a.leaflet-popup-close-button {
-    /* For better colour contrast */
-    color: #636363;
-  }
+    & .leaflet-control-zoom-in,
+    & .leaflet-control-zoom-out {
+      user-select: none;
+    }
 
-  .leaflet-tooltip {
-    color: black;
-    opacity: 0.8 !important;
-  }
+    & .leaflet-control-zoom-in:active,
+    & .leaflet-control-zoom-in:hover,
+    & .leaflet-control-zoom-out:active,
+    & .leaflet-control-zoom-out:hover {
+      opacity: 1;
+    }
 
-  #map:not(.leaflet-safari) .leaflet-tile-container {
-    filter: grayscale(0.8);
-  }
+    & .leaflet-control-zoom-in.leaflet-disabled,
+    & .leaflet-control-zoom-out.leaflet-disabled {
+      /* Just hide it rather than have an inaccessible colour contrast */
+      display: none;
+    }
 
-  #map:not(.leaflet-safari) .leaflet-tile {
-    filter: saturate(8) hue-rotate(-10deg);
-  }
+    & .leaflet-locate-control {
+      display: flex;
+      background: #fff;
+      cursor: pointer;
+      /* Copied from leaflet zoom control */
+      font:
+        bold 18px "Lucida Console",
+        Monaco,
+        monospace;
+    }
 
-  /* Safari filters are broken */
-  .leaflet-safari .leaflet-tile-pane .leaflet-layer {
-    filter: grayscale(0.9);
-  }
-  .leaflet-safari .leaflet-tile-container {
-    filter: saturate(4) hue-rotate(-10deg);
-  }
+    & .leaflet-locate-control:hover {
+      background: #f4f4f4;
+    }
 
-  :global(sharp-img) {
-    position: relative;
-    overflow: hidden;
-  }
+    & .leaflet-locate-control button,
+    & .leaflet-locate-control button:active,
+    & .leaflet-locate-control button:focus,
+    & .leaflet-locate-control :hover {
+      all: unset;
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      min-height: 34px;
+      line-height: 30px;
+      box-shadow: none;
+      cursor: pointer;
+    }
 
-  :global(sharp-img img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+    @media (min-width: 800px) {
+      & .leaflet-locate-control button,
+      & .leaflet-locate-control button:active,
+      & .leaflet-locate-control button:focus,
+      & .leaflet-locate-control button:hover {
+        padding-left: 5px !important;
+      }
+    }
 
-  :global(sharp-img .sharpen) {
-    mix-blend-mode: hard-light;
-  }
+    & .leaflet-locate-control svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+    }
 
-  :global(sharp-img .sharpen),
-  :global(sharp-img .sharpen::before),
-  :global(sharp-img .sharpen::after) {
-    position: absolute;
-    inset: 0;
-  }
+    @media (min-width: 800px) {
+      & .leaflet-locate-control svg {
+        position: static;
+        transform: none;
+      }
+    }
 
-  :global(sharp-img .sharpen::before),
-  :global(sharp-img .sharpen::after) {
-    content: "";
-    background-image: var(--sharp-img-css-background-image);
-    background-repeat: no-repeat;
-  }
+    & .leaflet-locate-control span {
+      position: relative;
+      top: 1px;
+      margin-left: 6px;
+    }
 
-  :global(sharp-img .sharpen::after) {
-    filter: invert(1);
-    opacity: 0.5;
-    top: -1px;
-    left: -1px;
-  }
-  
-  #map {
-    height: 100%;
-    flex: 1;
-    grid-area: map;
+    & .leaflet-container a.leaflet-popup-close-button {
+      /* For better colour contrast */
+      color: #636363;
+    }
+
+    & .leaflet-tooltip {
+      color: black;
+      opacity: 0.8 !important;
+    }
+
+    & #map:not(.leaflet-safari) .leaflet-tile-container {
+      filter: grayscale(0.8);
+    }
+
+    & #map:not(.leaflet-safari) .leaflet-tile {
+      filter: saturate(8) hue-rotate(-10deg);
+    }
+
+    /* Safari filters are broken */
+    & .leaflet-safari .leaflet-tile-pane .leaflet-layer {
+      filter: grayscale(0.9);
+    }
+    & .leaflet-safari .leaflet-tile-container {
+      filter: saturate(4) hue-rotate(-10deg);
+    }
+
+    & sharp-img {
+      position: relative;
+      overflow: hidden;
+    }
+
+    & sharp-img img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    & sharp-img .sharpen {
+      mix-blend-mode: hard-light;
+    }
+
+    & sharp-img .sharpen,
+    & sharp-img .sharpen::before,
+    & sharp-img .sharpen::after {
+      position: absolute;
+      inset: 0;
+    }
+
+    & sharp-img .sharpen::before,
+    & sharp-img .sharpen::after {
+      content: "";
+      background-image: var(--sharp-img-css-background-image);
+      background-repeat: no-repeat;
+    }
+
+    & sharp-img .sharpen::after {
+      filter: invert(1);
+      opacity: 0.5;
+      top: -1px;
+      left: -1px;
+    }
+    
+    & #map {
+      height: 100%;
+      flex: 1;
+      grid-area: map;
+    }
   }
 </style>

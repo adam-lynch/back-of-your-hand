@@ -1,6 +1,8 @@
 import leaflet from "leaflet";
 import getCenter from "@turf/center";
+// @ts-expect-error no types provided
 import createFeatureCollection from "turf-featurecollection";
+// @ts-expect-error no types provided
 import createPoint from "turf-point";
 
 import convertLatLngToCoordinates from "./convertLatLngToCoordinates";
@@ -18,8 +20,11 @@ export default ({
   question: Question;
   shouldDrawCircle?: boolean;
 }) => {
+  if (!question.distance) {
+    throw new Error("question.distance does not exist");
+  }
   const colorToUse = color || getColorFromDistance(question.distance.amount);
-  let targetLayer: leaflet.Polygon | leaflet.Polyline;
+  let targetLayer: leaflet.Polygon | ReturnType<typeof leaflet.polyline>;
 
   if (question.target.isEnclosedArea) {
     targetLayer = leaflet.polygon(question.target.points, {
@@ -46,16 +51,16 @@ export default ({
     (result, targetPoints) => [
       ...result,
       ...targetPoints.map((targetPoint) =>
-        createPoint(convertLatLngToCoordinates(targetPoint)),
+        createPoint(convertLatLngToCoordinates(targetPoint))
       ),
     ],
-    [],
+    []
   );
 
   let circle;
   if (!question.target.isEnclosedArea && shouldDrawCircle) {
-    const targetCenterCoordinates = getCenter.default(
-      createFeatureCollection(targetTurfPoints),
+    const targetCenterCoordinates = getCenter(
+      createFeatureCollection(targetTurfPoints)
     ).geometry.coordinates as leaflet.LatLngExpression;
 
     circle = leaflet
@@ -66,7 +71,7 @@ export default ({
         radius:
           Math.max(
             targetBounds.getNorthWest().distanceTo(targetBounds.getSouthEast()),
-            targetBounds.getNorthEast().distanceTo(targetBounds.getSouthWest()),
+            targetBounds.getNorthEast().distanceTo(targetBounds.getSouthWest())
           ) * 0.8,
         weight: 1,
       })

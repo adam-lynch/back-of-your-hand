@@ -1,12 +1,14 @@
-import "./third-party/goatcounter.js";
-import { initializeErrorReporting } from "./utilities/setUpErrorReporting.js";
+import "./root.css";
+import "./lib/third-party/leaflet.css";
+import "./lib/third-party/goatcounter.js";
+import { initializeErrorReporting } from "./lib/utilities/setUpErrorReporting.js";
 
 initializeErrorReporting();
 
-import App from "./App.svelte";
-import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
+import App from "./lib/App.svelte";
+import FatalErrorDisplay from "./lib/FatalErrorDisplay.svelte";
 
-let app: App | FatalErrorDisplay;
+let app: any;
 
 const onUnhandledError = (e: any) => {
   // @ts-ignore
@@ -50,5 +52,4 @@ try {
   onUnhandledError(e);
 }
 
-// @ts-expect-error
 export default app;

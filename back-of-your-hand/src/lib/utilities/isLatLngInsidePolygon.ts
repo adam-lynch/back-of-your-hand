@@ -3,13 +3,14 @@ import isPointInPolygon from "point-in-polygon";
 import convertLatLngToCoordinates, {
   convertLatLngsToCoordinates,
 } from "./convertLatLngToCoordinates";
-import type { Coordinates, LatLng, PotentiallyNestedLatLngs } from "./types";
+import type { LatLng, PotentiallyNestedLatLngs } from "./types";
 
 export default (
   latLng: LatLng,
-  polygonPoints: PotentiallyNestedLatLngs,
+  polygonPoints: PotentiallyNestedLatLngs
 ): boolean => {
   let polygonCoordinates = convertLatLngsToCoordinates(polygonPoints);
+  let safePolygonCoordinates: Parameters<typeof isPointInPolygon>[1];
 
   /*
     point-in-polygon doesn't like an unnecessary level; e.g:
@@ -26,15 +27,17 @@ export default (
     polygonCoordinates.length === 1 &&
     typeof polygonCoordinates[0] !== "number"
   ) {
-    polygonCoordinates = polygonCoordinates[0] as
-      | Coordinates[]
-      | Coordinates[][];
+    safePolygonCoordinates =
+      polygonCoordinates[0] as typeof safePolygonCoordinates;
+  } else {
+    safePolygonCoordinates =
+      polygonCoordinates as typeof safePolygonCoordinates;
   }
 
   try {
     return isPointInPolygon(
       convertLatLngToCoordinates(latLng),
-      polygonCoordinates,
+      safePolygonCoordinates
     );
   } catch (e) {
     return false;

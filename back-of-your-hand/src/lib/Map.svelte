@@ -210,7 +210,7 @@
     }
 
     if (!chosenPointMarker) {
-      throw new Error('chosenPointMarker is falsy');
+      throw new Error("chosenPointMarker is falsy");
     }
 
     /* First, compute the distance / score */
@@ -435,7 +435,7 @@
   // Draw all streets on the map, etc.
   const showSummary = debounce(() => {
     if (!$round) {
-      throw new Error('No round');
+      throw new Error("No round");
     }
     chosenPoint.set(null);
     resetMap(false, true);
@@ -539,7 +539,7 @@
         );
         setTimeout(() => {
           if (!chosenPointMarker) {
-            console.warn('No chosenPointMarker, skipping map.flyTo');
+            console.warn("No chosenPointMarker, skipping map.flyTo");
             return;
           }
           map.flyTo(chosenPointMarker.getLatLng(), newZoom, {
@@ -568,8 +568,7 @@
       // They've chosen to start a new round, back to area selection
       if (!isConfirmed) {
         // @ts-expect-error I don't see any other way to do this
-        map.setMaxBounds(null)
-          .setMinZoom(defaultMinZoom);
+        map.setMaxBounds(null).setMinZoom(defaultMinZoom);
         resetMap(false, true);
         locateControl.add(map);
         markBounds(areaSelectionMarkBoundsOptions);
@@ -613,7 +612,10 @@
   id="map"
 />
 
-<style global lang="postcss">
+<style
+  global
+  lang="postcss"
+>
   :global(body) {
     & .leaflet-control-container .leaflet-top.leaflet-right {
       display: flex;
@@ -783,7 +785,7 @@
       top: -1px;
       left: -1px;
     }
-    
+
     & #map {
       height: 100%;
       flex: 1;

@@ -22,7 +22,7 @@ Warning: I think this might be slightly broken since I introduced Babel. At leas
 
 ## HTTPS
 
-To set up HTTPS, set these environment variables: 
+To set up HTTPS, set these environment variables:
 
 - `BOYH_HTTPS_CERT`
 - `BOYH_HTTPS_KEY`
@@ -44,7 +44,6 @@ This project uses TypeScript, but the actual amount of it used is very little. T
 
 This automatically happens when a pull-request is merged / a commit is pushed to the main branch.
 
-
 ## VSCode
 
 Add this to your workspace-level settings:
@@ -54,7 +53,6 @@ Add this to your workspace-level settings:
   "css-unused-selector": "ignore",
 }
 ```
-
 
 # TODO: keep or not?
 

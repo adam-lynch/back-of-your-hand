@@ -7,7 +7,7 @@ import type { LatLng } from "./types";
 export default async (
   map: leaflet.Map,
   latLng: LatLng,
-  polyLinePoints: LatLng[][]
+  polyLinePoints: LatLng[][],
 ): Promise<
   | { distance: number; latLng: leaflet.LatLng }
   | { distance: 0; latLng?: leaflet.LatLng } // TODO: remove latLng?
@@ -31,7 +31,7 @@ export default async (
     const nearestPointOnSegment = leaflet.LineUtil.closestPointOnSegment(
       point,
       previousPolyLinePoint,
-      currentPolyLinePoint
+      currentPolyLinePoint,
     );
 
     const distanceFromPoint = map
@@ -53,7 +53,7 @@ export default async (
 
   if (typeof nearestPointDistance !== "number") {
     throw new Error(
-      `distance is not a number (${typeof nearestPointDistance})`
+      `distance is not a number (${typeof nearestPointDistance})`,
     );
   }
 

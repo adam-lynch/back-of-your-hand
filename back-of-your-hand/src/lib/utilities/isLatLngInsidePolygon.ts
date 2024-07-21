@@ -7,7 +7,7 @@ import type { LatLng, PotentiallyNestedLatLngs } from "./types";
 
 export default (
   latLng: LatLng,
-  polygonPoints: PotentiallyNestedLatLngs
+  polygonPoints: PotentiallyNestedLatLngs,
 ): boolean => {
   const polygonCoordinates = convertLatLngsToCoordinates(polygonPoints);
   let safePolygonCoordinates: Parameters<typeof isPointInPolygon>[1];
@@ -37,7 +37,7 @@ export default (
   try {
     return isPointInPolygon(
       convertLatLngToCoordinates(latLng),
-      safePolygonCoordinates
+      safePolygonCoordinates,
     );
   } catch (e) {
     return false;

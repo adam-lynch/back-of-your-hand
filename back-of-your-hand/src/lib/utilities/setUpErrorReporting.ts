@@ -19,7 +19,7 @@ export const initializeErrorReporting = () => {
       // TODO
       release: COMMIT_ID,
       tracesSampleRate: 0,
-    })
+    }),
   );
 };
 

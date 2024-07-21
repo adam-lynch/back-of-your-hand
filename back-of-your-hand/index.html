@@ -1,73 +1,143 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="How well do you know your area? Test your knowledge by locating streets on a map."
+    />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="description"
-    content="How well do you know your area? Test your knowledge by locating streets on a map." />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Back Of Your Hand</title>
 
-  <title>Back Of Your Hand</title>
-
-  <!-- Preloading, etc. -->
-  <!-- TODO:
+    <!-- Preloading, etc. -->
+    <!-- TODO:
       <link rel="preload" href="/build/bundle.css" as="style" />
       <link rel="preload" href="/build/bundle.js" as="script" />
       -->
-  <link rel="dns-prefetch" href="https://www.overpass.de/" />
-  <link rel="canonical" href="https://backofyourhand.com/game" />
+    <link
+      rel="dns-prefetch"
+      href="https://www.overpass.de/"
+    />
+    <link
+      rel="canonical"
+      href="https://backofyourhand.com/game"
+    />
 
-  <!-- Assets -->
-  <link rel="icon" href="/favicon.png" />
+    <!-- Assets -->
+    <link
+      rel="icon"
+      href="/favicon.png"
+    />
 
-  <!-- PWA stuff -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#df206f" />
+    <!-- PWA stuff -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
+    <link
+      rel="manifest"
+      href="/manifest.webmanifest"
+    />
+    <meta
+      name="theme-color"
+      content="#df206f"
+    />
 
-  <meta property="title" content="Back Of Your Hand" />
-  <meta property="description"
-    content="How well do you know your area? Test your knowledge by locating streets on a map." />
-  <!-- Social media / sharing stuff -->
-  <meta property="og:title" content="Back Of Your Hand" />
-  <meta property="og:description"
-    content="How well do you know your area? Test your knowledge by locating streets on a map." />
-  <meta property="og:image" content="https://backofyourhand.com/images/social-screenshot.png?x" />
-  <meta property="og:url" content="https://backofyourhand.com" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <!--  Non-essential, but recommended -->
-  <meta name="image" content="/images/social-screenshot.png?y" />
-  <meta property="og:site_name" content="Back of Your Hand" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:width" content="630" />
-  <meta name="twitter:image" content="https://backofyourhand.com/images/social-screenshot.png?z" />
-  <meta name="twitter:image:alt"
-    content="Screenshot of the game; on the left-hand side, the user is given a street name to find. The map is on the right-side, where a marker / guess has been placed by the user" />
-  <meta name="twitter:creator" content="@lynchy010" />
-  <meta name="twitter:site" content="@lynchy010" />
-</head>
+    <meta
+      property="title"
+      content="Back Of Your Hand"
+    />
+    <meta
+      property="description"
+      content="How well do you know your area? Test your knowledge by locating streets on a map."
+    />
+    <!-- Social media / sharing stuff -->
+    <meta
+      property="og:title"
+      content="Back Of Your Hand"
+    />
+    <meta
+      property="og:description"
+      content="How well do you know your area? Test your knowledge by locating streets on a map."
+    />
+    <meta
+      property="og:image"
+      content="https://backofyourhand.com/images/social-screenshot.png?x"
+    />
+    <meta
+      property="og:url"
+      content="https://backofyourhand.com"
+    />
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+    <!--  Non-essential, but recommended -->
+    <meta
+      name="image"
+      content="/images/social-screenshot.png?y"
+    />
+    <meta
+      property="og:site_name"
+      content="Back of Your Hand"
+    />
+    <meta
+      property="og:image:width"
+      content="1200"
+    />
+    <meta
+      property="og:image:width"
+      content="630"
+    />
+    <meta
+      name="twitter:image"
+      content="https://backofyourhand.com/images/social-screenshot.png?z"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Screenshot of the game; on the left-hand side, the user is given a street name to find. The map is on the right-side, where a marker / guess has been placed by the user"
+    />
+    <meta
+      name="twitter:creator"
+      content="@lynchy010"
+    />
+    <meta
+      name="twitter:site"
+      content="@lynchy010"
+    />
+  </head>
 
-<body>
-  <noscript>
-    <div class="full-screen-display">
-      <div class="full-screen-display__inner">
-        <h1>JavaScript disabled</h1>
-        <p>
-          I'm afraid you need JavaScript to play this game. Sorry about that!
-        </p>
-        <p><a href="/learn-more">Learn more</a> about the game in general</p>
-        <img class="hide-accessibly" src="https://count.backofyourhand.com/count?p=/noscript" />
+  <body>
+    <noscript>
+      <div class="full-screen-display">
+        <div class="full-screen-display__inner">
+          <h1>JavaScript disabled</h1>
+          <p>
+            I'm afraid you need JavaScript to play this game. Sorry about that!
+          </p>
+          <p><a href="/learn-more">Learn more</a> about the game in general</p>
+          <img
+            class="hide-accessibly"
+            src="https://count.backofyourhand.com/count?p=/noscript"
+          />
+        </div>
       </div>
-    </div>
-  </noscript>
+    </noscript>
 
-  <script type="module" src="/src/main.ts"></script>
+    <script
+      type="module"
+      src="/src/main.ts"
+    ></script>
 
-  <!-- TODO: <script>
+    <!-- TODO: <script>
     if (navigator.serviceWorker && !navigator.serviceWorker.controller) {
       navigator.serviceWorker.register("/serviceworker.js");
     }
   </script> -->
-</body>
-
+  </body>
 </html>

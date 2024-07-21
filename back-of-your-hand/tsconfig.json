@@ -14,7 +14,7 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "moduleDetection": "force",
+    "moduleDetection": "force"
   },
   "include": [
     "src/**/*.js",

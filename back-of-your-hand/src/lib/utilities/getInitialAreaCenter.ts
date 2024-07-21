@@ -4,7 +4,7 @@ import type { LatLng } from "./types";
 
 const getAreaCenterFromUrl = (
   urlSearchParams: URLSearchParams,
-  regExpToRemove?: RegExp
+  regExpToRemove?: RegExp,
 ): LatLng | void => {
   if (urlSearchParams.has("lat") && urlSearchParams.has("lng")) {
     const lat = urlSearchParams.get("lat");
@@ -50,7 +50,7 @@ const getAreaCenterFromUrl = (
 
       if (
         /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/.test(
-          unparsedAreaCenter
+          unparsedAreaCenter,
         )
       ) {
         const areaCenterPieces = unparsedAreaCenter.split(",");

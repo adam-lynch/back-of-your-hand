@@ -28,10 +28,6 @@ export default [
     },
   },
   {
-    ignores: [
-      "public/build",
-      "public/gc.js",
-      "src/lib/third-party",
-    ],
+    ignores: ["public/build", "public/gc.js", "src/lib/third-party"],
   },
 ];

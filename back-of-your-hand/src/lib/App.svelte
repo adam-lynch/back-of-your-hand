@@ -38,7 +38,7 @@
 
   const updateUrl = debounce(
     () => {
-      history.replaceState(null, '', $gameUrl);
+      history.replaceState(null, "", $gameUrl);
     },
     250,
     { trailing: true },
@@ -82,7 +82,7 @@
     }
 
     if (!$areaBounds) {
-      throw new Error('no areaBounds');
+      throw new Error("no areaBounds");
     }
 
     loadRound({
@@ -186,7 +186,10 @@
   {/if}
 </main>
 
-<style global lang="postcss">
+<style
+  global
+  lang="postcss"
+>
   main {
     height: 100%;
     display: grid;

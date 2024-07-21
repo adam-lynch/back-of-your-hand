@@ -1,4 +1,6 @@
 import browserslistToEsbuild from "browserslist-to-esbuild";
+// @ts-expect-error no types available
+import getCommitId from "git-commit-id";
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 
@@ -6,6 +8,9 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 export default defineConfig({
   build: {
     target: browserslistToEsbuild(),
+  },
+  define: {
+    COMMIT_ID: JSON.stringify(getCommitId({ cwd: ".." }) || "unknown"),
   },
   plugins: [
     svelte({

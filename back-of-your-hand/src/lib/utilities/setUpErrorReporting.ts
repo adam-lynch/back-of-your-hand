@@ -16,7 +16,7 @@ export const initializeErrorReporting = () => {
       },
       dsn: "https://5218ea8159eb46fe953d19a4e7530e94@o1226957.ingest.sentry.io/6372553",
       environment: "production",
-      // TODO
+      // @ts-expect-error set in vite config
       release: COMMIT_ID,
       tracesSampleRate: 0,
     }),

@@ -22,4 +22,10 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    https: {
+      cert: process.env.BOYH_HTTPS_CERT,
+      key: process.env.BOYH_HTTPS_KEY,
+    },
+  },
 });

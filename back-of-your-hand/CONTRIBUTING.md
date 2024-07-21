@@ -27,7 +27,7 @@ To set up HTTPS, set these environment variables:
 - `BOYH_HTTPS_CERT`
 - `BOYH_HTTPS_KEY`
 
-Both should be absolute paths to files. They will be passed to [sirv-cli](https://github.com/lukeed/sirv/tree/master/packages/sirv-cli) (see `--cert` and `--key`).
+Both should be absolute paths to files. They will be [passed to Vite](https://vitejs.dev/config/server-options.html#server-https).
 
 ## Edge handlers
 

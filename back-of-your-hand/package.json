@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "lint": "npm run format && npm run svelte-check && eslint --fix .",
     "lint--no-fix": "eslint . && prettier --check .",
+    "prepare": "husky",
     "preview": "vite preview",
     "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
     "test": "echo 'No tests yet, but I'm open to it'"
@@ -38,6 +39,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.43.0",
+    "husky": "^9.1.3",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.6",
     "svelte": "^4.2.18",

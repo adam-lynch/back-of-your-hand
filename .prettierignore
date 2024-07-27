@@ -1,3 +1,4 @@
+.husky
 dist
 package-lock.json
 public/gc.js

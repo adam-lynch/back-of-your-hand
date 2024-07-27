@@ -1,8 +1,8 @@
 import leaflet from "leaflet";
-import convertLatLngToLayerPoint from "./convertLatLngToLayerPoint.ts";
-import isLatLngInsidePolygon from "./isLatLngInsidePolygon";
+import convertLatLngToLayerPoint from "./convertLatLngToLayerPoint.ts.js";
+import isLatLngInsidePolygon from "./isLatLngInsidePolygon.js";
 
-import type { LatLng } from "./types";
+import type { LatLng } from "./types.js";
 
 export default async (
   map: leaflet.Map,

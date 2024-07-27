@@ -11,7 +11,6 @@ import fs from "fs";
 import { globSync } from "glob";
 import createIgnoreInstance from "ignore";
 import path from "path";
-console.log("1");
 import { fileExtensionsWhichSupportComments } from "../lint-staged.config.js";
 
 // extension to header comment string

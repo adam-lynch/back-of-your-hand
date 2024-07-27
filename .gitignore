@@ -1,8 +1,4 @@
-/.vscode
-/node_modules/
-/public/build/
-
 .DS_Store
-
+/.vscode
 dist
-stats.html
+node_modules

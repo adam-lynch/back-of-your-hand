@@ -23,10 +23,10 @@ const onUnhandledError = (e: any) => {
   }
 
   app = new FatalErrorDisplay({
-    target: document.body,
     props: {
       error: e,
     },
+    target: document.body,
   });
 };
 

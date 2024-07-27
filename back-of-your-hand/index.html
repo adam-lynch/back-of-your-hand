@@ -14,10 +14,6 @@
     <title>Back Of Your Hand</title>
 
     <!-- Preloading, etc. -->
-    <!-- TODO:
-      <link rel="preload" href="/build/bundle.css" as="style" />
-      <link rel="preload" href="/build/bundle.js" as="script" />
-      -->
     <link
       rel="dns-prefetch"
       href="https://www.overpass.de/"
@@ -30,6 +26,7 @@
     <!-- Assets -->
     <link
       rel="icon"
+      type="image/png"
       href="/favicon.png"
     />
 
@@ -134,10 +131,14 @@
       src="/src/main.ts"
     ></script>
 
-    <!-- TODO: <script>
-    if (navigator.serviceWorker && !navigator.serviceWorker.controller) {
-      navigator.serviceWorker.register("/serviceworker.js");
-    }
-  </script> -->
+    <script>
+      if (
+        "%MODE%" === "production" &&
+        navigator.serviceWorker &&
+        !navigator.serviceWorker.controller
+      ) {
+        navigator.serviceWorker.register("/serviceworker.js");
+      }
+    </script>
   </body>
 </html>

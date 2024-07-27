@@ -63,3 +63,7 @@ Setting `compilerOptions.types` shuts out all other types not explicitly listed 
 **Why enable `allowJs` in the TS template?**
 
 While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+
+# License header
+
+A license header comment will automatically be added to the top of any new files you create (by a git hook).

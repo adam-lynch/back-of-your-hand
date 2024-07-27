@@ -1,8 +1,8 @@
-import js from "@eslint/js";
-import ts from "typescript-eslint";
-import svelte from "eslint-plugin-svelte";
-import prettier from "eslint-config-prettier";
 import globals from "globals";
+import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
+import svelte from "eslint-plugin-svelte";
+import ts from "typescript-eslint";
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
@@ -15,7 +15,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node,
+        ...globals.node, // TODO: remove?
       },
     },
   },
@@ -28,6 +28,6 @@ export default [
     },
   },
   {
-    ignores: ["public/build", "public/gc.js", "src/lib/third-party"],
+    ignores: ["dist", "public/gc.js", "src/lib/third-party"],
   },
 ];

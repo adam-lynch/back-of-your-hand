@@ -1,3 +1,4 @@
+/* global clients skipWaiting */
 /*
   HTML: network, then offline page
   CSS: cache, then network
@@ -5,27 +6,25 @@
   Tile images: network
 */
 
-const cacheName = "files";
-const offlinePage = "/offline";
+const cacheName = "files-v2";
+const offlinePageUrl = "/offline";
 
 addEventListener("install", (installEvent) => {
   skipWaiting();
   installEvent.waitUntil(
     caches.open(cacheName).then((cache) => {
       return cache.addAll([
-        offlinePage, // The only HTML page cached
+        "/favicon.png",
+        "/gc.js",
         "/images/android-chrome-512x512.png",
         "/images/apple-touch-icon.png",
-        "/images/leaflet/marker-icon.png",
         "/images/leaflet/marker-icon-2x.png",
+        "/images/leaflet/marker-icon.png",
         "/images/leaflet/marker-shadow.png",
-        "/build/bundle.css",
-        "/build/bundle.js",
-        "/gc.js",
-        "/favicon.png",
         "/manifest.webmanifest",
+        offlinePageUrl, // The only HTML page cached
       ]);
-    })
+    }),
   );
 });
 
@@ -40,9 +39,9 @@ addEventListener("activate", (activateEvent) => {
         Promise.all(
           keys
             .filter((key) => key !== cacheName)
-            .map((key) => caches.delete(key))
-        )
-      )
+            .map((key) => caches.delete(key)),
+        ),
+      ),
   );
 });
 
@@ -71,7 +70,7 @@ addEventListener("fetch", (fetchEvent) => {
           const response = await responseFromFetch;
           return response;
         } catch (error) {
-          return (await caches.open(cacheName)).match(offlinePage);
+          return (await caches.open(cacheName)).match(offlinePageUrl);
         }
       } else {
         fetchEvent.waitUntil(
@@ -79,13 +78,13 @@ addEventListener("fetch", (fetchEvent) => {
             const responseCopy = (await responseFromFetch).clone();
             const myCache = await caches.open(cacheName);
             await myCache.put(request, responseCopy);
-          })()
+          })(),
         );
         return (
           (await (await caches.open(cacheName)).match(request)) ||
           responseFromFetch
         );
       }
-    })()
+    })(),
   );
 });

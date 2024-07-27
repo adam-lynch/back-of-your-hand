@@ -8,7 +8,7 @@
     "build": "vite build",
     "dev": "vite",
     "format": "prettier --write .",
-    "lint-all": "npm run format && npm run svelte-check && eslint --fix .",
+    "lint-all": "npm run format && eslint --fix . && npm run svelte-check && node ./build/licenseHeader/lint.js --all --write",
     "lint-all--no-fix": "npm run svelte-check && node ./build/licenseHeader/lint.js --all && eslint . && prettier --check .",
     "prepare": "husky",
     "preview": "vite preview",

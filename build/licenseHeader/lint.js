@@ -42,7 +42,7 @@ function makeLicenseHeaderComment(extension) {
       firstLinePrefix = `<!--\n${middleLinePrefix}`;
       lastLinePrefix = middleLinePrefix;
       lastLineSuffix = "\n-->";
-    } else if (["sh", "yaml"].includes(extension)) {
+    } else if (["sh", "yaml", "yml"].includes(extension)) {
       firstLinePrefix = `# `;
       middleLinePrefix = firstLinePrefix;
       lastLinePrefix = firstLinePrefix;

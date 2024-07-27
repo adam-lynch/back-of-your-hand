@@ -1,5 +1,3 @@
-*.sh
-*.yaml
 .husky
 dist
 package-lock.json

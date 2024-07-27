@@ -150,8 +150,8 @@
       if (!$round) {
         throw new Error("round is falsy");
       }
-      if (!$totalScore) {
-        throw new Error("totalScore is falsy");
+      if ($totalScore === null) {
+        throw new Error("totalScore is undefined");
       }
       const newPotentialBestScore = computeTotalScore($totalScore, $round);
       if (newPotentialBestScore > ($deviceBestScore ?? 0)) {

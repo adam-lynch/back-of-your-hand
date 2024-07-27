@@ -13,7 +13,11 @@ const isUsableAlternativeName = (
   alternativeName: string | void,
   mainName: string,
 ): alternativeName is string =>
-  Boolean(alternativeName && alternativeName !== mainName);
+  Boolean(
+    alternativeName &&
+      alternativeName !== mainName &&
+      !["-", "n/a"].includes(alternativeName.trim().toLowerCase()),
+  );
 
 const getAlternativeName = (
   element: Overpass.Element,

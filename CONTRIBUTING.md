@@ -10,24 +10,20 @@ Prerequisites: [Node.js](https://nodejs.org).
 
 1. Run `npm install` at the root of the project.
 
-If you're using [Visual Studio Code](https://code.visualstudio.com/) I recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
-
 # Development
 
 1. Run `npm run dev`.
 
 This recompiles and live-reloads the app as you make changes.
 
-Warning: I think this might be slightly broken since I introduced Babel. At least for me, it sometimes requires a manual reload.
-
 ## HTTPS
 
-To set up HTTPS, set these environment variables: 
+To set up HTTPS, set these environment variables:
 
 - `BOYH_HTTPS_CERT`
 - `BOYH_HTTPS_KEY`
 
-Both should be absolute paths to files. They will be passed to [sirv-cli](https://github.com/lukeed/sirv/tree/master/packages/sirv-cli) (see `--cert` and `--key`).
+Both should be absolute paths to files. They will be [passed to Vite](https://vitejs.dev/config/server-options.html#server-https).
 
 ## Edge handlers
 
@@ -39,6 +35,26 @@ This project uses TypeScript, but the actual amount of it used is very little. T
 
 - Documenting some types like what the "round" model is, but not necessarily enforcing it anywhere.
 - Between the Overpass API and multiple libraries, there are multiple representations for coordinates, and we convert between them in a few places. So, type annotations are useful whenever coordinates / LatLngs are passed around.
+
+### Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?
+
+Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+
+## VSCode
+
+If you're using [Visual Studio Code](https://code.visualstudio.com/) I recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
+
+Also, add this to your workspace-level settings:
+
+```
+"svelte.plugin.svelte.compilerWarnings": {
+  "css-unused-selector": "ignore",
+}
+```
+
+## License header
+
+A license header comment will automatically be added to the top of any new files you create (by a git hook).
 
 # Deploying to production
 

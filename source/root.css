@@ -1,0 +1,242 @@
+/* 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * 
+ * Project: Back Of Your Hand (https://backofyourhand.com)
+ * Repository: https://github.com/adam-lynch/back-of-your-hand
+ * Copyright © 2024 Adam Lynch (https://adamlynch.com)
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* This disables overscroll effects and prevents pull-to-refresh */
+  overscroll-behavior-y: none;
+  /* Disable zoom on iOS */
+  touch-action: none;
+}
+
+body {
+  background: #37003c;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.hide-accessibly {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+fieldset {
+  all: unset;
+}
+
+input {
+  accent-color: #df206f;
+}
+
+.single-line-text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #df206f;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #d11563;
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #df206f;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #d11563;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  background: #f0f0f0;
+  background: rgba(240, 240, 240, 0.85);
+  color: #000;
+  text-shadow: 0 1px 2px white;
+  cursor: pointer;
+}
+
+button:hover,
+button:active {
+  background: #d8d8d8;
+}
+
+button:active {
+  position: relative;
+  top: 1px;
+  text-shadow: 0 0 2px white;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  box-shadow:
+    0 0 0 3px #000,
+    0 0 0 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.6s linear;
+}
+
+.button--primary {
+  background: #df206f;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.button--primary:hover,
+.button--primary:active {
+  background: #d11563;
+}
+
+.button--primary:active,
+.button--secondary:active {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.button--secondary {
+  background: #922b56;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.button--secondary:hover,
+.button--secondary:active {
+  background: #a22257;
+}
+
+button:disabled,
+button:disabled:active,
+button:disabled:hover {
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+button:disabled:active {
+  position: relative;
+  top: 1px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-group button + button {
+  margin-left: 20px;
+}
+
+.summary-street-tooltip {
+  max-width: 250px;
+  display: block;
+  color: black;
+}
+
+@media (min-width: 800px) {
+  .summary-street-tooltip {
+    font-size: 1.25rem;
+  }
+}
+
+.full-screen-display {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999999;
+
+  overflow-y: auto;
+  background: white;
+}
+
+.full-screen-display__inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.full-screen-display__inner > * {
+  margin-top: 1.5rem;
+}
+
+.full-screen-display__innerbutton:first-of-type {
+  margin-right: 0.75rem;
+}
+
+.full-screen-display__inner h2 {
+  font-size: 1.2rem;
+}
+
+.full-screen-display__innerpre {
+  padding: 0.5rem;
+  overflow: auto;
+  background: #f3f3f3;
+  font-size: 0.7rem;
+}
+
+.unstyled-link,
+.unstyled-link:active,
+.unstyled-link:focus,
+.unstyled-link:hover {
+  color: inherit;
+  cursor: default;
+  text-decoration: none;
+}

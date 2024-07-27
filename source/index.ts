@@ -1,16 +1,27 @@
-import "./utilities/goatcounter.js";
-import { initializeErrorReporting } from "./utilities/setUpErrorReporting";
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Project: Back Of Your Hand (https://backofyourhand.com)
+ * Repository: https://github.com/adam-lynch/back-of-your-hand
+ * Copyright © 2024 Adam Lynch (https://adamlynch.com)
+ */
+
+import "./root.css";
+import "./lib/third-party/leaflet.css";
+import "./lib/third-party/goatcounter.js";
+import { initializeErrorReporting } from "./lib/utilities/setUpErrorReporting.js";
 
 initializeErrorReporting();
 
-import App from "./App.svelte";
-import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
+import App from "./lib/App.svelte";
+import FatalErrorDisplay from "./lib/FatalErrorDisplay.svelte";
 
-let app;
+let app: App | FatalErrorDisplay;
 
-const onUnhandledError = (e) => {
-  // @ts-ignore
-  if (!isProduction) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onUnhandledError = (e: any) => {
+  if (import.meta.env.DEV) {
     console.error("Unhandled error");
     console.error(e);
   }
@@ -21,10 +32,10 @@ const onUnhandledError = (e) => {
   }
 
   app = new FatalErrorDisplay({
-    target: document.body,
     props: {
       error: e,
     },
+    target: document.body,
   });
 };
 
@@ -50,4 +61,6 @@ try {
   onUnhandledError(e);
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export default app;

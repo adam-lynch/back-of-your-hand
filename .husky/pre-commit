@@ -1,0 +1,1 @@
+npx lint-staged --config build/lint-staged.config.js && npm run svelte-check

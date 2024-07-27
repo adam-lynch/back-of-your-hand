@@ -691,7 +691,7 @@
     & .leaflet-locate-control button,
     & .leaflet-locate-control button:active,
     & .leaflet-locate-control button:focus,
-    & .leaflet-locate-control :hover {
+    & .leaflet-locate-control button:hover {
       all: unset;
       position: relative;
       flex: 1;

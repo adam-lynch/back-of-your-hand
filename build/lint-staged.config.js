@@ -17,14 +17,21 @@ export const fileExtensionsWhichSupportComments = [
   "yaml",
   "yml",
 ];
+const commentableExtensionsWhichPrettierSupports =
+  fileExtensionsWhichSupportComments.filter(
+    (extension) => !["sh", "yaml", "yml"].includes(extension),
+  );
 
 const eslint = "eslint --fix";
 const licenseHeader = "node ./build/licenseHeader/lint.js --write";
 const prettier = "prettier --write";
 
 export default {
-  [`*.{${fileExtensionsWhichSupportComments.filter((extension) => !["sh", "yaml", "yml"].includes(extension)).join(",")}}`]:
-    [licenseHeader, prettier, eslint],
+  [`*.{${commentableExtensionsWhichPrettierSupports.join(",")}}`]: [
+    licenseHeader,
+    prettier,
+    eslint,
+  ],
   "*.{json,md}": [prettier],
   [`*.{sh,yaml,yml}`]: [licenseHeader],
 };

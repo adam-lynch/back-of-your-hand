@@ -13,7 +13,8 @@
     "prepare": "husky",
     "preview": "vite preview",
     "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
-    "test": "echo 'No tests yet, but I'm open to it'"
+    "test": "echo 'No tests yet, but I'm open to it'",
+    "visualzie": "npx vite-bundle-visualizer"
   },
   "dependencies": {
     "@sentry/browser": "^6.19.7",

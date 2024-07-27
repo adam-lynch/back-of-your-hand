@@ -19,7 +19,7 @@ export default async (
   polyLinePoints: LatLng[][],
 ): Promise<
   | { distance: number; latLng: leaflet.LatLng }
-  | { distance: 0; latLng?: leaflet.LatLng } // TODO: remove latLng?
+  | { distance: 0; latLng?: leaflet.LatLng }
 > => {
   if (isLatLngInsidePolygon(latLng, polyLinePoints)) {
     return { distance: 0 };

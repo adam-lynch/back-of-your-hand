@@ -24,7 +24,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node, // TODO: remove?
+        ...globals.node,
       },
     },
   },
@@ -37,7 +37,6 @@ export default [
     },
   },
   {
-    // TODO: use other ignores
     ignores: ["dist", "public/gc.js", "source/lib/third-party"],
   },
 ];

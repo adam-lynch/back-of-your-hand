@@ -16,8 +16,6 @@ Prerequisites: [Node.js](https://nodejs.org).
 
 This recompiles and live-reloads the app as you make changes.
 
-Warning: I think this might be slightly broken since I introduced Babel. At least for me, it sometimes requires a manual reload.
-
 ## HTTPS
 
 To set up HTTPS, set these environment variables:

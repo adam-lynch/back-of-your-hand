@@ -2,4 +2,4 @@
 dist
 package-lock.json
 public/gc.js
-src/lib/third-party
+source/lib/third-party

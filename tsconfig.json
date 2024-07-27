@@ -17,9 +17,9 @@
     "moduleDetection": "force"
   },
   "include": [
-    "src/**/*.js",
-    "src/**/*.svelte",
-    "src/**/*.ts",
+    "source/**/*.js",
+    "source/**/*.svelte",
+    "source/**/*.ts",
     "vite.config.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

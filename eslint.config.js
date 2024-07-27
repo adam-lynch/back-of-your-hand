@@ -38,6 +38,6 @@ export default [
   },
   {
     // TODO: use other ignores
-    ignores: ["dist", "public/gc.js", "src/lib/third-party"],
+    ignores: ["dist", "public/gc.js", "source/lib/third-party"],
   },
 ];

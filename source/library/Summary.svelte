@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import { orderedQuestions, round, totalScore } from "./store";
-  import computeTotalScore from "./utilities/computeTotalScore";
+  import computeTotalScore from "../utilities/computeTotalScore";
   export let onRestartClicked: () => void;
   export let reset: () => void;
 </script>

@@ -37,6 +37,6 @@ export default [
     },
   },
   {
-    ignores: ["dist", "public/gc.js", "source/lib/third-party"],
+    ignores: ["dist", "public/gc.js", "source/third-party"],
   },
 ];

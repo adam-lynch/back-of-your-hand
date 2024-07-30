@@ -28,9 +28,9 @@
     sidebarState,
   } from "./store";
   import Summary from "./Summary.svelte";
-  import trackEvent from "./utilities/trackEvent";
-  import { Difficulty } from "./utilities/types";
-  import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
+  import trackEvent from "../utilities/trackEvent";
+  import { Difficulty } from "../utilities/types";
+  import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
 
   export let areSettingsShown = writable(false);
 

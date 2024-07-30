@@ -28,16 +28,16 @@
   } from "./store";
 
   import * as locateControl from "./locateControl";
-  import drawTarget from "./utilities/drawTarget";
-  import getNearestPointOnPolyLine from "./utilities/getNearestPointOnPolyLine";
-  import getViewportWidth from "./utilities/getViewportWidth";
-  import reduceLatLngPrecision from "./utilities/reduceLatLngPrecision";
-  import type { Question, Round } from "./utilities/types";
-  import trackEvent from "./utilities/trackEvent";
-  import delay from "./utilities/delay";
-  import capLng from "./utilities/capLng";
-  import roundNumber from "./utilities/roundNumber";
-  import waitForAnyOngoingZoomsToEnd from "./utilities/waitForAnyOngoingZoomsToEnd";
+  import drawTarget from "../utilities/drawTarget";
+  import getNearestPointOnPolyLine from "../utilities/getNearestPointOnPolyLine";
+  import getViewportWidth from "../utilities/getViewportWidth";
+  import reduceLatLngPrecision from "../utilities/reduceLatLngPrecision";
+  import type { Question, Round } from "../utilities/types";
+  import trackEvent from "../utilities/trackEvent";
+  import delay from "../utilities/delay";
+  import capLng from "../utilities/capLng";
+  import roundNumber from "../utilities/roundNumber";
+  import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
   import type { HTMLSharpImage } from "./customElements";
 

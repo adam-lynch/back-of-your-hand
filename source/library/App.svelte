@@ -16,8 +16,8 @@
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "./FatalErrorDisplay.svelte";
   import Map from "./Map.svelte";
-  import computeTotalScore from "./utilities/computeTotalScore";
-  import ignoreError from "./utilities/ignoreError";
+  import computeTotalScore from "../utilities/computeTotalScore";
+  import ignoreError from "../utilities/ignoreError";
   import {
     areaBounds,
     areaCenter,
@@ -32,9 +32,9 @@
     round,
     totalScore,
   } from "./store";
-  import loadRound from "./utilities/loadRound";
-  import type { LatLng } from "./utilities/types";
-  import trackEvent from "./utilities/trackEvent";
+  import loadRound from "../utilities/loadRound";
+  import type { LatLng } from "../utilities/types";
+  import trackEvent from "../utilities/trackEvent";
   import { defineCustomElements } from "./customElements";
 
   export let unhandledError: Error | null = null;

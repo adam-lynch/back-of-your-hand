@@ -9,9 +9,9 @@
 
 <script lang="ts">
   import { geolocationRequesterStatus, interactionVerb } from "./store";
-  import ignoreError from "./utilities/ignoreError";
-  import setAreaCenterUsingWebGeolocationApi from "./utilities/setAreaCenterUsingWebGeolocationApi";
-  import trackEvent from "./utilities/trackEvent";
+  import ignoreError from "../utilities/ignoreError";
+  import setAreaCenterUsingWebGeolocationApi from "../utilities/setAreaCenterUsingWebGeolocationApi";
+  import trackEvent from "../utilities/trackEvent";
 
   const prompt = async () => {
     geolocationRequesterStatus.set("prompted");

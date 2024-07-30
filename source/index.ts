@@ -7,15 +7,15 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import "./root.css";
-import "./lib/third-party/leaflet.css";
-import "./lib/third-party/goatcounter.js";
-import { initializeErrorReporting } from "./lib/utilities/setUpErrorReporting.js";
+import "./library/root.css";
+import "./third-party/leaflet.css";
+import "./third-party/goatcounter.js";
+import { initializeErrorReporting } from "./utilities/setUpErrorReporting.js";
 
 initializeErrorReporting();
 
-import App from "./lib/App.svelte";
-import FatalErrorDisplay from "./lib/FatalErrorDisplay.svelte";
+import App from "./library/App.svelte";
+import FatalErrorDisplay from "./library/FatalErrorDisplay.svelte";
 
 let app: App | FatalErrorDisplay;
 

@@ -10,13 +10,13 @@
 import type leaflet from "leaflet";
 import { derived, writable } from "svelte/store";
 
-import getInitialAreaCenter from "./utilities/getInitialAreaCenter";
-import getInitialSettingValue from "./utilities/getInitialSettingValue";
-import getSeed from "./utilities/getSeed";
-import ignoreError from "./utilities/ignoreError";
-import isTouchDevice from "./utilities/isTouchDevice";
-import { Difficulty } from "./utilities/types";
-import type { LatLng, Round } from "./utilities/types";
+import getInitialAreaCenter from "../utilities/getInitialAreaCenter";
+import getInitialSettingValue from "../utilities/getInitialSettingValue";
+import getSeed from "../utilities/getSeed";
+import ignoreError from "../utilities/ignoreError";
+import isTouchDevice from "../utilities/isTouchDevice";
+import { Difficulty } from "../utilities/types";
+import type { LatLng, Round } from "../utilities/types";
 
 const initialUrlSearchParams = new URLSearchParams(window.location.search);
 

@@ -8,7 +8,7 @@
  */
 
 import leaflet from "leaflet";
-import { geolocationRequesterStatus } from "./store";
+import { geolocationRequesterStatus } from "../utilities/store";
 import getViewportWidth from "../utilities/getViewportWidth";
 import ignoreError from "../utilities/ignoreError";
 import setAreaCenterUsingWebGeolocationApi from "../utilities/setAreaCenterUsingWebGeolocationApi";

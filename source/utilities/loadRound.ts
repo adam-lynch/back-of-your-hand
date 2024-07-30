@@ -12,7 +12,7 @@ import { get } from "svelte/store";
 import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
-import { isAreaConfirmed, isLoading, round, seed } from "../library/store";
+import { isAreaConfirmed, isLoading, round, seed } from "./store";
 import { Difficulty } from "./types";
 import type { LatLng } from "./types";
 import type { LatLngBounds } from "leaflet";

@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { areaCenter } from "../library/store";
+import { areaCenter } from "./store";
 import getLatLngFromWebGeolocationApi from "./getLatLngFromWebGeolocationApi";
 
 export default async () => {

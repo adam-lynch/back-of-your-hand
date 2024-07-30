@@ -31,7 +31,7 @@
     numberOfQuestions,
     round,
     totalScore,
-  } from "./store";
+  } from "../utilities/store";
   import loadRound from "../utilities/loadRound";
   import type { LatLng } from "../utilities/types";
   import trackEvent from "../utilities/trackEvent";

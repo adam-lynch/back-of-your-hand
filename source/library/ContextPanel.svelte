@@ -26,7 +26,7 @@
     seed,
     settingsLastOpenedAt,
     sidebarState,
-  } from "./store";
+  } from "../utilities/store";
   import Summary from "./Summary.svelte";
   import trackEvent from "../utilities/trackEvent";
   import { Difficulty } from "../utilities/types";

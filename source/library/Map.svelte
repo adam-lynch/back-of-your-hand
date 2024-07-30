@@ -25,7 +25,7 @@
     ongoingZoomCount,
     round,
     sidebarState,
-  } from "./store";
+  } from "../utilities/store";
 
   import * as locateControl from "./locateControl";
   import drawTarget from "../utilities/drawTarget";

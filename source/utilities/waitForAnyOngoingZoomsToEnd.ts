@@ -9,7 +9,7 @@
 
 import { get } from "svelte/store";
 
-import { isZooming } from "../library/store";
+import { isZooming } from "./store";
 
 /*
   This isn't bad but it's not 100% reliable. Just test your use case a good bit

@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-const exclusions: {
+const initialExclusions: {
   highways?: string[]; // default: all
   name: string | RegExp; // must be lowercase
 }[] = [
@@ -28,4 +28,47 @@ const exclusions: {
   },
 ];
 
-export default exclusions;
+const EXCLUSIONS_KEY = "street_exclusions";
+
+const saveExclusionsToLocalStorage = (exclusions: typeof initialExclusions) => {
+  localStorage.setItem(EXCLUSIONS_KEY, JSON.stringify(exclusions));
+};
+
+const getExclusionsFromLocalStorage = (): typeof initialExclusions => {
+  const storedExclusions = localStorage.getItem(EXCLUSIONS_KEY);
+  return storedExclusions ? JSON.parse(storedExclusions) : initialExclusions;
+};
+
+const addExclusion = (exclusion: { highways?: string[]; name: string }) => {
+  const exclusions = getExclusionsFromLocalStorage();
+
+  // Check for duplicate exclusions
+  const isDuplicate = exclusions.some(
+    (existingExclusion) =>
+      existingExclusion.name.toString() === exclusion.name.toString() &&
+      (existingExclusion.highways || []).sort().join(",") ===
+        (exclusion.highways || []).sort().join(","),
+  );
+
+  if (!isDuplicate) {
+    exclusions.push(exclusion);
+    saveExclusionsToLocalStorage(exclusions);
+  }
+};
+
+const removeExclusion = (index: number) => {
+  const exclusions = getExclusionsFromLocalStorage();
+  if (index >= 0 && index < exclusions.length) {
+    exclusions.splice(index, 1);
+    saveExclusionsToLocalStorage(exclusions);
+  }
+};
+
+export {
+  initialExclusions,
+  getExclusionsFromLocalStorage,
+  addExclusion,
+  removeExclusion,
+};
+
+export default getExclusionsFromLocalStorage;

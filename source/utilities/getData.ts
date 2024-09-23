@@ -12,7 +12,7 @@ import type leaflet from "leaflet";
 import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import ignoreError from "./ignoreError";
-import exclusions from "./exclusions";
+import getExclusionsFromLocalStorage from "./exclusions";
 import capLng from "./capLng";
 import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
@@ -185,13 +185,15 @@ export default async ({
     radius,
   })) as Overpass.Response;
 
-  const results = [];
+  const results = new Set<Overpass.Element>();
 
   // Pot for drawing streets from.
   const pot: { [key: string]: Overpass.Element } = {};
 
   // Iterate through all items, filter them based on the exclusion criteria
   // and add them to the pot without duplicates.
+  const exclusions = getExclusionsFromLocalStorage();
+
   for (const element of elements) {
     const key = element.tags.name?.toLowerCase();
 
@@ -222,25 +224,28 @@ export default async ({
     pot[key] = element;
   }
 
-  for (let i = 0; i < numberOfQuestions; i++) {
+  while (results.size < numberOfQuestions) {
     // Pick a random street from the pot.
-    const key = getRandomItem(Object.keys(pot), getRandomNumber);
+    const keysArray = Object.keys(pot);
+    const key = getRandomItem(keysArray, getRandomNumber);
 
     /*
       This will happen if there are less than the desired amount of (uniquely named) streets in the area.
       It's the caller's responsibility to handle this case.
     */
-    if (!key) {
+    if (!key || keysArray.length === 0) {
       break;
     }
 
     // Add the street to the results.
-    results.push(pot[key]);
+    results.add(pot[key]);
 
     // Remove the street from the pot.
     delete pot[key];
   }
 
-  // Convert to our type, join with other streets of the same name, etc.
-  return results.map((result) => adjustStreetDetails(result, elements));
+  // Convert Set to Array and to our type, join with other streets of the same name, etc.
+  return Array.from(results).map((result) =>
+    adjustStreetDetails(result, elements),
+  );
 };

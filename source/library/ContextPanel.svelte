@@ -31,6 +31,7 @@
   import trackEvent from "../utilities/trackEvent";
   import { Difficulty } from "../utilities/types";
   import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
+  import { addExclusion } from "../utilities/exclusions";
 
   export let areSettingsShown = writable(false);
 
@@ -72,6 +73,13 @@
     // Reset chosen point / marker
     chosenPoint.set(null);
     isChosenPointConfirmed.set(false);
+  };
+
+  const onAddExclusion = () => {
+    if ($currentQuestion?.target.name) {
+      addExclusion({ name: $currentQuestion.target.name.toLowerCase() });
+    }
+    onNextClicked();
   };
 
   const onRestartClicked = () => {
@@ -319,6 +327,12 @@
               on:click={onNextClicked}
             >
               Next
+            </button>
+            <button
+              class="button--primary"
+              on:click={onAddExclusion}
+            >
+              Exclude for Future
             </button>
           {:else}
             <button

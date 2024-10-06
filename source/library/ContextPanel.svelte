@@ -11,6 +11,7 @@
   import { writable } from "svelte/store";
   import {
     areaRadius,
+    areaShape,
     chosenPoint,
     currentQuestion,
     deviceBestScore,
@@ -29,21 +30,29 @@
   } from "../utilities/store";
   import Summary from "./Summary.svelte";
   import trackEvent from "../utilities/trackEvent";
-  import { Difficulty } from "../utilities/types";
+  import { Difficulty, PresetAreaShape } from "../utilities/types";
   import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
+  import capitalize from "lodash/capitalize";
 
   export let areSettingsShown = writable(false);
 
   const onNumberOfQuestionsUpdated = (event: Event) => {
     const amount = parseInt((event.target as HTMLInputElement).value);
-    numberOfQuestions.update(() => amount);
+    numberOfQuestions.set(amount);
   };
 
   const onRadiusChanged = () => {
     const radius = parseInt(
       (document.getElementById("radiusSlider") as HTMLInputElement).value,
     );
-    areaRadius.update(() => radius);
+    areaRadius.set(radius);
+  };
+
+  const onAreaShapeChanged = () => {
+    areaShape.set(
+      (document.getElementById("areaShape") as HTMLSelectElement)
+        .value as PresetAreaShape,
+    );
   };
 
   const onChosenPointConfirmed = () => {
@@ -151,7 +160,7 @@
     areSettingsShown.set(false);
   });
 
-  const timestampOfLastSettingsUpdate = 1679088005110;
+  const timestampOfLastSettingsUpdate = 1728241913765; // Date.now()
   const onSettingsButtonClicked = () => {
     areSettingsShown.update((previous) => !previous);
     const now = Date.now();
@@ -462,7 +471,9 @@
           </div>
 
           <div>
-            <label for="radiusSlider">Radius of area</label>
+            <label for="radiusSlider"
+              >Area {#if $areaShape === "circle"}radius{:else}extent{/if}</label
+            >
             <div class="subtext">{$areaRadius} m</div>
             <input
               type="range"
@@ -474,6 +485,19 @@
               id="radiusSlider"
               on:input={onRadiusChanged}
             />
+          </div>
+
+          <div class="settings__area-shape">
+            <label for="areaShape">Area shape</label>
+            <select
+              id="areaShape"
+              on:change={onAreaShapeChanged}
+              value={$areaShape}
+            >
+              {#each Object.values(PresetAreaShape) as shape}
+                <option value={shape}>{capitalize(shape)}</option>
+              {/each}
+            </select>
           </div>
 
           <div>
@@ -728,10 +752,17 @@
 
   .settings > *:not(.wideSetting) {
     flex: 1;
+    flex-basis: 45%;
   }
 
   .wideSetting {
     min-width: 100%;
+  }
+
+  .settings select {
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #e6e4e4;
   }
 
   .difficultyRadioButtonGroup {
@@ -778,6 +809,12 @@
 
   .radioButtonGroupTitle {
     margin-bottom: 0.5rem;
+  }
+
+  .settings__area-shape {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .street-sign-wrapper {

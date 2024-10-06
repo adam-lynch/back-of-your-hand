@@ -83,30 +83,43 @@ const adjustStreetDetails = (
 const load = async ({
   areaBounds,
   centerLatLng,
-  radius,
+  circleRadius,
 }: {
   areaBounds: leaflet.LatLngBounds;
   centerLatLng: LatLng;
-  radius: number;
+  circleRadius: number | null;
 }) => {
   // Setting the bounding box is important. It massively speeds up the query
   const numberOfDecimalPointsToConsider = 4;
-  const bboxValue = [
-    roundNumber(areaBounds.getNorthWest().lat, numberOfDecimalPointsToConsider),
-    roundNumber(
+  const bbox = {
+    north: roundNumber(
+      areaBounds.getNorthWest().lat,
+      numberOfDecimalPointsToConsider,
+    ),
+    west: roundNumber(
       capLng(areaBounds.getNorthWest().lng),
       numberOfDecimalPointsToConsider,
     ),
-    roundNumber(areaBounds.getSouthEast().lat, numberOfDecimalPointsToConsider),
-    roundNumber(
+    south: roundNumber(
+      areaBounds.getSouthEast().lat,
+      numberOfDecimalPointsToConsider,
+    ),
+    east: roundNumber(
       capLng(areaBounds.getSouthEast().lng),
       numberOfDecimalPointsToConsider,
     ),
-  ].join(",");
+  };
+  const bboxString = [bbox.south, bbox.west, bbox.north, bbox.east].join(",");
 
-  const aroundValue = `${radius},${centerLatLng.lat},${capLng(
-    centerLatLng.lng,
-  )}`;
+  let spatialModifier = "";
+  if (circleRadius === null) {
+    spatialModifier = `(${bboxString})`;
+  } else {
+    const aroundValue = `${circleRadius},${centerLatLng.lat},${capLng(
+      centerLatLng.lng,
+    )}`;
+    spatialModifier = `(around:${aroundValue})`;
+  }
 
   const highwayCategories = Object.values(difficultiesToHighwayCategories)
     .map((categories) => categories)
@@ -119,11 +132,11 @@ const load = async ({
     properties we need in the response.
   */
   const urlPath = [
-    `api/interpreter?data=[out:json][bbox:${bboxValue}];`,
+    `api/interpreter?data=[out:json][bbox:${bboxString}];`,
     `(`,
-    `way(around:${aroundValue})[highway~"${highwayRegex}"][name];`,
-    `way(around:${aroundValue})[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
-    `way(around:${aroundValue})[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
+    `way${spatialModifier}[highway~"${highwayRegex}"][name];`,
+    `way${spatialModifier}[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
+    `way${spatialModifier}[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
     `);`,
     `out%20tags%20geom;`,
   ].join("");
@@ -166,15 +179,15 @@ const load = async ({
 export default async ({
   areaBounds,
   centerLatLng,
+  circleRadius,
   difficulty,
-  radius,
   getRandomNumber,
   numberOfQuestions,
 }: {
   areaBounds: leaflet.LatLngBounds;
   centerLatLng: LatLng;
+  circleRadius: number | null;
   difficulty: Difficulty;
-  radius: number;
   getRandomNumber: () => number;
   numberOfQuestions: number;
 }): Promise<Question["target"][]> => {
@@ -182,7 +195,7 @@ export default async ({
   const { elements } = (await load({
     areaBounds,
     centerLatLng,
-    radius,
+    circleRadius,
   })) as Overpass.Response;
 
   const results = [];

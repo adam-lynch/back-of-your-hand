@@ -20,6 +20,7 @@
     "@sentry/browser": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "@turf/center": "^6.0.1",
+    "@turf/destination": "^7.1.0",
     "@types/leaflet": "^1.5.19",
     "@types/lodash": "^4.14.182",
     "@types/turf": "^3.5.32",

@@ -14,19 +14,21 @@ import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import { isAreaConfirmed, isLoading, round, seed } from "./store";
 import { Difficulty } from "./types";
-import type { LatLng } from "./types";
+import { PresetAreaShape, type LatLng } from "./types";
 import type { LatLngBounds } from "leaflet";
 
 let getRandomNumber: ReturnType<typeof getRandomNumberGenerator>;
 export default async ({
   areaCenter,
   areaBounds,
+  areaShape,
   difficulty,
   numberOfQuestions,
   radius,
 }: {
   areaCenter: LatLng;
   areaBounds: LatLngBounds;
+  areaShape: PresetAreaShape;
   difficulty: Difficulty;
   numberOfQuestions: number;
   radius: number;
@@ -40,9 +42,9 @@ export default async ({
     areaBounds,
     centerLatLng: areaCenter as LatLng,
     difficulty,
-    radius,
     getRandomNumber,
     numberOfQuestions,
+    circleRadius: areaShape === PresetAreaShape.Circle ? radius : null,
   });
 
   if (targets.length < numberOfQuestions) {

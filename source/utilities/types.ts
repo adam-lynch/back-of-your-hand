@@ -87,3 +87,8 @@ export enum Difficulty {
   Resident = "resident",
   TaxiDriver = "taxi-driver",
 }
+
+export enum PresetAreaShape {
+  Circle = "circle",
+  Square = "square",
+}

@@ -6,7 +6,7 @@
   Tile images: network
 */
 
-const cacheName = "files-v2";
+const cacheName = "files-v3";
 const offlinePageUrl = "/offline";
 
 addEventListener("install", (installEvent) => {

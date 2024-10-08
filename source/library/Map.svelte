@@ -15,6 +15,7 @@
     areaBounds,
     areaCenter,
     areaRadius,
+    areaShape,
     chosenPoint,
     currentQuestion,
     currentQuestionIndex,
@@ -32,7 +33,11 @@
   import getNearestPointOnPolyLine from "../utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "../utilities/getViewportWidth";
   import reduceLatLngPrecision from "../utilities/reduceLatLngPrecision";
-  import type { Question, Round } from "../utilities/types";
+  import {
+    PresetAreaShape,
+    type Question,
+    type Round,
+  } from "../utilities/types";
   import trackEvent from "../utilities/trackEvent";
   import delay from "../utilities/delay";
   import capLng from "../utilities/capLng";
@@ -40,6 +45,7 @@
   import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
   import type { HTMLSharpImage } from "./customElements";
+  import convertLatLngToLatLngBoundsExpression from "../utilities/convertLatLngToLatLngBoundsExpression";
 
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
@@ -47,7 +53,7 @@
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
 
-  let areaBoundsCircle: leaflet.Circle;
+  let areaBoundsShape: leaflet.Circle | leaflet.Rectangle;
   let areaBoundsCenterMarker: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
@@ -98,7 +104,7 @@
   let areElementLabelsShown = true;
 
   // Used when intializing, plus when updating its style (when starting a new round)
-  const areaBoundsCircleSelectionStyle = {
+  const areaBoundsShapeSelectionStyle = {
     color: "#ff2882",
     fillColor: "#ff2882",
     fillOpacity: 0.05,
@@ -107,22 +113,29 @@
     opacity: 0.5,
   };
 
-  // Draw the area bounds circle
+  // Draw the area bounds shape
   const markBounds = ({
     shouldShowAreaBoundsPopup,
   }: {
     shouldShowAreaBoundsPopup?: boolean;
   }) => {
-    const newAreaBoundsCircle = leaflet
-      .circle($areaCenter, {
-        ...areaBoundsCircleSelectionStyle,
+    let newAreaBoundsShape: typeof areaBoundsShape;
+    if ($areaShape === PresetAreaShape.Circle) {
+      newAreaBoundsShape = leaflet.circle($areaCenter, {
+        ...areaBoundsShapeSelectionStyle,
         radius: $areaRadius,
-      })
-      .addTo(map);
+      });
+    } else {
+      newAreaBoundsShape = leaflet.rectangle(
+        convertLatLngToLatLngBoundsExpression($areaCenter, $areaRadius),
+        areaBoundsShapeSelectionStyle,
+      );
+    }
+    newAreaBoundsShape.addTo(map);
 
     const newAreaBoundsCenterMarker = leaflet
       .circle($areaCenter, {
-        ...areaBoundsCircleSelectionStyle,
+        ...areaBoundsShapeSelectionStyle,
         fillOpacity: 0.75,
         opacity: 0,
         radius: $areaRadius / 50,
@@ -136,10 +149,10 @@
       newAreaBoundsCenterMarker.openPopup();
     }
 
-    const newAreaBounds = newAreaBoundsCircle.getBounds();
+    const newAreaBounds = newAreaBoundsShape.getBounds();
     areaBounds.set(newAreaBounds);
 
-    const boundsToFitInView = newAreaBoundsCircle
+    const boundsToFitInView = newAreaBoundsShape
       .getBounds()
       .pad(getBoundsPaddingWhenMarkingBounds());
     map.flyToBounds(boundsToFitInView, {
@@ -147,13 +160,13 @@
       duration: 0.75,
     });
 
-    if (areaBoundsCircle) {
-      map.removeLayer(areaBoundsCircle);
+    if (areaBoundsShape) {
+      map.removeLayer(areaBoundsShape);
     }
     if (areaBoundsCenterMarker) {
       map.removeLayer(areaBoundsCenterMarker);
     }
-    areaBoundsCircle = newAreaBoundsCircle;
+    areaBoundsShape = newAreaBoundsShape;
     areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
@@ -200,7 +213,7 @@
       .setMaxBounds($areaBounds.pad(0.12))
       .setMinZoom(12);
 
-    areaBoundsCircle.setStyle({
+    areaBoundsShape.setStyle({
       color: "#37003c",
       fill: false,
       stroke: true,
@@ -508,12 +521,12 @@
           animate: false,
         });
         setTimeout(() => {
-          markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+          markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
         }, 250);
         return;
       }
 
-      markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
     });
 
     areaRadius.subscribe((value) => {
@@ -521,7 +534,15 @@
         return;
       }
 
-      markBounds(areaBoundsCircle ? {} : areaSelectionMarkBoundsOptions);
+      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+    });
+
+    areaShape.subscribe((value) => {
+      if (!value) {
+        return;
+      }
+
+      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
     });
 
     // Mark their guess
@@ -581,7 +602,7 @@
         resetMap(false, true);
         locateControl.add(map);
         markBounds(areaSelectionMarkBoundsOptions);
-        areaBoundsCircle.setStyle(areaBoundsCircleSelectionStyle);
+        areaBoundsShape.setStyle(areaBoundsShapeSelectionStyle);
 
         return;
       }

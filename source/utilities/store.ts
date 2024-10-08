@@ -17,6 +17,7 @@ import ignoreError from "./ignoreError";
 import isTouchDevice from "./isTouchDevice";
 import { Difficulty } from "./types";
 import type { LatLng, Round } from "./types";
+import { PresetAreaShape } from "./types";
 
 const initialUrlSearchParams = new URLSearchParams(window.location.search);
 
@@ -33,6 +34,13 @@ export const areaRadius = writable(
         return parseInt(input);
       }
     },
+    urlSearchParams: initialUrlSearchParams,
+  }),
+);
+export const areaShape = writable(
+  getInitialSettingValue<PresetAreaShape>({
+    defaultValue: PresetAreaShape.Circle,
+    name: "shape",
     urlSearchParams: initialUrlSearchParams,
   }),
 );
@@ -119,8 +127,8 @@ export const seed = writable<string>(
 );
 
 export const gameUrl = derived(
-  [areaCenter, areaRadius, difficulty, numberOfQuestions],
-  ([$areaCenter, $areaRadius, $difficulty, $numberOfQuestions]) => {
+  [areaCenter, areaRadius, areaShape, difficulty, numberOfQuestions],
+  ([$areaCenter, $areaRadius, $areaShape, $difficulty, $numberOfQuestions]) => {
     const url = new URL(window.location.origin);
     url.pathname = "/game";
     url.searchParams.set("difficulty", $difficulty);
@@ -128,6 +136,7 @@ export const gameUrl = derived(
     url.searchParams.set("lng", $areaCenter.lng.toString());
     url.searchParams.set("numberOfQuestions", $numberOfQuestions.toString());
     url.searchParams.set("radius", $areaRadius.toString());
+    url.searchParams.set("shape", $areaShape);
     return url.toString();
   },
 );

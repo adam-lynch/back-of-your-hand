@@ -22,6 +22,7 @@
     areaBounds,
     areaCenter,
     areaRadius,
+    areaShape,
     currentQuestion,
     deviceBestScore,
     difficulty,
@@ -74,6 +75,15 @@
     updateUrl();
   });
 
+  areaShape.subscribe((value) => {
+    if (!value) {
+      return;
+    }
+
+    updateUrl();
+    trackEvent({ name: "area-shape-changed", title: "Area shape changed" });
+  });
+
   difficulty.subscribe(() => updateUrl());
 
   numberOfQuestions.subscribe((value: number) => {
@@ -97,6 +107,7 @@
     loadRound({
       areaBounds: $areaBounds,
       areaCenter: $areaCenter,
+      areaShape: $areaShape,
       difficulty: $difficulty,
       numberOfQuestions: $numberOfQuestions,
       radius: $areaRadius,
@@ -107,6 +118,7 @@
 
       localStorage.setItem("difficulty", $difficulty);
       localStorage.setItem("radius", $areaRadius.toString());
+      localStorage.setItem("shape", $areaShape);
     });
   });
 

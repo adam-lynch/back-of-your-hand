@@ -53,8 +53,13 @@ fieldset {
   all: unset;
 }
 
-input {
+input,
+select {
   accent-color: #df206f;
+
+  &:focus-visible {
+    outline-color: #df206f;
+  }
 }
 
 .single-line-text-overflow {

@@ -50,7 +50,7 @@ export default async ({
   if (targets.length < numberOfQuestions) {
     await delay(200); // Make sure zoom-in has finished
     let errorSuffix = "";
-    if (difficulty !== Difficulty.Tourist) {
+    if (difficulty !== Difficulty.TaxiDriver) {
       errorSuffix = " or increase the difficulty so more streets are included";
     }
     if (targets.length < 5) {

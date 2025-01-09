@@ -11,10 +11,11 @@
   import {
     geolocationRequesterStatus,
     interactionVerb,
-  } from "../utilities/store";
-  import ignoreError from "../utilities/ignoreError";
-  import setAreaCenterUsingWebGeolocationApi from "../utilities/setAreaCenterUsingWebGeolocationApi";
-  import trackEvent from "../utilities/trackEvent";
+  } from "../../utilities/store";
+  import ignoreError from "../../utilities/ignoreError";
+  import setAreaCenterUsingWebGeolocationApi from "../../utilities/setAreaCenterUsingWebGeolocationApi";
+  import trackEvent from "../../utilities/trackEvent";
+  import Button from "../forms/Button.svelte";
 
   const prompt = async () => {
     geolocationRequesterStatus.set("prompted");
@@ -95,11 +96,12 @@
         </div>
 
         <div class="button-group">
-          <button
+          <Button
             class="button--primary"
-            on:click={prompt}>Continue</button
+            on:click={prompt}
+            variant="primary">Continue</Button
           >
-          <button on:click={cancel}>Cancel</button>
+          <Button on:click={cancel}>Cancel</Button>
         </div>
       {:else if $geolocationRequesterStatus === "prompted"}
         <p>{$interactionVerb} "Allow"</p>

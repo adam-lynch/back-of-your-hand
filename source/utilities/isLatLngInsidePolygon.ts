@@ -12,7 +12,7 @@ import isPointInPolygon from "point-in-polygon";
 import convertLatLngToCoordinates, {
   convertLatLngsToCoordinates,
 } from "./convertLatLngToCoordinates";
-import type { LatLng, PotentiallyNestedLatLngs } from "./types";
+import type { LatLng, PotentiallyNestedLatLngs } from "../library/game/types";
 
 export default (
   latLng: LatLng,

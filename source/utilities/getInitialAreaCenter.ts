@@ -9,7 +9,7 @@
 
 import capLng from "./capLng";
 import ignoreError from "./ignoreError";
-import type { LatLng } from "./types";
+import type { LatLng } from "../library/game/types";
 
 const getAreaCenterFromUrl = (
   urlSearchParams: URLSearchParams,

@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type { Overpass } from "./types";
+import type { Overpass } from "../library/game/types";
 
 const isUsableAlternativeName = (
   alternativeName: string | void,

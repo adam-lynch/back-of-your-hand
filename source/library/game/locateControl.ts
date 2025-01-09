@@ -8,11 +8,11 @@
  */
 
 import leaflet from "leaflet";
-import { geolocationRequesterStatus } from "../utilities/store";
-import getViewportWidth from "../utilities/getViewportWidth";
-import ignoreError from "../utilities/ignoreError";
-import setAreaCenterUsingWebGeolocationApi from "../utilities/setAreaCenterUsingWebGeolocationApi";
-import trackEvent from "../utilities/trackEvent";
+import { geolocationRequesterStatus } from "../../utilities/store";
+import getViewportWidth from "../../utilities/getViewportWidth";
+import ignoreError from "../../utilities/ignoreError";
+import setAreaCenterUsingWebGeolocationApi from "../../utilities/setAreaCenterUsingWebGeolocationApi";
+import trackEvent from "../../utilities/trackEvent";
 
 let control: leaflet.Control | null = null;
 let container: HTMLElement;

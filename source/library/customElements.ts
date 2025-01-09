@@ -74,5 +74,8 @@ export class HTMLSharpImage extends HTMLElement {
 }
 
 export function defineCustomElements() {
+  if (customElements.get("sharp-img")) {
+    return;
+  }
   customElements.define("sharp-img", HTMLSharpImage);
 }

@@ -7,11 +7,14 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import sveltePreprocess from "svelte-preprocess";
 import browserslistToEsbuild from "browserslist-to-esbuild";
+import { preprocess as delegateAllEvents } from "svelte-preprocess-delegate-events";
 // @ts-expect-error no types available
 import getCommitId from "git-commit-id";
 import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
+import Icons from "unplugin-icons/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,6 +32,10 @@ export default defineConfig({
         }
         handler(warning);
       },
+      preprocess: [sveltePreprocess({ typescript: true }), delegateAllEvents()],
+    }),
+    Icons({
+      compiler: "svelte",
     }),
   ],
   server: {

@@ -7,27 +7,36 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type leaflet from "leaflet";
-import { derived, writable } from "svelte/store";
+import type * as geojson from "geojson";
+import { derived, get, writable } from "svelte/store";
 
 import getInitialAreaCenter from "./getInitialAreaCenter";
 import getInitialSettingValue from "./getInitialSettingValue";
 import getSeed from "./getSeed";
 import ignoreError from "./ignoreError";
 import isTouchDevice from "./isTouchDevice";
-import { Difficulty } from "./types";
-import type { LatLng, Round } from "./types";
-import { PresetAreaShape } from "./types";
+import { Difficulty } from "../library/game/types";
+import type { LatLng, Round } from "../library/game/types";
+import { PresetAreaShape } from "../library/game/types";
+import createFeatureFromPresetAreaShape from "./createFeatureFromPresetAreaShape";
+import convertLatLngToPosition from "./convertLatLngToPosition";
+import * as defaults from "./defaults";
+import setWritableIfDifferent from "./setWritableIfDifferent";
+import getCenterOfFeature from "./getCenterOfFeature";
+import convertPositionToLatLng from "./convertPositionToLatLng";
+import type { Area } from "../api/resourceObjects";
+import subscribeIfNotDeepEqual from "../library/utilities/subscribeIfNotDeepEqual";
 
-const initialUrlSearchParams = new URLSearchParams(window.location.search);
+export const initialUrlSearchParams = new URLSearchParams(
+  window.location.search,
+);
 
-export const areaBounds = writable<leaflet.LatLngBounds | null>(null);
 export const areaCenter = writable<LatLng>(
   getInitialAreaCenter(initialUrlSearchParams),
 );
 export const areaRadius = writable(
   getInitialSettingValue<number>({
-    defaultValue: 2000,
+    defaultValue: defaults.radius,
     name: "radius",
     parse: (input) => {
       if (input) {
@@ -37,9 +46,10 @@ export const areaRadius = writable(
     urlSearchParams: initialUrlSearchParams,
   }),
 );
+
 export const areaShape = writable(
   getInitialSettingValue<PresetAreaShape>({
-    defaultValue: PresetAreaShape.Circle,
+    defaultValue: defaults.shape,
     name: "shape",
     urlSearchParams: initialUrlSearchParams,
   }),
@@ -55,6 +65,16 @@ export const difficulty = writable(
       }
     },
     urlSearchParams: initialUrlSearchParams,
+  }),
+);
+
+export const hasEverPlayedARoundOnThisDevice =
+  typeof localStorage.getItem("deviceBestScore") === "string";
+
+export const lastAreaSelectionAreaId = writable(
+  getInitialSettingValue<string | null | undefined>({
+    defaultValue: null,
+    name: "lastAreaSelectionAreaId",
   }),
 );
 
@@ -121,6 +141,39 @@ export const isZooming = derived(ongoingZoomCount, ($value) => $value > 0);
 export const sidebarState = writable<
   "default" | "creating-multiplayer-session" | "summary"
 >("default");
+
+export type AreaSelection = {
+  areaId: Area["id"] | null;
+  feature: geojson.Feature<GeoJSON.Polygon>;
+  presetShape: PresetAreaShape;
+  radius: number | null;
+};
+
+const initialAreaSelectionShape =
+  get(areaShape) === PresetAreaShape.Polygon
+    ? PresetAreaShape.Circle
+    : get(areaShape);
+const initialAreaSelectionRadius = get(areaRadius);
+const initialAreaSelectionFeature = createFeatureFromPresetAreaShape(
+  initialAreaSelectionShape,
+  convertLatLngToPosition(get(areaCenter)),
+  initialAreaSelectionRadius,
+);
+
+export const areaSelection = writable<AreaSelection>({
+  areaId: null,
+  feature: initialAreaSelectionFeature,
+  presetShape: initialAreaSelectionShape,
+  radius: initialAreaSelectionRadius,
+});
+
+subscribeIfNotDeepEqual(areaSelection, (value) => {
+  const centerPosition = getCenterOfFeature(value.feature);
+  setWritableIfDifferent(areaCenter, convertPositionToLatLng(centerPosition));
+  setWritableIfDifferent(areaRadius, value.areaId ? null : value.radius);
+  setWritableIfDifferent(areaShape, value.presetShape);
+});
+
 export const round = writable<Round | null>(null);
 export const seed = writable<string>(
   (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed(),
@@ -135,15 +188,25 @@ export const gameUrl = derived(
     url.searchParams.set("lat", $areaCenter.lat.toString());
     url.searchParams.set("lng", $areaCenter.lng.toString());
     url.searchParams.set("numberOfQuestions", $numberOfQuestions.toString());
-    url.searchParams.set("radius", $areaRadius.toString());
-    url.searchParams.set("shape", $areaShape);
+    if ($areaRadius !== null) {
+      url.searchParams.set("radius", $areaRadius.toString());
+    }
+    if ($areaShape !== PresetAreaShape.Polygon) {
+      url.searchParams.set("shape", $areaShape);
+    }
     return url.toString();
   },
 );
 
 export const multiplayerSessionJoinUrl = derived(
-  [gameUrl, seed],
-  ([$gameUrl, $seed]) => `${$gameUrl}&sharedSeed=${$seed}`,
+  [gameUrl, seed, areaSelection],
+  ([$gameUrl, $seed, $areaSelection]) => {
+    let result = `${$gameUrl}&sharedSeed=${$seed}`;
+    if ($areaSelection.areaId) {
+      result += `&areaIdForMultiplayer=${$areaSelection.areaId}`;
+    }
+    return result;
+  },
 );
 
 export const orderedQuestions = derived(round, ($value) => {

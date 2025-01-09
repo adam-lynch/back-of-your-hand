@@ -8,8 +8,9 @@
 -->
 
 <script lang="ts">
-  import { orderedQuestions, round, totalScore } from "../utilities/store";
-  import computeTotalScore from "../utilities/computeTotalScore";
+  import { orderedQuestions, round, totalScore } from "../../utilities/store";
+  import computeTotalScore from "../../utilities/computeTotalScore";
+  import Button from "../forms/Button.svelte";
   export let onRestartClicked: () => void;
   export let reset: () => void;
 </script>
@@ -42,14 +43,15 @@
   </ol>
 
   <div class="call-to-action">
-    <button
+    <Button
       class="button--primary"
       on:click={onRestartClicked}
+      variant="primary"
     >
       Start a new round
-    </button>
+    </Button>
 
-    <button on:click={reset}> Reset </button>
+    <Button on:click={reset}>Reset</Button>
   </div>
 </div>
 

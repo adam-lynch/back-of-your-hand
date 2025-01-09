@@ -12,24 +12,25 @@ import { get } from "svelte/store";
 import delay from "./delay";
 import getData from "./getData";
 import getRandomNumberGenerator from "./getRandomNumberGenerator";
-import { isAreaConfirmed, isLoading, round, seed } from "./store";
-import { Difficulty } from "./types";
-import { PresetAreaShape, type LatLng } from "./types";
-import type { LatLngBounds } from "leaflet";
+import {
+  isAreaConfirmed,
+  isLoading,
+  round,
+  seed,
+  type AreaSelection,
+} from "./store";
+import { Difficulty } from "../library/game/types";
 
 let getRandomNumber: ReturnType<typeof getRandomNumberGenerator>;
 export default async ({
-  areaCenter,
-  areaBounds,
-  areaShape,
+  areaSelection,
   difficulty,
+  isOrganizationUrl,
   numberOfQuestions,
-  radius,
 }: {
-  areaCenter: LatLng;
-  areaBounds: LatLngBounds;
-  areaShape: PresetAreaShape;
+  areaSelection: AreaSelection;
   difficulty: Difficulty;
+  isOrganizationUrl: boolean;
   numberOfQuestions: number;
   radius: number;
 }) => {
@@ -39,36 +40,40 @@ export default async ({
     getRandomNumber = getRandomNumberGenerator(get(seed));
   }
   const targets = await getData({
-    areaBounds,
-    centerLatLng: areaCenter as LatLng,
+    areaSelection,
     difficulty,
     getRandomNumber,
     numberOfQuestions,
-    circleRadius: areaShape === PresetAreaShape.Circle ? radius : null,
   });
 
-  if (targets.length < numberOfQuestions) {
+  let alertMessage: string | null = null;
+
+  if (targets.length === 0) {
+    alertMessage =
+      "There are no streets or points of interest in this area. Please select another area";
+  } else if (targets.length < numberOfQuestions && !isOrganizationUrl) {
     await delay(200); // Make sure zoom-in has finished
-    let errorSuffix = "";
-    if (difficulty !== Difficulty.TaxiDriver) {
-      errorSuffix = " or increase the difficulty so more streets are included";
-    }
     if (targets.length < 5) {
-      alert(
-        `There aren't enough streets or points of interest in this area (minimum 5 required). Please select another area${errorSuffix}`,
-      );
+      alertMessage =
+        "There aren't enough streets or points of interest in this area (minimum 5 required). Please select another area";
     } else {
-      alert(
-        `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfQuestions})${errorSuffix}`,
-      );
+      alertMessage = `There are only ${targets.length} streets or points of interest in this area. Please reduce the "Questions per round" setting (currently set to ${numberOfQuestions})`;
     }
+  }
+
+  if (alertMessage) {
+    let suffix = "";
+    if (difficulty !== Difficulty.TaxiDriver) {
+      suffix = " or increase the difficulty so more streets are included";
+    }
+    alert(alertMessage + suffix);
+
     isAreaConfirmed.set(false);
     isLoading.set(false);
     return;
   }
 
   round.set({
-    areaBounds: areaBounds,
     questions: targets.map((target, index) => ({
       target,
       index,

@@ -11,41 +11,37 @@
   import leaflet, { type LeafletMouseEventHandlerFn } from "leaflet";
   import debounce from "lodash/debounce";
   import { onMount } from "svelte";
+  import * as svelteStore from "svelte/store";
   import {
-    areaBounds,
     areaCenter,
     areaRadius,
+    areaSelection,
     areaShape,
     chosenPoint,
     currentQuestion,
     currentQuestionIndex,
-    didOpenMultiplayerSessionUrl,
     interactionVerb,
     isAreaConfirmed,
     isChosenPointConfirmed,
     ongoingZoomCount,
     round,
     sidebarState,
-  } from "../utilities/store";
+  } from "../../utilities/store";
 
   import * as locateControl from "./locateControl";
-  import drawTarget from "../utilities/drawTarget";
-  import getNearestPointOnPolyLine from "../utilities/getNearestPointOnPolyLine";
-  import getViewportWidth from "../utilities/getViewportWidth";
-  import reduceLatLngPrecision from "../utilities/reduceLatLngPrecision";
-  import {
-    PresetAreaShape,
-    type Question,
-    type Round,
-  } from "../utilities/types";
-  import trackEvent from "../utilities/trackEvent";
-  import delay from "../utilities/delay";
-  import capLng from "../utilities/capLng";
-  import roundNumber from "../utilities/roundNumber";
-  import waitForAnyOngoingZoomsToEnd from "../utilities/waitForAnyOngoingZoomsToEnd";
+  import drawTarget from "../../utilities/drawTarget";
+  import getNearestPointOnPolyLine from "../../utilities/getNearestPointOnPolyLine";
+  import getViewportWidth from "../../utilities/getViewportWidth";
+  import { type Question, type Round } from "./types";
+  import delay from "../../utilities/delay";
+  import capLng from "../../utilities/capLng";
+  import roundNumber from "../../utilities/roundNumber";
+  import waitForAnyOngoingZoomsToEnd from "../../utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
-  import type { HTMLSharpImage } from "./customElements";
-  import convertLatLngToLatLngBoundsExpression from "../utilities/convertLatLngToLatLngBoundsExpression";
+  import type { HTMLSharpImage } from "../customElements";
+  import createLeafletPathFromAreaSelection from "../utilities/createLeafletPathFromAreaSelection";
+  import getLeafletLatLngBoundsFromPath from "../utilities/getLeafletLatLngBoundsFromPath";
+  import updateAreaCenterWithWarningIfNecessary from "../utilities/updateAreaCenterWithWarningIfNecessary";
 
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
@@ -53,7 +49,7 @@
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
 
-  let areaBoundsShape: leaflet.Circle | leaflet.Rectangle;
+  let areaBoundsShape: leaflet.Path;
   let areaBoundsCenterMarker: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
@@ -61,7 +57,6 @@
   };
   const defaultMinZoom = 3.5;
   let chosenPointMarker: leaflet.Marker | null;
-  let hasShownPredefinedAreaChangedWarning: boolean;
   let map: leaflet.Map;
   let mapElement: HTMLElement;
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
@@ -119,26 +114,21 @@
   }: {
     shouldShowAreaBoundsPopup?: boolean;
   }) => {
-    let newAreaBoundsShape: typeof areaBoundsShape;
-    if ($areaShape === PresetAreaShape.Circle) {
-      newAreaBoundsShape = leaflet.circle($areaCenter, {
-        ...areaBoundsShapeSelectionStyle,
-        radius: $areaRadius,
-      });
-    } else {
-      newAreaBoundsShape = leaflet.rectangle(
-        convertLatLngToLatLngBoundsExpression($areaCenter, $areaRadius),
-        areaBoundsShapeSelectionStyle,
-      );
-    }
+    const newAreaBoundsShape = createLeafletPathFromAreaSelection(
+      svelteStore.get(areaSelection),
+      areaBoundsShapeSelectionStyle,
+    );
     newAreaBoundsShape.addTo(map);
+    const newAreaBounds = getLeafletLatLngBoundsFromPath(newAreaBoundsShape);
+    const newAreaBoundsCenter = newAreaBounds.getCenter();
 
     const newAreaBoundsCenterMarker = leaflet
-      .circle($areaCenter, {
+      .circle(newAreaBoundsCenter, {
         ...areaBoundsShapeSelectionStyle,
         fillOpacity: 0.75,
         opacity: 0,
-        radius: $areaRadius / 50,
+        radius:
+          newAreaBoundsCenter.distanceTo(newAreaBounds.getNorthEast()) / 50,
       })
       .addTo(map);
 
@@ -149,16 +139,37 @@
       newAreaBoundsCenterMarker.openPopup();
     }
 
-    const newAreaBounds = newAreaBoundsShape.getBounds();
-    areaBounds.set(newAreaBounds);
+    const boundsToFitInView = newAreaBounds.pad(
+      getBoundsPaddingWhenMarkingBounds(),
+    );
 
-    const boundsToFitInView = newAreaBoundsShape
-      .getBounds()
-      .pad(getBoundsPaddingWhenMarkingBounds());
-    map.flyToBounds(boundsToFitInView, {
-      animate: true,
-      duration: 0.75,
-    });
+    /*
+      Rarely, there's a weird unfixable issue deep in Leaflet with animations (I think it's https://github.com/Leaflet/Leaflet/issues/3249 but I'm not sure).
+      If the error occurs, we rerun it without animating.
+    */
+    const flyToBoundsArgs: Parameters<typeof map.flyToBounds> = [
+      boundsToFitInView,
+      {
+        animate: true,
+        duration: 0.75,
+      },
+    ];
+    try {
+      map.flyToBounds(...flyToBoundsArgs);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.includes("Invalid LatLng object: (NaN, NaN)")
+      ) {
+        console.warn(error);
+        map.flyToBounds(flyToBoundsArgs[0], {
+          ...flyToBoundsArgs[1],
+          animate: false,
+        });
+      } else {
+        throw error;
+      }
+    }
 
     if (areaBoundsShape) {
       map.removeLayer(areaBoundsShape);
@@ -202,15 +213,14 @@
 
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
-    if (!$areaBounds) {
-      throw new Error("No areaBounds");
-    }
     hideElementLabels();
     locateControl.remove(map);
+
+    const areaBounds = getLeafletLatLngBoundsFromPath(areaBoundsShape);
     map
-      .fitBounds($areaBounds)
+      .fitBounds(areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
-      .setMaxBounds($areaBounds.pad(0.12))
+      .setMaxBounds(areaBounds.pad(0.12))
       .setMinZoom(12);
 
     areaBoundsShape.setStyle({
@@ -328,38 +338,7 @@
 
     // They're selecting an area
     if (!$isAreaConfirmed) {
-      const updateCenter = () => areaCenter.set(reduceLatLngPrecision(latLng));
-
-      // If they came in with a seed and then change the area, warn them
-      if (
-        !$round &&
-        $didOpenMultiplayerSessionUrl &&
-        !hasShownPredefinedAreaChangedWarning
-      ) {
-        hasShownPredefinedAreaChangedWarning = true;
-        trackEvent({
-          name: "change-prefined-area-seed_attempted",
-          title: "Change predefined area-seed: attempted",
-        });
-        if (
-          confirm(
-            "The link you opened contains a pre-defined area and set of streets. A friend may have given you the URL so you could compete. \n\nChange the area anyway?",
-          )
-        ) {
-          trackEvent({
-            name: "change-prefined-area-seed_confirmed",
-            title: "Change predefined area-seed: confirmed",
-          });
-          updateCenter();
-        } else {
-          trackEvent({
-            name: "change-prefined-area-seed_cancelled",
-            title: "Change predefined area-seed: cancelled",
-          });
-        }
-      } else {
-        updateCenter();
-      }
+      updateAreaCenterWithWarningIfNecessary(latLng, true);
       return;
     }
 
@@ -446,11 +425,13 @@
       map.removeLayer(resultFeatureGroup);
       resultFeatureGroup = null;
     }
-    if (shouldFitBounds && $areaBounds) {
-      map.fitBounds($areaBounds).once("zoomend", () => {
-        // This prevents the map going (and staying gray) on Firefox for Android sometimes
-        map.panBy([1, 1]);
-      });
+    if (shouldFitBounds && areaBoundsShape) {
+      map
+        .fitBounds(getLeafletLatLngBoundsFromPath(areaBoundsShape))
+        .once("zoomend", () => {
+          // This prevents the map going (and staying gray) on Firefox for Android sometimes
+          map.panBy([1, 1]);
+        });
     }
   };
 
@@ -493,49 +474,55 @@
   }, 50);
 
   onMount(() => {
+    const unsubscribers: (() => void)[] = [];
+
     initializeMap();
 
     /* The following are store subscriptions, i.e. reactions to state changes */
 
     // Mark the area bounds whenever the center point changes
-    areaCenter.subscribe((value) => {
-      if (!value) {
-        return;
-      }
+    unsubscribers.push(
+      areaCenter.subscribe((value) => {
+        if (!value) {
+          return;
+        }
 
-      // If it hasn't changed, add a little animation as some feedback for the locate button press
-      const currrentMapCenterLatLng = map.getCenter();
-      const numberOfDecimalPointsToConsider = 4;
-      const hasChanged =
-        roundNumber(
-          currrentMapCenterLatLng.lat,
-          numberOfDecimalPointsToConsider,
-        ) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) ||
-        roundNumber(
-          currrentMapCenterLatLng.lng,
-          numberOfDecimalPointsToConsider,
-        ) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
+        // If it hasn't changed, add a little animation as some feedback for the locate button press
+        const currrentMapCenterLatLng = map.getCenter();
+        const numberOfDecimalPointsToConsider = 4;
+        const hasChanged =
+          roundNumber(
+            currrentMapCenterLatLng.lat,
+            numberOfDecimalPointsToConsider,
+          ) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) ||
+          roundNumber(
+            currrentMapCenterLatLng.lng,
+            numberOfDecimalPointsToConsider,
+          ) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
 
-      if (!hasChanged) {
-        map.zoomOut(1, {
-          animate: false,
-        });
-        setTimeout(() => {
-          markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
-        }, 250);
-        return;
-      }
+        if (!hasChanged) {
+          map.zoomOut(1, {
+            animate: false,
+          });
+          setTimeout(() => {
+            markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+          }, 250);
+          return;
+        }
 
-      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
-    });
+        markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+      }),
+    );
 
-    areaRadius.subscribe((value) => {
-      if (!value) {
-        return;
-      }
+    unsubscribers.push(
+      areaRadius.subscribe((value) => {
+        if (!value) {
+          return;
+        }
 
-      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
-    });
+        markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+      }),
+    );
 
     areaShape.subscribe((value) => {
       if (!value) {
@@ -546,87 +533,103 @@
     });
 
     // Mark their guess
-    chosenPoint.subscribe((value) => {
-      if (chosenPointMarker) {
-        map.removeLayer(chosenPointMarker);
-        chosenPointMarker = null;
-      }
+    unsubscribers.push(
+      chosenPoint.subscribe((value) => {
+        if (chosenPointMarker) {
+          map.removeLayer(chosenPointMarker);
+          chosenPointMarker = null;
+        }
 
-      if (!value) {
-        return;
-      }
+        if (!value) {
+          return;
+        }
 
-      chosenPointMarker = leaflet.marker(value).addTo(map);
+        chosenPointMarker = leaflet.marker(value).addTo(map);
 
-      // Zoom in a litle to help them see how close they really are
-      const currentZoom = map.getZoom();
-      const minDesiredZoom = 17;
-      if (currentZoom < 18) {
-        // Keep the new zoom within the max and min zoom levels we'd like
-        let newZoom = Math.max(
-          Math.min(currentZoom + 3, maxMapZoom),
-          minDesiredZoom,
-        );
-        setTimeout(() => {
-          if (!chosenPointMarker) {
-            console.warn("No chosenPointMarker, skipping map.flyTo");
-            return;
-          }
-          map.flyTo(chosenPointMarker.getLatLng(), newZoom, {
-            animate: true,
-            duration: 0.5,
-          });
-        }, 250);
-      }
-    });
+        // Zoom in a litle to help them see how close they really are
+        const currentZoom = map.getZoom();
+        const minDesiredZoom = 17;
+        if (currentZoom < 18) {
+          // Keep the new zoom within the max and min zoom levels we'd like
+          let newZoom = Math.max(
+            Math.min(currentZoom + 3, maxMapZoom),
+            minDesiredZoom,
+          );
+          setTimeout(() => {
+            if (!chosenPointMarker) {
+              console.warn("No chosenPointMarker, skipping map.flyTo");
+              return;
+            }
+            map.flyTo(chosenPointMarker.getLatLng(), newZoom, {
+              animate: true,
+              duration: 0.5,
+            });
+          }, 250);
+        }
+      }),
+    );
 
     // When they confirm their guess, or when it's reset when moving to another street / round
-    isChosenPointConfirmed.subscribe((isConfirmed) => {
-      if (isConfirmed) {
-        onChosenPointConfirmed();
-        return;
-      }
+    unsubscribers.push(
+      isChosenPointConfirmed.subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          onChosenPointConfirmed();
+          return;
+        }
 
-      // Moved onto new street / challenge. Reset the map to be safe
-      if ($isAreaConfirmed) {
-        resetMap();
-      }
-    });
+        // Moved onto new street / challenge. Reset the map to be safe
+        if ($isAreaConfirmed) {
+          resetMap();
+        }
+      }),
+    );
 
     // React to the area being confirmed / unset
-    isAreaConfirmed.subscribe((isConfirmed) => {
-      // They've chosen to start a new round, back to area selection
-      if (!isConfirmed) {
-        // @ts-expect-error I don't see any other way to do this
-        map.setMaxBounds(null).setMinZoom(defaultMinZoom);
-        resetMap(false, true);
-        locateControl.add(map);
-        markBounds(areaSelectionMarkBoundsOptions);
-        areaBoundsShape.setStyle(areaBoundsShapeSelectionStyle);
+    unsubscribers.push(
+      isAreaConfirmed.subscribe((isConfirmed) => {
+        // They've chosen to start a new round, back to area selection
+        if (!isConfirmed) {
+          // @ts-expect-error I don't see any other way to do this
+          map.setMaxBounds(null).setMinZoom(defaultMinZoom);
+          resetMap(false, true);
+          locateControl.add(map);
+          markBounds(areaSelectionMarkBoundsOptions);
+          areaBoundsShape.setStyle(areaBoundsShapeSelectionStyle);
 
-        return;
-      }
+          return;
+        }
 
-      // Area has become confirmed, round starting...
-      onAreaConfirmed();
-    });
+        // Area has become confirmed, round starting...
+        onAreaConfirmed();
+      }),
+    );
 
     // Show summary
-    sidebarState.subscribe((value) => {
-      if (value === "summary") {
-        showSummary();
-      } else if ($isAreaConfirmed) {
-        // Reset the map to be safe
-        resetMap(true, true);
-      }
-    });
+    unsubscribers.push(
+      sidebarState.subscribe((value) => {
+        if (value === "summary") {
+          showSummary();
+        } else if ($isAreaConfirmed) {
+          // Reset the map to be safe
+          resetMap(true, true);
+        }
+      }),
+    );
 
     // When we move to the next question, reset the map
-    currentQuestionIndex.subscribe((value) => {
-      if (value) {
-        resetMap();
+    unsubscribers.push(
+      currentQuestionIndex.subscribe((value) => {
+        if (value) {
+          resetMap();
+        }
+      }),
+    );
+
+    return () => {
+      for (const unsubscriber of unsubscribers) {
+        unsubscriber();
       }
-    });
+    };
   });
 
   const closeSettingsForSmallDevices = () => {
@@ -665,6 +668,7 @@
       font-size: 1.2rem !important;
       font-weight: bold !important;
       text-align: left !important;
+      color: black !important;
     }
 
     @media (min-width: 800px) {

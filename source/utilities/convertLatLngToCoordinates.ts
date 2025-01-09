@@ -14,7 +14,7 @@ import type {
   LatLng,
   PotentiallyNestedCoordinates,
   PotentiallyNestedLatLngs,
-} from "./types";
+} from "../library/game/types";
 
 const convertLatLngToCoordinates = (latlng: LatLng): Coordinates => [
   latlng.lat,

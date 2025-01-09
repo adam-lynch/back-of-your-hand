@@ -7,16 +7,13 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
+import * as turf from "@turf/turf";
 import leaflet from "leaflet";
-import getCenter from "@turf/center";
-// @ts-expect-error no types provided
-import createFeatureCollection from "turf-featurecollection";
-// @ts-expect-error no types provided
-import createPoint from "turf-point";
+import type * as GeoJSON from "geojson";
 
 import convertLatLngToCoordinates from "./convertLatLngToCoordinates";
 import getColorFromDistance from "./getColorFromDistance";
-import type { Question } from "./types";
+import type { Question } from "../library/game/types";
 
 export default ({
   color,
@@ -56,11 +53,13 @@ export default ({
 
   const targetBounds = targetLayer.getBounds();
 
-  const targetTurfPoints = question.target.points.reduce(
+  const targetTurfPoints = question.target.points.reduce<
+    GeoJSON.Feature<GeoJSON.Point>[]
+  >(
     (result, targetPoints) => [
       ...result,
       ...targetPoints.map((targetPoint) =>
-        createPoint(convertLatLngToCoordinates(targetPoint)),
+        turf.point(convertLatLngToCoordinates(targetPoint)),
       ),
     ],
     [],
@@ -68,8 +67,8 @@ export default ({
 
   let circle;
   if (!question.target.isEnclosedArea && shouldDrawCircle) {
-    const targetCenterCoordinates = getCenter(
-      createFeatureCollection(targetTurfPoints),
+    const targetCenterCoordinates = turf.center(
+      turf.featureCollection(targetTurfPoints),
     ).geometry.coordinates as leaflet.LatLngExpression;
 
     circle = leaflet

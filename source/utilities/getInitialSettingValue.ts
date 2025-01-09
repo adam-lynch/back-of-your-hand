@@ -39,23 +39,25 @@ function getFromStorage<T>({
   }
 }
 
-export default <T extends number | object | string>({
+export default <T extends number | object | string | null | undefined>({
   defaultValue,
   name,
   parse = (input: string | void) => input as unknown as T,
   postProcess = (input: T) => input,
-  urlSearchParams = new URLSearchParams(window.location.search),
+  urlSearchParams,
 }: {
   defaultValue: T;
   name: string;
   parse?: (input: string | void) => T | void;
   postProcess?: (input: T) => T;
-  urlSearchParams: URLSearchParams;
+  // This can be omitted to skip checking for a query parameter
+  urlSearchParams?: URLSearchParams;
 }): T => {
   const safeParse: typeof parse = (input) => ignoreError(() => parse(input));
   return postProcess(
     // Did the user provide one in the URL?
-    getFromUrl<T>({ name, parse: safeParse, urlSearchParams }) ||
+    (urlSearchParams &&
+      getFromUrl<T>({ name, parse: safeParse, urlSearchParams })) ||
       // Did they play previously?
       getFromStorage<T>({ name, parse: safeParse }) ||
       // Return the default value.

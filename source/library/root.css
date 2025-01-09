@@ -13,6 +13,38 @@
   padding: 0;
 }
 
+html {
+  --app-header-height: 3.75rem;
+  --focus-accent-color-light: rgb(130, 199, 255);
+  --focus-accent-color-dark: #eee;
+  --focus-accent-color: var(--focus-accent-color-dark);
+  --page-title-bottom-margin: 3rem;
+  --page-content-padding-horizontal: 20px;
+  --scrollbar-thumb-background: #484148;
+  --scrollbar-thumb-background: red;
+  --scrollbar-track-background: #060206;
+  --scrollbar-track-background: yellow;
+}
+
+* {
+  scrollbar-color: #484148 #060206;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar,
+::-webkit-scrollbar-track {
+  background-color: #060206;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #484148;
+  border-radius: 10px;
+}
+
 html,
 body {
   position: relative;
@@ -33,15 +65,30 @@ body {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .hide-accessibly {
+  display: unset;
   position: absolute;
   left: -10000px;
   top: auto;
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+.hide-accessibly--important {
+  display: unset !important;
+  position: absolute !important;
+  left: -10000px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
 }
 
 ol,
@@ -53,13 +100,9 @@ fieldset {
   all: unset;
 }
 
-input,
-select {
-  accent-color: #df206f;
-
-  &:focus-visible {
-    outline-color: #df206f;
-  }
+:focus-visible {
+  outline: 1px solid var(--focus-accent-color-light);
+  outline-offset: 5px;
 }
 
 .single-line-text-overflow {
@@ -106,86 +149,12 @@ select {
   background: #d11563;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 2rem;
-  font-size: 1.2rem;
-  background: #f0f0f0;
-  background: rgba(240, 240, 240, 0.85);
-  color: #000;
-  text-shadow: 0 1px 2px white;
-  cursor: pointer;
-}
-
-button:hover,
-button:active {
-  background: #d8d8d8;
-}
-
-button:active {
-  position: relative;
-  top: 1px;
-  text-shadow: 0 0 2px white;
-}
-
-button:focus {
-  outline: none;
-}
-
-button:focus-visible {
-  box-shadow:
-    0 0 0 3px #000,
-    0 0 0 4px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.6s linear;
-}
-
-.button--primary {
-  background: #df206f;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.button--primary:hover,
-.button--primary:active {
-  background: #d11563;
-}
-
-.button--primary:active,
-.button--secondary:active {
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
-}
-
-.button--secondary {
-  background: #922b56;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.button--secondary:hover,
-.button--secondary:active {
-  background: #a22257;
-}
-
-button:disabled,
-button:disabled:active,
-button:disabled:hover {
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.3);
-  cursor: not-allowed;
-}
-
-button:disabled:active {
-  position: relative;
-  top: 1px;
-}
-
 .button-group {
   display: flex;
   justify-content: flex-end;
 }
 
-.button-group button + button {
+.button-group .button + .button {
   margin-left: 20px;
 }
 
@@ -214,7 +183,7 @@ button:disabled:active {
 }
 
 .full-screen-display__inner {
-  max-width: 600px;
+  max-width: 95vw;
   margin: 0 auto;
 }
 

@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type { LatLng, Overpass } from "./types";
+import type { LatLng, Overpass } from "../library/game/types";
 
 export default (element: Overpass.Element, points: LatLng[][]) => {
   if (element.tags.area == "yes") {

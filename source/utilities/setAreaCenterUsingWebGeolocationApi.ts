@@ -7,10 +7,10 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { areaCenter } from "./store";
 import getLatLngFromWebGeolocationApi from "./getLatLngFromWebGeolocationApi";
+import updateAreaCenterWithWarningIfNecessary from "../library/utilities/updateAreaCenterWithWarningIfNecessary";
 
 export default async () => {
   const newCenter = await getLatLngFromWebGeolocationApi();
-  areaCenter.set(newCenter);
+  updateAreaCenterWithWarningIfNecessary(newCenter, false);
 };

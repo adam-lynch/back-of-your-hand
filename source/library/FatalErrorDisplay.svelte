@@ -8,6 +8,8 @@
 -->
 
 <script lang="ts">
+  import Button from "./forms/Button.svelte";
+
   export let error: Error | null = null;
 
   const onFeedbackClicked = () => {
@@ -24,14 +26,21 @@
   <div class="full-screen-display__inner">
     <h1>Something broke</h1>
     <p>There was an unexpected error. Sorry about this.</p>
-    <button
+    <Button
       class="button--primary"
-      on:click={onRefreshClicked}>Reset</button
+      on:click={onRefreshClicked}
+      theme="light"
+      variant="primary"
     >
-    <button
+      Reset
+    </Button>
+    <Button
       class="button"
-      on:click={onFeedbackClicked}>Send feedback</button
+      on:click={onFeedbackClicked}
+      theme="light"
     >
+      Send feedback
+    </Button>
 
     {#if error}
       <h2>Error details</h2>

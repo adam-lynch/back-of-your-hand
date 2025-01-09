@@ -7,8 +7,6 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type Leaflet from "leaflet";
-
 export type LatLng = {
   lat: number;
   lng: number;
@@ -38,21 +36,12 @@ export type Question = {
   };
 };
 
+// TODO: maybe rename because now there is an API model (and associated TS type) called Round
 export type Round = {
-  areaBounds: Leaflet.LatLngBounds;
   didSetNewDeviceBestScore?: boolean;
   // I couldn't think of a better name
   questions: Question[];
   status: "error" | "ongoing" | "complete";
-};
-
-export type State = {
-  areaBounds?: Leaflet.LatLngBounds;
-  isAreaConfirmed?: boolean;
-  chosenPoint?: LatLng;
-  isChosenPointConfirmed?: boolean;
-  isLoading?: boolean;
-  round?: Round;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -90,5 +79,6 @@ export enum Difficulty {
 
 export enum PresetAreaShape {
   Circle = "circle",
+  Polygon = "polygon",
   Square = "square",
 }

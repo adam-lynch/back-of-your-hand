@@ -8,7 +8,7 @@
  */
 
 import roundNumber from "./roundNumber";
-import type { LatLng } from "./types";
+import type { LatLng } from "../library/game/types";
 
 export default ({ lat, lng }: LatLng): LatLng => ({
   lat: roundNumber(lat, 5),

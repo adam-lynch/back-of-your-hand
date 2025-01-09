@@ -9,7 +9,7 @@
 
 import type leaflet from "leaflet";
 
-import type { LatLng } from "./types";
+import type { LatLng } from "../library/game/types";
 import waitForAnyOngoingZoomsToEnd from "./waitForAnyOngoingZoomsToEnd";
 
 export default async (

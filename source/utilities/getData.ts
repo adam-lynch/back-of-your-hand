@@ -7,8 +7,6 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type leaflet from "leaflet";
-
 import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import ignoreError from "./ignoreError";
@@ -16,9 +14,12 @@ import exclusions from "./exclusions";
 import capLng from "./capLng";
 import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
-import roundNumber from "./roundNumber";
-import type { LatLng, Overpass, Question } from "./types";
-import { Difficulty } from "./types";
+import type { Overpass, Question } from "../library/game/types";
+import { Difficulty, PresetAreaShape } from "../library/game/types";
+import type { AreaSelection } from "./store";
+import getCenterOfFeature from "./getCenterOfFeature";
+import convertPositionToLatLng from "./convertPositionToLatLng";
+import getBboxOfFeature from "./getBboxOfFeature";
 
 const difficultiesToHighwayCategories: { [difficulty: string]: string[] } = {
   [Difficulty.Tourist]: ["motorway", "primary", "secondary", "trunk"],
@@ -80,45 +81,27 @@ const adjustStreetDetails = (
 };
 
 // Actually get the data. Try localStorage, fallback to hitting OpenStreetMap's Overpass API
-const load = async ({
-  areaBounds,
-  centerLatLng,
-  circleRadius,
-}: {
-  areaBounds: leaflet.LatLngBounds;
-  centerLatLng: LatLng;
-  circleRadius: number | null;
-}) => {
+const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
   // Setting the bounding box is important. It massively speeds up the query
-  const numberOfDecimalPointsToConsider = 4;
-  const bbox = {
-    north: roundNumber(
-      areaBounds.getNorthWest().lat,
-      numberOfDecimalPointsToConsider,
-    ),
-    west: roundNumber(
-      capLng(areaBounds.getNorthWest().lng),
-      numberOfDecimalPointsToConsider,
-    ),
-    south: roundNumber(
-      areaBounds.getSouthEast().lat,
-      numberOfDecimalPointsToConsider,
-    ),
-    east: roundNumber(
-      capLng(areaBounds.getSouthEast().lng),
-      numberOfDecimalPointsToConsider,
-    ),
-  };
+  const bbox = getBboxOfFeature(areaSelection.feature, 4);
   const bboxString = [bbox.south, bbox.west, bbox.north, bbox.east].join(",");
 
   let spatialModifier = "";
-  if (circleRadius === null) {
-    spatialModifier = `(${bboxString})`;
-  } else {
-    const aroundValue = `${circleRadius},${centerLatLng.lat},${capLng(
+  if (areaSelection.presetShape === PresetAreaShape.Circle) {
+    const centerLatLng = convertPositionToLatLng(
+      getCenterOfFeature(areaSelection.feature),
+    );
+    const aroundValue = `${areaSelection.radius},${centerLatLng.lat},${capLng(
       centerLatLng.lng,
     )}`;
     spatialModifier = `(around:${aroundValue})`;
+  } else if (areaSelection.presetShape === PresetAreaShape.Polygon) {
+    const polyModifierValue = areaSelection.feature.geometry.coordinates[0]
+      .map(([lng, lat]) => `${lat} ${lng}`)
+      .join(" ");
+    spatialModifier = `(poly:"${polyModifierValue}")`;
+  } else {
+    spatialModifier = `(${bboxString})`;
   }
 
   const highwayCategories = Object.values(difficultiesToHighwayCategories)
@@ -131,8 +114,8 @@ const load = async ({
     streets with a name within N metres around M center point. It also specifies the minimal
     properties we need in the response.
   */
-  const urlPath = [
-    `api/interpreter?data=[out:json][bbox:${bboxString}];`,
+  const overpassQuery = [
+    `[out:json][bbox:${bboxString}];`,
     `(`,
     `way${spatialModifier}[highway~"${highwayRegex}"][name];`,
     `way${spatialModifier}[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
@@ -142,7 +125,7 @@ const load = async ({
   ].join("");
 
   // If the query changes, the "cache" is automatically skipped
-  const localStorageKey = `overpass-response2__${urlPath})`;
+  const localStorageKey = `overpass-response2__${overpassQuery})`;
   const responseFromLocalStorage = ignoreError(() =>
     localStorage.getItem(localStorageKey),
   );
@@ -163,7 +146,14 @@ const load = async ({
     }
   }
 
-  const response = await fetch(`https://www.overpass-api.de/${urlPath}`);
+  const response = await fetch(`https://www.overpass-api.de/api/interpreter`, {
+    body: `data=${overpassQuery}`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
   let result;
   try {
     result = await response.json();
@@ -177,25 +167,19 @@ const load = async ({
 };
 
 export default async ({
-  areaBounds,
-  centerLatLng,
-  circleRadius,
+  areaSelection,
   difficulty,
   getRandomNumber,
   numberOfQuestions,
 }: {
-  areaBounds: leaflet.LatLngBounds;
-  centerLatLng: LatLng;
-  circleRadius: number | null;
+  areaSelection: AreaSelection;
   difficulty: Difficulty;
   getRandomNumber: () => number;
   numberOfQuestions: number;
 }): Promise<Question["target"][]> => {
   // Get the data
   const { elements } = (await load({
-    areaBounds,
-    centerLatLng,
-    circleRadius,
+    areaSelection,
   })) as Overpass.Response;
 
   const results = [];

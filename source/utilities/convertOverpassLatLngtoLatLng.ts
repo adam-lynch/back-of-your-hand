@@ -7,6 +7,6 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type { LatLng, Overpass } from "./types";
+import type { LatLng, Overpass } from "../library/game/types";
 
 export default ({ lat, lon }: Overpass.LatLng): LatLng => ({ lat, lng: lon });

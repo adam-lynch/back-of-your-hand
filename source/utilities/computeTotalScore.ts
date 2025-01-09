@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type { Round } from "./types";
+import type { Round } from "../library/game/types";
 
 export default (total: number, round: Round): number => {
   return Math.round(total / round.questions.length);

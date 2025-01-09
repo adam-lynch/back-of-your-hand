@@ -8,7 +8,7 @@
 -->
 
 <script lang="ts">
-  import { isLoading } from "../utilities/store";
+  import { isLoading } from "../../utilities/store";
 </script>
 
 <div id="hud">

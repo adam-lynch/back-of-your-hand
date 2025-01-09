@@ -32,7 +32,8 @@ export const initializeErrorReporting = () => {
   );
 };
 
-export const reportError = (error: Error) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const reportError = (error: any) => {
   if (import.meta.env.DEV) {
     return;
   }

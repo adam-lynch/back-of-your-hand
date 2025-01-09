@@ -8,11 +8,9 @@
  */
 
 import leaflet from "leaflet";
-import turfDestination from "@turf/destination";
-// @ts-expect-error no types provided
-import createTurfPoint from "turf-point";
+import * as turf from "@turf/turf";
 
-import type { LatLng } from "./types";
+import type { LatLng } from "../library/game/types";
 
 function movePoint(
   point: GeoJSON.Feature<GeoJSON.Point>,
@@ -20,14 +18,14 @@ function movePoint(
   angle: number,
 ): GeoJSON.Feature<GeoJSON.Point> {
   // @ts-expect-error the type incorrectly says that 4th argument must be a string
-  return turfDestination(point, distance, angle, { units: "meters" });
+  return turf.destination(point, distance, angle, { units: "meters" });
 }
 
 export default function convertLatLngToLatLngBoundsExpression(
   center: LatLng,
   extent: number,
 ): leaflet.LatLngBoundsExpression {
-  const centerPoint = createTurfPoint([center.lng, center.lat]);
+  const centerPoint = turf.point([center.lng, center.lat]);
 
   const north = movePoint(centerPoint, extent, 0);
   const south = movePoint(centerPoint, extent, 180);

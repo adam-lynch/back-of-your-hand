@@ -99,6 +99,10 @@
         path="/"
         component={internalRoutes.game.component}
       />
+      <Route
+        path="/geo-lookup-done"
+        component={internalRoutes.game.component}
+      />
       {#each Object.values(internalRoutes) as internalRoute}
         <Route
           path={internalRoute.path}

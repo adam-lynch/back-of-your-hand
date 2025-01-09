@@ -34,7 +34,7 @@ export const accessDetails = writable<AccessDetailsAttributes | null>(
 );
 
 export const isOrganizationUrl = writable(
-  window.location.hostname.split(".").length > 2,
+  window.location.hostname.split(".").length === 3,
 );
 export const isLoggedIn = derived(accessDetails, ($accessDetails) =>
   Boolean($accessDetails),

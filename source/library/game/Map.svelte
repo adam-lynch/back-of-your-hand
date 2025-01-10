@@ -161,6 +161,7 @@
         error instanceof Error &&
         error.message.includes("Invalid LatLng object: (NaN, NaN)")
       ) {
+        error.message += ". Trying again...";
         console.warn(error);
         map.flyToBounds(flyToBoundsArgs[0], {
           ...flyToBoundsArgs[1],

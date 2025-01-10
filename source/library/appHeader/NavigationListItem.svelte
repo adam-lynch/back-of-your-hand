@@ -65,6 +65,7 @@
   {:else if navigationItem.externalPath}
     <Link
       className={clickableElementClassName}
+      isExternal
       to={makeHref(navigationItem.externalPath)}
     >
       <NavigationListItemTitle

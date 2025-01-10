@@ -33,9 +33,7 @@
     const urlSearchParams = new URLSearchParams();
     urlSearchParams.append(
       "continue",
-      encodeURIComponent(
-        $location.pathname + $location.search + $location.hash,
-      ),
+      $location.pathname + $location.search + $location.hash,
     );
     return `${path}?${urlSearchParams.toString()}`;
   }

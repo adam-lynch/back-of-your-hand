@@ -92,7 +92,7 @@ export default derived(
           {
             Icon: HelpIcon,
             id: "learn-more",
-            externalPath: "/learn-more", // TODO: append continue param
+            externalPath: "/learn-more",
             shouldHaveContinueQueryParameter: true,
             title: "Learn more",
             titleHiddenButAccessibleSuffix: "(how to play, etc)",
@@ -109,7 +109,7 @@ export default derived(
       {
         Icon: HelpIcon,
         id: "learn-more-not-organization-plan",
-        externalPath: "/learn-more", // TODO: append continue param
+        externalPath: "/learn-more",
         requirementsToExist: ["not-organization-plan"],
         shouldHaveContinueQueryParameter: true,
         title: "Learn more",

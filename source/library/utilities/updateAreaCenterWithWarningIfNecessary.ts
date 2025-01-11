@@ -120,5 +120,7 @@ export default function updateAreaCenterWithWarningIfNecessary(
     }
 
     updateCenter();
+  } else {
+    updateCenter();
   }
 }

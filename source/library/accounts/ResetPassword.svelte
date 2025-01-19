@@ -59,11 +59,15 @@
 >
   <svelte:fragment slot="top">
     {#if hasBeenReset}
-      <p
-        >Your password has been reset. <Link to={internalRoutes.logIn.path}
-          >Log in</Link
-        ></p
-      >
+      <p class="confirm-description">
+        Your password has been reset.
+        <Link
+          class="log-in-link"
+          to={internalRoutes.logIn.path}
+        >
+          Log in
+        </Link>
+      </p>
     {/if}
   </svelte:fragment>
 
@@ -132,4 +136,15 @@
 </AccountsFormPage>
 
 <style>
+  :global(.confirm-description) {
+    color: #c3c3c3;
+  }
+
+  :global(.log-in-link) {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+    color: white;
+  }
 </style>

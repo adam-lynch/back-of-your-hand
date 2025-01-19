@@ -72,6 +72,11 @@
         title={navigationItem.title}
       />
     </Link>
+  {:else if navigationItem.Component}
+    <svelte:component
+      this={navigationItem.Component}
+      {...navigationItem.componentProps}
+    />
   {:else}
     <Button
       on:click={performAction}
@@ -91,9 +96,13 @@
     display: flex;
     flex-direction: row;
 
-    & > * {
-      flex: 1;
+    &:has(button):not(:last-child) {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 10px;
+      padding-top: 20px;
+    }
 
+    & > * {
       display: flex;
       align-items: center;
     }

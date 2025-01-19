@@ -16,13 +16,13 @@
 
   export let confirmText = "Confirm";
   export let description: string;
-  export let onConfirm: (event: SubmitEvent) => void;
+  export let onConfirm: ((event: SubmitEvent) => void) | undefined = undefined;
   export let title = "Are you sure?";
 
   let isOpen = false;
 
   const onSubmit = (event: SubmitEvent) => {
-    onConfirm(event);
+    onConfirm?.(event);
     if (event.defaultPrevented) {
       return;
     }

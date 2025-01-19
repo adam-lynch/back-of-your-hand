@@ -15,7 +15,7 @@
   import Button from "./forms/Button.svelte";
   import { writable } from "svelte/store";
 
-  export let description: string;
+  export let description: string = "";
   export let isOpen = writable(true);
   export let onOpenChange = () => {};
   export let title: string;

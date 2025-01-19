@@ -22,9 +22,13 @@ import ProfileIcon from "~icons/mdi/user";
 import ReportsIcon from "~icons/mdi/report-timeline-variant";
 import SettingsIcon from "~icons/mdi/settings";
 import UsersIcon from "~icons/mdi/users";
+import ContactButton from "../ContactButton.svelte";
 
 export type NavigationItem = {
   childItems?: NavigationItem[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Component?: any; // Svelte component
+  componentProps?: Record<string, unknown>;
   externalPath?: string;
   Icon?: ComponentType;
   id?: string;
@@ -96,6 +100,22 @@ export default derived(
             shouldHaveContinueQueryParameter: true,
             title: "Learn more",
             titleHiddenButAccessibleSuffix: "(how to play, etc)",
+          },
+          {
+            Component: ContactButton,
+            componentProps: {
+              title: "Send feedback",
+              username: "&#x68;&#x65;&#x6C;&#x6C;&#x6F;",
+            },
+            id: "contact-support--not-organization-plan",
+            requirementsToExist: ["not-organization-plan"],
+            title: "Send feedback",
+          },
+          {
+            Component: ContactButton,
+            id: "contact-support--organization-plan",
+            requirementsToExist: ["organization-plan"],
+            title: "Contact support",
           },
           {
             id: "log-out",

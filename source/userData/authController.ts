@@ -124,6 +124,7 @@ async function onLackOfAuthenticationDetected(
   setAccessDetails(null);
   storeActions.setUserData(null);
 
+  // Not sure this is necessary anymore. It doesn't *seem* to make a difference
   if (wasLoggedIn) {
     navigate(getInternalRoutes().loggedOut.path, { replace: false });
   }

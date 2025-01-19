@@ -18,7 +18,7 @@
   import authController from "./../userData/authController";
   import { navigate } from "svelte-routing";
   import getInternalRoutes from "./routing/getInternalRoutes";
-  import fetchUserOrganizationWithEverything from "../userData/fetchUserOrganizationWithAllIncludes";
+  import fetchUserOrganizationWithAllIncludes from "../userData/fetchUserOrganizationWithAllIncludes";
   import { setUserData } from "../userData/storeActions";
   import getCurrentInternalRoute from "./routing/getCurrentInternalRoute";
   import RouteWrapper from "./routing/RouteWrapper.svelte";
@@ -30,6 +30,7 @@
   import FormPlayground from "./playground/FormPlayground.svelte";
   import AutoSavingFieldsPlayground from "./playground/AutoSavingFieldsPlayground.svelte";
   import RouteGuard from "./routing/RouteGuard.svelte";
+  import { ClientRequestError } from "../api/requestApi";
 
   export let unhandledError: Error | null = null;
   export let url = "";
@@ -38,7 +39,7 @@
 
   async function retrieveUserData() {
     try {
-      const apiResponse = await fetchUserOrganizationWithEverything();
+      const apiResponse = await fetchUserOrganizationWithAllIncludes();
       setUserData(apiResponse);
 
       // Populates store and other stuff uses it
@@ -46,6 +47,12 @@
     } catch (error) {
       console.error(error);
       setUserData(null);
+      if (
+        error instanceof ClientRequestError &&
+        error.response.status === 401
+      ) {
+        return;
+      }
       // TODO: handle offline here?
       // TODO: remove?
       throw error;

@@ -122,12 +122,14 @@ export default async function requestApi<TSuccessfulResponsePayload>(
           responseBody,
         )
       : response.status;
+
     if (effectiveStatus === 401) {
       eventEmitter.emit("lack-of-authentication-detected", {
         cause: "401",
         response,
       });
     }
+
     throw new ClientRequestError(
       `Status ${response.status}`,
       response,

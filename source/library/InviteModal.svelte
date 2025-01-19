@@ -20,13 +20,23 @@
   import Button from "./forms/Button.svelte";
   import ErrorMessages from "./forms/ErrorMessages.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
+  import requestApi from "../api/requestApi";
+
+  let email = "";
+  const selectedRole = writable<"standard" | "admin">("standard");
 
   const handleOnSubmit = async () => {
-    // TODO: send API request
+    await requestApi("userorganizations/request_invite", {
+      body: {
+        email,
+        role: $selectedRole,
+      },
+      isNotJSONAPI: true,
+      method: "POST",
+    });
+
     toast.success("User invited!", getCommonToastOptions());
   };
-
-  const selectedRole = writable<"standard" | "admin">("standard");
 </script>
 
 <MultiFieldFormModal
@@ -66,6 +76,7 @@
     >
       <TextInput
         aria-describedby={ariaDescribedby}
+        bind:value={email}
         class={_class}
         name={_name}
         {id}

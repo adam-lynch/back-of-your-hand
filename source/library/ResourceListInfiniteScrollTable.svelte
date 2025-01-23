@@ -65,6 +65,10 @@
         <td>{defaultValue}</td>
       </slot>
     </Table>
+
+    {#if !resourceObjects.length}
+      <p class="empty-state">Nothing to see here yet!</p>
+    {/if}
   </svelte:fragment>
 </ResourceListInfiniteScroller>
 
@@ -72,5 +76,11 @@
   :global(.resource-list-infinite-scroll-table__wrapper.table__wrapper) {
     max-width: unset;
     overflow-x: unset;
+  }
+
+  :global(.empty-state) {
+    margin: 20px 5px;
+    text-align: center;
+    opacity: 0.8;
   }
 </style>

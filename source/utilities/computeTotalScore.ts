@@ -10,5 +10,5 @@
 import type { Round } from "../library/game/types";
 
 export default (total: number, round: Round): number => {
-  return Math.round(total / round.questions.length);
+  return total > 0 ? Math.round(total / round.questions.length) : 0;
 };

@@ -41,7 +41,7 @@
       | string
       | number
       | undefined;
-    let result = (value || "").toString();
+    let result = (value === undefined ? "" : value).toString();
     if (column.formatValue) {
       result = column.formatValue(result);
     }

@@ -35,6 +35,7 @@
   import AreaSelection from "../AreaSelection.svelte";
   import Button from "../forms/Button.svelte";
   import combineClasses from "../utilities/combineClasses";
+  import prettifyDistance from "../utilities/prettifyDistance";
 
   export let areSettingsShown = writable(false);
 
@@ -268,11 +269,7 @@
         {#if $currentQuestion.status === "complete" && $currentQuestion.distance}
           <div>
             <h2>Result</h2>
-            <p
-              >Distance: {Math.round(
-                $currentQuestion.distance.amount,
-              ).toLocaleString()}
-              {$currentQuestion.distance.unit}</p
+            <p>Distance: {prettifyDistance($currentQuestion.distance.amount)}</p
             >
             <p>Score: {$currentQuestion.score}%</p>
             <p class="subtext">Feel free to zoom in and explore</p>

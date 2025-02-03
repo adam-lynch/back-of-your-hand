@@ -23,14 +23,18 @@
     areaRadius,
     areaSelection,
     areaShape,
+    chosenPoint,
     currentQuestion,
     deviceBestScore,
+    didOpenMultiplayerSessionUrl,
     difficulty,
     gameUrl,
     isAreaConfirmed,
+    isChosenPointConfirmed,
     nextQuestion,
     numberOfQuestions,
     round,
+    sidebarState,
     totalScore,
   } from "../../utilities/store";
   import loadRound from "../../utilities/loadRound";
@@ -74,6 +78,16 @@
     250,
     { trailing: true },
   );
+
+  function resetGame() {
+    areSettingsShown.set(false);
+    chosenPoint.set(null);
+    isChosenPointConfirmed.set(false);
+    isAreaConfirmed.set(false);
+    round.set(null);
+    didOpenMultiplayerSessionUrl.set(false);
+    sidebarState.set("default");
+  }
 
   onMount(() => {
     const unsubscribers: svelteStore.Unsubscriber[] = [];
@@ -263,6 +277,7 @@
       for (const unsubscriber of unsubscribers) {
         unsubscriber();
       }
+      resetGame();
     };
   });
 </script>
@@ -273,7 +288,10 @@
       <FatalErrorDisplay error={unhandledError} />
     {:else}
       <!-- This is like a sidebar (but not really), I couldn't think of a better name -->
-      <ContextPanel bind:areSettingsShown />
+      <ContextPanel
+        bind:areSettingsShown
+        {resetGame}
+      />
       <MapWrapper {areSettingsShown} />
       <p class="hide-accessibly"
         ><a href="#context-panel">Back to context panel</a></p

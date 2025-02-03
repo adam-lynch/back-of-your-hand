@@ -38,6 +38,7 @@
   import prettifyDistance from "../utilities/prettifyDistance";
 
   export let areSettingsShown = writable(false);
+  export let resetGame: () => void;
 
   const onNumberOfQuestionsUpdated = (event: Event) => {
     const amount = parseInt((event.target as HTMLInputElement).value);
@@ -74,7 +75,7 @@
 
   const onRestartClicked = () => {
     trackEvent({ name: "restart", title: "Restart" });
-    reset();
+    resetGame();
 
     // It's required to set it to false and then true again
     isAreaConfirmed.set(true);
@@ -84,16 +85,6 @@
   const onSummaryRequested = () => {
     sidebarState.set("summary");
     trackEvent({ name: "view-summary", title: "View summary" });
-  };
-
-  const reset = () => {
-    areSettingsShown.set(false);
-    chosenPoint.set(null);
-    isChosenPointConfirmed.set(false);
-    isAreaConfirmed.set(false);
-    round.set(null);
-    didOpenMultiplayerSessionUrl.set(false);
-    sidebarState.set("default");
   };
 
   const start = async () => {
@@ -192,7 +183,7 @@
     {#if $sidebarState === "summary"}
       <Summary
         {onRestartClicked}
-        {reset}
+        reset={resetGame}
       />
     {:else if $sidebarState === "creating-multiplayer-session"}
       <h2 class="hide-accessibly">Create multiplayer session</h2>
@@ -239,7 +230,7 @@
         >
           Start
         </Button>
-        <Button on:click={reset}>Reset</Button>
+        <Button on:click={resetGame}>Reset</Button>
       </div>
     {:else if $round?.status && ["ongoing", "complete"].includes($round.status)}
       <!-- Just to be safe-->
@@ -321,7 +312,7 @@
             </Button>
 
             <Button
-              on:click={reset}
+              on:click={resetGame}
               variant="tertiary">Reset</Button
             >
           {/if}
@@ -354,7 +345,7 @@
           >
             Play (multiplayer mode)
           </Button>
-          <Button on:click={reset}>Reset</Button>
+          <Button on:click={resetGame}>Reset</Button>
         {:else}
           <Button
             class="button--primary"

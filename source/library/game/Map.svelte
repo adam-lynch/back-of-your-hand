@@ -252,6 +252,11 @@
 
     await waitForAnyOngoingZoomsToEnd();
 
+    // Has been reset?
+    if (!$currentQuestion) {
+      return;
+    }
+
     // This is used to compute the distance but we'll also use it to visualize the distance
     const { distance, latLng: nearestPointOnStreet } =
       await getNearestPointOnPolyLine(
@@ -259,6 +264,11 @@
         chosenLatLng,
         $currentQuestion.target.points as Question["target"]["points"],
       );
+
+    // Has been reset?
+    if (!$currentQuestion) {
+      return;
+    }
 
     let score = 0;
     if (distance < 1) {

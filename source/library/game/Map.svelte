@@ -12,21 +12,6 @@
   import debounce from "lodash/debounce";
   import { onMount } from "svelte";
   import * as svelteStore from "svelte/store";
-  import {
-    areaCenter,
-    areaRadius,
-    areaSelection,
-    areaShape,
-    chosenPoint,
-    currentQuestion,
-    currentQuestionIndex,
-    interactionVerb,
-    isAreaConfirmed,
-    isChosenPointConfirmed,
-    ongoingZoomCount,
-    round,
-    sidebarState,
-  } from "../../utilities/store";
 
   import * as locateControl from "./locateControl";
   import drawTarget from "../../utilities/drawTarget";
@@ -42,6 +27,22 @@
   import createLeafletPathFromAreaSelection from "../utilities/createLeafletPathFromAreaSelection";
   import getLeafletLatLngBoundsFromPath from "../utilities/getLeafletLatLngBoundsFromPath";
   import updateAreaCenterWithWarningIfNecessary from "../utilities/updateAreaCenterWithWarningIfNecessary";
+  import {
+    areaCenter,
+    areaRadius,
+    areaSelection,
+    areaShape,
+    chosenPoint,
+    currentQuestion,
+    currentQuestionIndex,
+    interactionVerb,
+    isAreaConfirmed,
+    isChosenPointConfirmed,
+    ongoingZoomCount,
+    round,
+    sidebarState,
+  } from "../../utilities/store";
+  import { isOrganizationUrl } from "../../userData/store";
 
   const shouldUseSimpleTileLayers = true;
   const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
@@ -132,7 +133,7 @@
       })
       .addTo(map);
 
-    if (shouldShowAreaBoundsPopup) {
+    if (shouldShowAreaBoundsPopup && !$isOrganizationUrl) {
       newAreaBoundsCenterMarker.bindPopup(
         `To select a different area, you can zoom out and ${$interactionVerb.toLowerCase()} anywhere on the map.`,
       );

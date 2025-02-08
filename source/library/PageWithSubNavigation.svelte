@@ -105,7 +105,6 @@
     position: sticky;
     top: 0;
     padding: 1rem var(--page-content-padding-horizontal);
-    padding-bottom: 0;
     margin-bottom: calc(var(--page-title-bottom-margin) - 1rem);
 
     @media (min-height: 900px) {

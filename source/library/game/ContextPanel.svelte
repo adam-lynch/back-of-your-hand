@@ -661,6 +661,7 @@
   :global(.settings > *:not(.wideSetting)) {
     flex: 1;
     flex-basis: 45%;
+    justify-content: space-between;
   }
 
   :global(.wideSetting) {
@@ -759,5 +760,9 @@
   .question-index {
     margin-right: 0.25rem;
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  .context-panel :global(.select-input) {
+    background: rgba(255, 255, 255, 0.15);
   }
 </style>

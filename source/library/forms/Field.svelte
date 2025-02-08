@@ -52,6 +52,7 @@
     let:messages
   >
     <ErrorMessages
+      class="field-error-messages"
       id={errorMessagesId}
       isForOneField
       messages={messages || []}
@@ -86,5 +87,10 @@
 
   :global(.field:has(.field__control[required]) .field__optional-indicator) {
     display: none;
+  }
+
+  .field :global(.field-error-messages) {
+    margin-top: -0.65em;
+    margin-bottom: 0.4em;
   }
 </style>

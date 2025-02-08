@@ -56,7 +56,7 @@
     --_focused-shadow-color: var(--_focused-shadow-color-light);
 
     --_padding-inline: 1ch;
-    --_padding-block: 0.5ch;
+    --_padding-block: 0.75ch;
 
     --_placeholder-color-light: hsl(0 0% 75%);
     --_placeholder-color-dark: hsl(0 0% 35%);

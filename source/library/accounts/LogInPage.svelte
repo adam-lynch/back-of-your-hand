@@ -106,9 +106,9 @@
   </svelte:fragment>
 
   <svelte:fragment slot="accounts-form-footer">
-    <Button type="submit">Log in</Button>
     <!-- TODO: Pass email -->
     <Link to={internalRoutes.forgotPassword.path}>Forgot password?</Link>
+    <Button type="submit">Log in</Button>
   </svelte:fragment>
 </AccountsFormPage>
 

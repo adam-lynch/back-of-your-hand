@@ -10,7 +10,7 @@
 <script lang="ts">
   import { derived } from "svelte/store";
   import toast from "svelte-french-toast";
-  import type { User } from "../api/resourceObjects";
+  import type { User, UserOrganization } from "../api/resourceObjects";
   import prettifyUserName from "../utilities/prettifyUserName";
   import ConfirmationModal from "./ConfirmationModal.svelte";
   import { user as currentUser } from "../userData/store";
@@ -18,8 +18,12 @@
   import eventEmitter from "../utilities/eventEmitter";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
 
-  export let onConfirm: (user: User) => void = () => {};
+  export let onConfirm: (
+    user: User,
+    userOrganization: UserOrganization,
+  ) => void = () => {};
   export let user: User;
+  export let userOrganization: UserOrganization;
 
   let isCurrentUser = derived(
     currentUser,
@@ -29,10 +33,13 @@
   const title = `Delete ${$isCurrentUser ? "your account" : prettifyUserName(user)}?`;
 
   const handleConfirm = async () => {
-    const userId = user.id;
-    onConfirm(user);
-    await api.deleteResource<User>("user", userId);
-    eventEmitter.emit("user-deleted", userId);
+    const userOrganizationId = userOrganization.id;
+    onConfirm(user, userOrganization);
+    await api.deleteResource<UserOrganization>(
+      "userOrganization",
+      userOrganizationId,
+    );
+    eventEmitter.emit("user-deleted", user.id);
     toast.success("User deleted!", getCommonToastOptions());
   };
 </script>

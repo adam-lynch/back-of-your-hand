@@ -14,7 +14,11 @@
   import InfiniteScroller from "./InfiniteScroller.svelte";
   import { pickFromIncluded } from "../api/pickFromResponse";
   import { isArray } from "lodash";
-  import type { ResourceIdentifierObject } from "jsonapi-typescript";
+  import type {
+    DocWithData,
+    ResourceIdentifierObject,
+  } from "jsonapi-typescript";
+  import type { AnyResourceObject } from "../api/resourceObjects";
 
   export let fetchResourceList: (
     partialOptions: FetchResourceListOptions,
@@ -38,6 +42,51 @@
     },
   );
 
+  // Recursive
+  function replaceRelationshipsWithIncludedIfPossible(
+    relationships: AnyResourceObject["relationships"],
+    response: DocWithData<AnyResourceObject[]>,
+  ) {
+    if (!relationships) {
+      return relationships;
+    }
+
+    const relationshipsEntries = Object.entries(relationships).map(
+      ([relationshipName, relationshipValue]) => {
+        if (relationshipValue.data && !isArray(relationshipValue.data)) {
+          const resourceObjectIdentifier =
+            relationshipValue.data as ResourceIdentifierObject;
+          const relatedResourceObject = pickFromIncluded(
+            response,
+            ({ id, type }) =>
+              id === resourceObjectIdentifier.id &&
+              type === resourceObjectIdentifier.type,
+          );
+
+          if (relatedResourceObject) {
+            const newRelationshipValue = {
+              data: relatedResourceObject,
+            };
+
+            if (newRelationshipValue.data.relationships) {
+              newRelationshipValue.data.relationships =
+                replaceRelationshipsWithIncludedIfPossible(
+                  relatedResourceObject.relationships,
+                  response,
+                );
+            }
+
+            return [relationshipName, newRelationshipValue];
+          }
+        }
+
+        return [relationshipName, relationshipValue];
+      },
+    );
+
+    return Object.fromEntries(relationshipsEntries);
+  }
+
   async function loadMore() {
     const pageCountValue = svelteStore.get(numberOfPagesLoaded);
     const response = await fetchResourceList({
@@ -56,33 +105,12 @@
             throw new Error("Resource object has no relationships");
           }
 
-          const relationshipsEntries = Object.entries(
-            resourceObject.relationships,
-          ).map(([relationshipName, relationshipValue]) => {
-            if (relationshipValue.data && !isArray(relationshipValue.data)) {
-              const resourceObjectIdentifier =
-                relationshipValue.data as ResourceIdentifierObject;
-              const relatedResourceObject = pickFromIncluded(
-                response,
-                ({ id, type }) =>
-                  id === resourceObjectIdentifier.id &&
-                  type === resourceObjectIdentifier.type,
-              );
-              if (relatedResourceObject) {
-                return [
-                  relationshipName,
-                  {
-                    data: relatedResourceObject,
-                  },
-                ];
-              }
-            }
-            return [relationshipName, relationshipValue];
-          });
-
           return {
             ...resourceObject,
-            relationships: Object.fromEntries(relationshipsEntries),
+            relationships: replaceRelationshipsWithIncludedIfPossible(
+              resourceObject.relationships,
+              response,
+            ),
           };
         });
       }

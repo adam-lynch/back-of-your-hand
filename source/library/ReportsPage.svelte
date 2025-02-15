@@ -30,8 +30,14 @@
         area: {
           data: Area;
         };
-        user: {
-          data: User;
+        userorganization: {
+          data: {
+            relationships: {
+              user: {
+                data: User;
+              };
+            };
+          };
         };
       };
     };
@@ -142,7 +148,7 @@
         return api.fetchResourceList<Round>("round", {
           ...options,
           filter: filterOptions,
-          include: ["area", "user"],
+          include: ["area", "userorganization.user"],
           sort: [
             {
               name: "createdAt",
@@ -241,7 +247,10 @@
           slot="body-cell"
         >
           {#if column.name === "User"}
-            {prettifyUserName(castRowData(rowData).relationships.user.data)}
+            {prettifyUserName(
+              castRowData(rowData).relationships.userorganization.data
+                .relationships.user.data,
+            )}
           {:else}
             {defaultValue}
           {/if}

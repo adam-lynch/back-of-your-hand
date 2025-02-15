@@ -183,6 +183,7 @@
           <DeleteUserConfirmationModal
             onConfirm={onUserDeletionConfirmed}
             user={castRowData(rowData).relationships.user.data}
+            userOrganization={castRowData(rowData)}
           >
             <Button
               slot="trigger"

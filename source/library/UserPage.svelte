@@ -171,6 +171,7 @@
         <DeleteUserConfirmationModal
           onConfirm={onDeletionConfirmed}
           user={$userStore}
+          userOrganization={$userOrganizationStore}
         >
           <Button
             slot="trigger"

@@ -62,7 +62,7 @@ export type Round = JSONAPI.ResourceObject<
   },
   {
     area: JSONAPI.ToOneRelationship;
-    user: JSONAPI.ToOneRelationship;
+    userorganization: JSONAPI.ToOneRelationship;
   }
 >;
 

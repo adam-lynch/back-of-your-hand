@@ -44,7 +44,11 @@
   import { navigate } from "svelte-routing";
   import Page from "../Page.svelte";
   import getInternalRoutes from "../routing/getInternalRoutes";
-  import { isLoggedIn, isOrganizationUrl, user } from "../../userData/store";
+  import {
+    isLoggedIn,
+    isOrganizationUrl,
+    userOrganization,
+  } from "../../userData/store";
   import setOrRemoveLocalStorageItem from "../../utilities/setOrRemoveLocalStorageItem";
   import api from "../../api";
   import type { Round } from "../../api/resourceObjects";
@@ -236,22 +240,28 @@
           }
 
           if ($isOrganizationUrl) {
-            if (!$user) {
-              throw new Error("No user");
+            if (!$userOrganization) {
+              throw new Error("No userOrganization");
             }
             await api.postResource<Round>({
               attributes: {
-                area: $areaSelection.areaId
-                  ? {
-                      id: $areaSelection.areaId,
-                      type: "area",
-                    }
-                  : null,
                 questionAmount: $round.questions.length,
                 score: newPotentialBestScore,
-                user: {
-                  id: $user.id,
-                  type: "user",
+              },
+              relationships: {
+                area: {
+                  data: $areaSelection.areaId
+                    ? {
+                        id: $areaSelection.areaId,
+                        type: "area",
+                      }
+                    : null,
+                },
+                userorganization: {
+                  data: {
+                    id: $userOrganization.id,
+                    type: "userOrganization",
+                  },
                 },
               },
               type: "round",

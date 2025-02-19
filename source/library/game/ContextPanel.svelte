@@ -26,7 +26,7 @@
     settingsLastOpenedAt,
     sidebarState,
   } from "../../utilities/store";
-  import { organization } from "../../userData/store";
+  import { isOrganizationUrl, organization } from "../../userData/store";
   import Summary from "./Summary.svelte";
   import trackEvent from "../../utilities/trackEvent";
   import { Difficulty } from "./types";
@@ -188,8 +188,8 @@
     {:else if $sidebarState === "creating-multiplayer-session"}
       <h2 class="hide-accessibly">Create multiplayer session</h2>
       <p
-        >Your friends can play along on their own devices, just give them the
-        URL below:</p
+        >Your {$isOrganizationUrl ? "colleagues" : "friends"} can play along on their
+        own devices, just give them the URL below:</p
       >
 
       <div class="multiplayer-link-wrapper">

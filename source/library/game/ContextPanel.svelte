@@ -230,7 +230,7 @@
         >
           Start
         </Button>
-        <Button on:click={resetGame}>Reset</Button>
+        <Button on:click={resetGame}>Back</Button>
       </div>
     {:else if $round?.status && ["ongoing", "complete"].includes($round.status)}
       <!-- Just to be safe-->

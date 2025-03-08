@@ -15,13 +15,20 @@
   import makePercentage from "./utilities/makePercentage";
   import prettifyUserName from "../utilities/prettifyUserName";
   import api, { type FetchResourceListOptions } from "../api";
-  import type { Area, Round, User } from "../api/resourceObjects";
+  import type {
+    Area,
+    Round,
+    User,
+    UserOrganization,
+  } from "../api/resourceObjects";
   import SelectInput from "./forms/SelectInput.svelte";
   import { areas } from "../userData/store";
   import { derived, writable } from "svelte/store";
   import { onMount } from "svelte";
-  import usersSort from "./utilities/usersSort";
+  import userOrganizationsSort from "./utilities/userOrganizationsSort";
   import makeDateRange from "../utilities/makeDateRange";
+  import { pickFromIncluded } from "../api/pickFromResponse";
+  import isNotEmpty from "../utilities/isNotEmpty";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const castRowData = (input: any) =>
@@ -65,13 +72,28 @@
 
   const users = writable<User[]>([]);
   onMount(async () => {
-    const result = await api.fetchResourceList<User>("user", {
-      page: {
-        size: 500,
+    const result = await api.fetchResourceList<UserOrganization>(
+      "userOrganization",
+      {
+        include: ["user"],
+        page: {
+          size: 500,
+        },
+        sort: userOrganizationsSort,
       },
-      sort: usersSort,
-    });
-    users.set(result.data);
+    );
+    users.set(
+      result.data
+        .map((userOrganization) =>
+          pickFromIncluded<User>(
+            result,
+            (includedItem) =>
+              includedItem.type === "user" &&
+              includedItem.id === userOrganization.relationships?.user.data.id,
+          ),
+        )
+        .filter(isNotEmpty),
+    );
   });
 
   const userFilterOptions = derived([users], ([$users]) => {
@@ -135,7 +157,7 @@
           filterOptions["area.id"] = $areaFilterSelectedOption;
         }
         if ($userFilterSelectedOption !== "all") {
-          filterOptions["user.id"] = $userFilterSelectedOption;
+          filterOptions["userorganization.user.id"] = $userFilterSelectedOption;
         }
         const dateRange = makeDateRange($dateFilterSelectedOption);
         if (dateRange?.start) {

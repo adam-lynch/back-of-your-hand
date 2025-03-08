@@ -11,11 +11,11 @@ import type { SortBy } from "../../api";
 
 export default [
   {
-    name: "firstName",
+    name: "user.firstName",
     direction: "ascending",
   },
   {
-    name: "lastName",
+    name: "user.lastName",
     direction: "ascending",
   },
 ] as SortBy[];

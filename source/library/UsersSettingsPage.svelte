@@ -26,7 +26,7 @@
   import api from "../api";
   import prettifyUserName from "../utilities/prettifyUserName";
   import * as svelteStore from "svelte/store";
-  import usersSort from "./utilities/usersSort";
+  import userOrganizationsSort from "./utilities/userOrganizationsSort";
   import InviteModal from "./InviteModal.svelte";
   import combineClasses from "./utilities/combineClasses";
   import { navigate } from "svelte-routing";
@@ -94,10 +94,7 @@
     api.fetchResourceList<UserOrganization>("userOrganization", {
       ...options,
       include: ["user"],
-      sort: usersSort.map((item) => ({
-        ...item,
-        name: `user.${item.name}`,
-      })),
+      sort: userOrganizationsSort,
     });
 
   const postFilter = svelteStore.derived(

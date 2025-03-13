@@ -16,8 +16,10 @@ import type { InternalRoute } from "../routing/getInternalRoutes";
 import getInternalRoutes from "../routing/getInternalRoutes";
 import validateInternalRouteRequirementsToExist from "../routing/validateInternalRouteRequirementsToExist";
 import type { ComponentType } from "svelte";
+import ComplianceIcon from "~icons/mdi/file-document-check-outline";
 import GameIcon from "~icons/mdi/map-marker";
 import HelpIcon from "~icons/mdi/help";
+import PrivacyIcon from "~icons/iconoir/privacy-policy";
 import ProfileIcon from "~icons/mdi/user";
 import ReportsIcon from "~icons/mdi/report-timeline-variant";
 import SettingsIcon from "~icons/mdi/settings";
@@ -102,6 +104,18 @@ export default derived(
             titleHiddenButAccessibleSuffix: "(how to play, etc)",
           },
           {
+            Icon: ComplianceIcon,
+            id: "terms-of-service",
+            externalPath: "/terms-of-service",
+            title: "Terms of service",
+          },
+          {
+            Icon: PrivacyIcon,
+            id: "privacy-policy",
+            externalPath: "/privacy",
+            title: "Privacy policy",
+          },
+          {
             Component: ContactButton,
             componentProps: {
               title: "Send feedback",
@@ -134,6 +148,20 @@ export default derived(
         shouldHaveContinueQueryParameter: true,
         title: "Learn more",
         titleHiddenButAccessibleSuffix: "(how to play, etc)",
+      },
+      {
+        Icon: ComplianceIcon,
+        id: "terms-of-service-not-organization-plan",
+        externalPath: "/terms-of-service",
+        requirementsToExist: ["not-organization-plan"],
+        title: "Terms of service",
+      },
+      {
+        Icon: PrivacyIcon,
+        id: "privacy-poicy-not-organization-plan",
+        externalPath: "/privacy",
+        requirementsToExist: ["not-organization-plan"],
+        title: "Privacy policy",
       },
     ]);
   },

@@ -2,4 +2,6 @@
 dist
 package-lock.json
 public/gc.js
+public/privacy.html
+public/terms-of-service.html
 source/third-party

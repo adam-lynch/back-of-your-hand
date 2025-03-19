@@ -9,6 +9,7 @@
 
 import type * as GeoJSON from "geojson";
 import type * as JSONAPI from "./JSONAPI";
+import type { Overpass } from "../library/game/types";
 
 // These value types are more narrow than what JSON:API allows
 type AttributeValue = boolean | number | object | string | AttributeValue[];
@@ -22,6 +23,7 @@ interface TimestampedResourceAttributes extends JSONAPI.AttributesObject {
 
 export type AnyResourceObject =
   | Area
+  | AreaOverpassData
   | Organization
   | Round
   | User
@@ -35,6 +37,16 @@ export type Area = JSONAPI.ResourceObject<
   },
   {
     parentArea: JSONAPI.ToOneRelationship<"optional">;
+  }
+>;
+
+export type AreaOverpassData = JSONAPI.ResourceObject<
+  "areaoverpassdata",
+  TimestampedResourceAttributes & {
+    responseBody: Overpass.Response;
+  },
+  {
+    area: JSONAPI.ToOneRelationship;
   }
 >;
 

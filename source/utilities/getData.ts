@@ -11,17 +11,23 @@ import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
-import capLng from "./capLng";
 import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
 import type { Overpass, Question } from "../library/game/types";
-import { Difficulty, PresetAreaShape } from "../library/game/types";
+import { Difficulty } from "../library/game/types";
 import type { AreaSelection } from "./store";
+import api from "../api";
+import type { AreaOverpassData } from "../api/resourceObjects";
+import capLng from "./capLng";
+import { PresetAreaShape } from "../library/game/types";
 import getCenterOfFeature from "./getCenterOfFeature";
 import convertPositionToLatLng from "./convertPositionToLatLng";
 import getBboxOfFeature from "./getBboxOfFeature";
+import { reportError } from "./setUpErrorReporting";
 
-const difficultiesToHighwayCategories: { [difficulty: string]: string[] } = {
+const difficultiesToHighwayCategories: {
+  [difficulty: string]: string[];
+} = {
   [Difficulty.Tourist]: ["motorway", "primary", "secondary", "trunk"],
 };
 difficultiesToHighwayCategories[Difficulty.Resident] = [
@@ -80,8 +86,97 @@ const adjustStreetDetails = (
   };
 };
 
-// Actually get the data. Try localStorage, fallback to hitting OpenStreetMap's Overpass API
+/*
+  Actually get the data.
+  Custom area: try localStorage, fallback to hitting OpenStreetMap's Overpass API.
+  Predefined area: get data from backend, fallback to Overpass.
+*/
 const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
+  // It's safe to set this to false in development; e.g. to get the overpass query or response
+  const mustGetDataFromBackend = areaSelection.areaId;
+  if (mustGetDataFromBackend) {
+    try {
+      const areaOverpassDataItems =
+        await api.fetchResourceList<AreaOverpassData>("areaoverpassdata", {
+          filter: {
+            area__id: areaSelection.areaId,
+          },
+          page: {
+            size: 1,
+          },
+        });
+      if (!areaOverpassDataItems.data.length) {
+        throw new Error("No AreaOverpassDatas");
+      }
+      return areaOverpassDataItems.data[0].attributes.responseBody;
+    } catch (error) {
+      console.warn(
+        "Failed to get overpass data from backend, falling back to Overpass...",
+        {
+          error,
+        },
+      );
+      reportError(error);
+    }
+  }
+
+  const overpassQuery = makeOverpassQuery({ areaSelection });
+
+  const shouldCacheResponseInBrowser = !areaSelection.areaId;
+  // If the query changes, the "cache" is automatically skipped
+  const localStorageKey = `overpass-response2__${overpassQuery})`;
+
+  if (shouldCacheResponseInBrowser) {
+    const responseFromLocalStorage = ignoreError(() =>
+      localStorage.getItem(localStorageKey),
+    );
+
+    // Prune localStorage
+    Object.entries(ignoreError(() => localStorage) || {})
+      .map(([key]) => key)
+      .filter(
+        (key) => key !== localStorageKey && key.startsWith("overpass-response"),
+      )
+      .forEach((key) => ignoreError(() => localStorage.removeItem(key)));
+
+    if (responseFromLocalStorage) {
+      try {
+        return JSON.parse(responseFromLocalStorage);
+      } catch (e) {
+        // Ignore and continue to query API
+      }
+    }
+  }
+
+  const response = await fetch(`https://www.overpass-api.de/api/interpreter`, {
+    body: `data=${overpassQuery}`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    method: "POST",
+  });
+  let result;
+  try {
+    result = await response.json();
+  } catch (e) {
+    throw new Error("Cannot parse Overpass API response");
+  }
+
+  if (shouldCacheResponseInBrowser) {
+    ignoreError(() =>
+      localStorage.setItem(localStorageKey, JSON.stringify(result)),
+    );
+  }
+
+  return result;
+};
+
+function makeOverpassQuery({
+  areaSelection,
+}: {
+  areaSelection: AreaSelection;
+}): string {
   // Setting the bounding box is important. It massively speeds up the query
   const bbox = getBboxOfFeature(areaSelection.feature, 4);
   const bboxString = [bbox.south, bbox.west, bbox.north, bbox.east].join(",");
@@ -124,47 +219,8 @@ const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
     `out%20tags%20geom;`,
   ].join("");
 
-  // If the query changes, the "cache" is automatically skipped
-  const localStorageKey = `overpass-response2__${overpassQuery})`;
-  const responseFromLocalStorage = ignoreError(() =>
-    localStorage.getItem(localStorageKey),
-  );
-
-  // Prune localStorage
-  Object.entries(ignoreError(() => localStorage) || {})
-    .map(([key]) => key)
-    .filter(
-      (key) => key !== localStorageKey && key.startsWith("overpass-response"),
-    )
-    .forEach((key) => ignoreError(() => localStorage.removeItem(key)));
-
-  if (responseFromLocalStorage) {
-    try {
-      return JSON.parse(responseFromLocalStorage);
-    } catch (e) {
-      // Ignore and continue to query API
-    }
-  }
-
-  const response = await fetch(`https://www.overpass-api.de/api/interpreter`, {
-    body: `data=${overpassQuery}`,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  });
-  let result;
-  try {
-    result = await response.json();
-  } catch (e) {
-    throw new Error("Cannot parse Overpass API response");
-  }
-  ignoreError(() =>
-    localStorage.setItem(localStorageKey, JSON.stringify(result)),
-  );
-  return result;
-};
+  return overpassQuery;
+}
 
 export default async ({
   areaSelection,

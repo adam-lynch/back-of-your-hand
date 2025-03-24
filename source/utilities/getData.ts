@@ -181,7 +181,12 @@ function makeOverpassQuery({
   const bbox = getBboxOfFeature(areaSelection.feature, 4);
   const bboxString = [bbox.south, bbox.west, bbox.north, bbox.east].join(",");
 
-  let spatialModifier = "";
+  /*
+    A spatial modifier limits a `way` query to X bounds, for example.
+    If we are dealing with a multiple polygons, we need multiple spatial modifiers. So if we have N polygons,
+    we'd have N copies of each query statement, except each with a different spartial modifier.
+  */
+  let spatialModifiers: string[] = [];
   if (areaSelection.presetShape === PresetAreaShape.Circle) {
     const centerLatLng = convertPositionToLatLng(
       getCenterOfFeature(areaSelection.feature),
@@ -189,14 +194,24 @@ function makeOverpassQuery({
     const aroundValue = `${areaSelection.radius},${centerLatLng.lat},${capLng(
       centerLatLng.lng,
     )}`;
-    spatialModifier = `(around:${aroundValue})`;
-  } else if (areaSelection.presetShape === PresetAreaShape.Polygon) {
-    const polyModifierValue = areaSelection.feature.geometry.coordinates[0]
-      .map(([lng, lat]) => `${lat} ${lng}`)
-      .join(" ");
-    spatialModifier = `(poly:"${polyModifierValue}")`;
+    spatialModifiers.push(`(around:${aroundValue})`);
+  } else if (areaSelection.presetShape === PresetAreaShape.MultiPolygon) {
+    if (areaSelection.feature.geometry.type !== "MultiPolygon") {
+      throw new Error(
+        `MultiPolygon areaSelection has geometry type of ${areaSelection.feature.geometry.type}`,
+      );
+    }
+
+    spatialModifiers = areaSelection.feature.geometry.coordinates.map(
+      (polygonCoordinates) => {
+        const polyModifierValue = polygonCoordinates[0]
+          .map(([lng, lat]) => `${lat} ${lng}`)
+          .join(" ");
+        return `(poly:"${polyModifierValue}")`;
+      },
+    );
   } else {
-    spatialModifier = `(${bboxString})`;
+    spatialModifiers.push(`(${bboxString})`);
   }
 
   const highwayCategories = Object.values(difficultiesToHighwayCategories)
@@ -209,17 +224,21 @@ function makeOverpassQuery({
     streets with a name within N metres around M center point. It also specifies the minimal
     properties we need in the response.
   */
-  const overpassQuery = [
-    `[out:json][bbox:${bboxString}];`,
-    `(`,
-    `way${spatialModifier}[highway~"${highwayRegex}"][name];`,
-    `way${spatialModifier}[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
-    `way${spatialModifier}[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
-    `);`,
-    `out%20tags%20geom;`,
-  ].join("");
+  const overpassQueryLines = [`[out:json][bbox:${bboxString}];`, `(`];
 
-  return overpassQuery;
+  for (const spatialModifier of spatialModifiers) {
+    overpassQueryLines.push(
+      `(`,
+      `way${spatialModifier}[highway~"${highwayRegex}"][name];`,
+      `way${spatialModifier}[historic~"^(castle|fort|monument|ruins|ship|tower)$"][name][wikidata];`,
+      `way${spatialModifier}[tourism~"^(aquarium|museum|zoo)$"][name][wikidata];`,
+      `);`,
+    );
+  }
+
+  overpassQueryLines.push(`);`, `out%20tags%20geom;`);
+
+  return overpassQueryLines.join("");
 }
 
 export default async ({

@@ -17,7 +17,7 @@
   import { writable } from "svelte/store";
 
   const shapeOptions = Object.values(PresetAreaShape)
-    .filter((shape) => shape !== PresetAreaShape.Polygon)
+    .filter((shape) => shape !== PresetAreaShape.MultiPolygon)
     .map((shape) => ({ label: capitalize(shape), value: shape }));
   const chosenAreaShape = writable<(typeof shapeOptions)[0]["value"]>(
     shapeOptions.find(({ value }) => value === $areaShape)?.value,
@@ -51,7 +51,7 @@
   </div>
 {/if}
 
-{#if $areaSelection.presetShape !== PresetAreaShape.Polygon}
+{#if $areaSelection.presetShape !== PresetAreaShape.MultiPolygon}
   <div class="settings__area-shape">
     <label for="areaShape">Area shape</label>
     <SelectInput

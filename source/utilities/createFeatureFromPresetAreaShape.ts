@@ -15,7 +15,7 @@ export default function createFeatureFromPresetAreaShape(
   presetAreaShape: PresetAreaShape,
   centerPosition: GeoJSON.Position,
   radius: number,
-): GeoJSON.Feature<GeoJSON.Polygon> {
+): GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon> {
   if (presetAreaShape === PresetAreaShape.Circle) {
     return turf.circle(turf.point(centerPosition), radius / 1000);
   }

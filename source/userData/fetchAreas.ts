@@ -55,10 +55,11 @@ export default async function fetchAreas({
         // TODO: get default area from API instead of assuming first?
         result.data[0]);
     if (area) {
+      const feature = createFeatureFromArea(area);
       areaSelection.set({
         areaId: area.id,
-        feature: createFeatureFromArea(area),
-        presetShape: PresetAreaShape.Polygon,
+        feature,
+        presetShape: PresetAreaShape.MultiPolygon,
         radius: null,
       });
     }

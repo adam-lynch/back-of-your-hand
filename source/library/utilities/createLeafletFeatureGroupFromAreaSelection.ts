@@ -14,45 +14,62 @@ import getCenterOfFeature from "../../utilities/getCenterOfFeature";
 import convertPositionToLatLng from "../../utilities/convertPositionToLatLng";
 import convertLatLngToLatLngBoundsExpression from "../../utilities/convertLatLngToLatLngBoundsExpression";
 
-export default function createLeafletPathFromAreaSelection(
+function createLeafletPathsFromAreaSelection(
   areaSelection: AreaSelection,
   pathOptions: leaflet.PathOptions = {},
-): leaflet.Path {
+): leaflet.Path[] {
   if (areaSelection.presetShape === PresetAreaShape.Circle) {
     if (areaSelection.radius === null) {
       throw new Error("Circle AreaSelection has no radius");
     }
-    return leaflet.circle(
-      convertPositionToLatLng(getCenterOfFeature(areaSelection.feature)),
-      {
-        ...pathOptions,
-        radius: areaSelection.radius,
-      },
-    );
+    return [
+      leaflet.circle(
+        convertPositionToLatLng(getCenterOfFeature(areaSelection.feature)),
+        {
+          ...pathOptions,
+          radius: areaSelection.radius,
+        },
+      ),
+    ];
   }
 
   if (areaSelection.presetShape === PresetAreaShape.Square) {
     if (areaSelection.radius === null) {
       throw new Error("Square AreaSelection has no radius");
     }
-    return leaflet.rectangle(
-      convertLatLngToLatLngBoundsExpression(
-        convertPositionToLatLng(getCenterOfFeature(areaSelection.feature)),
-        areaSelection.radius,
+    return [
+      leaflet.rectangle(
+        convertLatLngToLatLngBoundsExpression(
+          convertPositionToLatLng(getCenterOfFeature(areaSelection.feature)),
+          areaSelection.radius,
+        ),
+        pathOptions,
       ),
-      pathOptions,
-    );
+    ];
   }
 
-  if (areaSelection.feature.geometry.type !== "Polygon") {
+  if (areaSelection.feature.geometry.type !== "MultiPolygon") {
     throw new Error(
       `AreaSelection has unexpected geometry type "${areaSelection.feature.geometry.type}"`,
     );
   }
-  return leaflet.polygon(
-    areaSelection.feature.geometry.coordinates.map((positions) =>
-      positions.map(convertPositionToLatLng),
+  return [
+    leaflet.polygon(
+      areaSelection.feature.geometry.coordinates.map((polygonCoordinates) =>
+        polygonCoordinates.map((positions) =>
+          positions.map(convertPositionToLatLng),
+        ),
+      ),
+      pathOptions,
     ),
-    pathOptions,
+  ];
+}
+
+export default function createLeafletFeatureGroupFromAreaSelection(
+  areaSelection: AreaSelection,
+  pathOptions: leaflet.PathOptions = {},
+): leaflet.FeatureGroup<leaflet.Path> {
+  return leaflet.featureGroup(
+    createLeafletPathsFromAreaSelection(areaSelection, pathOptions),
   );
 }

@@ -144,13 +144,17 @@ export const sidebarState = writable<
 
 export type AreaSelection = {
   areaId: Area["id"] | null;
-  feature: geojson.Feature<GeoJSON.Polygon>;
+  feature: geojson.Feature<
+    | GeoJSON.MultiPolygon
+    // Polygon is for circle and square, never anything else
+    | GeoJSON.Polygon
+  >;
   presetShape: PresetAreaShape;
   radius: number | null;
 };
 
 const initialAreaSelectionShape =
-  get(areaShape) === PresetAreaShape.Polygon
+  get(areaShape) === PresetAreaShape.MultiPolygon
     ? PresetAreaShape.Circle
     : get(areaShape);
 const initialAreaSelectionRadius = get(areaRadius);
@@ -191,7 +195,7 @@ export const gameUrl = derived(
     if ($areaRadius !== null) {
       url.searchParams.set("radius", $areaRadius.toString());
     }
-    if ($areaShape !== PresetAreaShape.Polygon) {
+    if ($areaShape !== PresetAreaShape.MultiPolygon) {
       url.searchParams.set("shape", $areaShape);
     }
     return url.toString();

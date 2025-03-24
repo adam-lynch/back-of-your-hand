@@ -33,7 +33,7 @@ export type Area = JSONAPI.ResourceObject<
   "area",
   TimestampedResourceAttributes & {
     name: string;
-    shape: GeoJSON.Polygon;
+    shape: GeoJSON.MultiPolygon;
   },
   {
     parentArea: JSONAPI.ToOneRelationship<"optional">;

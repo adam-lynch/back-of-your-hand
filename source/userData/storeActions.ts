@@ -40,7 +40,7 @@ export function setUserData(
 
 export function updateAreaSelectionCenter(latLng: LatLng) {
   const areaSelectionValue = get(areaSelection);
-  if (areaSelectionValue.presetShape === PresetAreaShape.Polygon) {
+  if (areaSelectionValue.presetShape === PresetAreaShape.MultiPolygon) {
     throw new Error("Unsupported");
   }
   const adjustedPosition = convertLatLngToPosition(

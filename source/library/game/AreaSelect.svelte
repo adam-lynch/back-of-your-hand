@@ -70,10 +70,12 @@
       throw new Error("Can't find area on chosenAreaId change");
     }
 
+    const feature = createFeatureFromArea(area);
+
     areaSelection.set({
       areaId: area.id,
-      feature: createFeatureFromArea(area),
-      presetShape: PresetAreaShape.Polygon,
+      feature,
+      presetShape: PresetAreaShape.MultiPolygon,
       radius: null,
     });
   };

@@ -79,6 +79,6 @@ export enum Difficulty {
 
 export enum PresetAreaShape {
   Circle = "circle",
-  Polygon = "polygon",
+  MultiPolygon = "multi-polygon",
   Square = "square",
 }

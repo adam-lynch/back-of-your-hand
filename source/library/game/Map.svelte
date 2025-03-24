@@ -24,8 +24,7 @@
   import waitForAnyOngoingZoomsToEnd from "../../utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
   import type { HTMLSharpImage } from "../customElements";
-  import createLeafletPathFromAreaSelection from "../utilities/createLeafletPathFromAreaSelection";
-  import getLeafletLatLngBoundsFromPath from "../utilities/getLeafletLatLngBoundsFromPath";
+  import createLeafletFeatureGroupFromAreaSelection from "../utilities/createLeafletFeatureGroupFromAreaSelection";
   import updateAreaCenterWithWarningIfNecessary from "../utilities/updateAreaCenterWithWarningIfNecessary";
   import {
     areaCenter,
@@ -50,7 +49,7 @@
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
 
-  let areaBoundsShape: leaflet.Path;
+  let areaBoundsFeatureGroup: leaflet.FeatureGroup<leaflet.Path>;
   let areaBoundsCenterMarker: leaflet.Circle;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
@@ -100,7 +99,7 @@
   let areElementLabelsShown = true;
 
   // Used when intializing, plus when updating its style (when starting a new round)
-  const areaBoundsShapeSelectionStyle = {
+  const areaBoundsLayerGroupSelectionStyle = {
     color: "#ff2882",
     fillColor: "#ff2882",
     fillOpacity: 0.05,
@@ -115,18 +114,24 @@
   }: {
     shouldShowAreaBoundsPopup?: boolean;
   }) => {
-    const newAreaBoundsShape = createLeafletPathFromAreaSelection(
-      svelteStore.get(areaSelection),
-      areaBoundsShapeSelectionStyle,
-    );
-    newAreaBoundsShape.addTo(map);
-    const newAreaBounds = getLeafletLatLngBoundsFromPath(newAreaBoundsShape);
+    const newAreaBoundsFeatureGroup: typeof areaBoundsFeatureGroup =
+      createLeafletFeatureGroupFromAreaSelection(
+        svelteStore.get(areaSelection),
+        areaBoundsLayerGroupSelectionStyle,
+      );
+    newAreaBoundsFeatureGroup.addTo(map);
+    const newAreaBounds = newAreaBoundsFeatureGroup.getBounds();
     const newAreaBoundsCenter = newAreaBounds.getCenter();
 
     const newAreaBoundsCenterMarker = leaflet
       .circle(newAreaBoundsCenter, {
-        ...areaBoundsShapeSelectionStyle,
-        fillOpacity: 0.75,
+        ...areaBoundsLayerGroupSelectionStyle,
+        // Hide if there are multiple polygons; it doesn't look right if it's floating in the middle of nothing
+        fillOpacity:
+          $areaSelection.feature.geometry.type === "MultiPolygon" &&
+          $areaSelection.feature.geometry.coordinates.length > 1
+            ? 0
+            : 0.75,
         opacity: 0,
         radius:
           newAreaBoundsCenter.distanceTo(newAreaBounds.getNorthEast()) / 50,
@@ -173,13 +178,13 @@
       }
     }
 
-    if (areaBoundsShape) {
-      map.removeLayer(areaBoundsShape);
+    if (areaBoundsFeatureGroup) {
+      map.removeLayer(areaBoundsFeatureGroup);
     }
     if (areaBoundsCenterMarker) {
       map.removeLayer(areaBoundsCenterMarker);
     }
-    areaBoundsShape = newAreaBoundsShape;
+    areaBoundsFeatureGroup = newAreaBoundsFeatureGroup;
     areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
@@ -218,14 +223,14 @@
     hideElementLabels();
     locateControl.remove(map);
 
-    const areaBounds = getLeafletLatLngBoundsFromPath(areaBoundsShape);
+    const areaBounds = areaBoundsFeatureGroup.getBounds();
     map
       .fitBounds(areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds(areaBounds.pad(0.12))
       .setMinZoom(12);
 
-    areaBoundsShape.setStyle({
+    areaBoundsFeatureGroup.setStyle({
       color: "#37003c",
       fill: false,
       stroke: true,
@@ -437,13 +442,11 @@
       map.removeLayer(resultFeatureGroup);
       resultFeatureGroup = null;
     }
-    if (shouldFitBounds && areaBoundsShape) {
-      map
-        .fitBounds(getLeafletLatLngBoundsFromPath(areaBoundsShape))
-        .once("zoomend", () => {
-          // This prevents the map going (and staying gray) on Firefox for Android sometimes
-          map.panBy([1, 1]);
-        });
+    if (shouldFitBounds && areaBoundsFeatureGroup) {
+      map.fitBounds(areaBoundsFeatureGroup.getBounds()).once("zoomend", () => {
+        // This prevents the map going (and staying gray) on Firefox for Android sometimes
+        map.panBy([1, 1]);
+      });
     }
   };
 
@@ -517,12 +520,16 @@
             animate: false,
           });
           setTimeout(() => {
-            markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+            markBounds(
+              areaBoundsFeatureGroup ? {} : areaSelectionMarkBoundsOptions,
+            );
           }, 250);
           return;
         }
 
-        markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+        markBounds(
+          areaBoundsFeatureGroup ? {} : areaSelectionMarkBoundsOptions,
+        );
       }),
     );
 
@@ -532,7 +539,9 @@
           return;
         }
 
-        markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+        markBounds(
+          areaBoundsFeatureGroup ? {} : areaSelectionMarkBoundsOptions,
+        );
       }),
     );
 
@@ -541,7 +550,7 @@
         return;
       }
 
-      markBounds(areaBoundsShape ? {} : areaSelectionMarkBoundsOptions);
+      markBounds(areaBoundsFeatureGroup ? {} : areaSelectionMarkBoundsOptions);
     });
 
     // Mark their guess
@@ -606,7 +615,7 @@
           resetMap(false, true);
           locateControl.add(map);
           markBounds(areaSelectionMarkBoundsOptions);
-          areaBoundsShape.setStyle(areaBoundsShapeSelectionStyle);
+          areaBoundsFeatureGroup.setStyle(areaBoundsLayerGroupSelectionStyle);
 
           return;
         }

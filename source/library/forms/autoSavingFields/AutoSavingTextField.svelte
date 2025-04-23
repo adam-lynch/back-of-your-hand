@@ -42,7 +42,6 @@
   const formSchema = yup.object({
     [name]: schema.label(fieldProps.labelText),
   });
-
   type Schema = yup.InferType<typeof formSchema>;
 
   const form = createForm<Schema>({

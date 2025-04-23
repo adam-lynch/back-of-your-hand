@@ -15,10 +15,13 @@
   import { isOrganizationUrl } from "../userData/store";
   import SelectInput from "./forms/SelectInput.svelte";
   import { writable } from "svelte/store";
+  import Button from "./forms/Button.svelte";
+  import OrganizationPlanModal from "./OrganizationPlanModal.svelte";
 
   const shapeOptions = Object.values(PresetAreaShape)
     .filter((shape) => shape !== PresetAreaShape.MultiPolygon)
     .map((shape) => ({ label: capitalize(shape), value: shape }));
+
   const chosenAreaShape = writable<(typeof shapeOptions)[0]["value"]>(
     shapeOptions.find(({ value }) => value === $areaShape)?.value,
   );
@@ -27,6 +30,7 @@
     if (!value) {
       return;
     }
+
     areaSelection.update((oldValue) => ({
       ...oldValue,
       presetShape: value,
@@ -56,9 +60,25 @@
     <label for="areaShape">Area shape</label>
     <SelectInput
       bind:value={$chosenAreaShape}
+      class="settings__area-shape-field"
       id="areaShape"
       options={shapeOptions}
     />
+
+    {#if !$isOrganizationUrl}
+      <div class="settings__area-shape-custom-button-wrapper">
+        <OrganizationPlanModal>
+          <Button
+            builders={[builder]}
+            let:builder
+            size="small"
+            slot="trigger"
+          >
+            Custom shapes 🔒
+          </Button>
+        </OrganizationPlanModal>
+      </div>
+    {/if}
   </div>
 
   <div>
@@ -90,5 +110,15 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .settings__area-shape:has(.settings__area-shape-custom-button-wrapper) {
+    & .settings__area-shape-field {
+      margin-block: 5px;
+    }
+  }
+
+  .settings__area-shape-custom-button-wrapper {
+    text-align: right;
   }
 </style>

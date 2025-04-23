@@ -8,50 +8,59 @@
 -->
 
 <script lang="ts">
-  import { writable } from "svelte/store";
   import toast from "svelte-french-toast";
   import MultiFieldFormModal from "./MultiFieldFormModal.svelte";
   import yup from "./forms/yup";
   import commonSchema from "./forms/commonSchema";
   import Field from "./forms/Field.svelte";
   import TextInput from "./forms/TextInput.svelte";
-  import SelectInput from "./forms/SelectInput.svelte";
-  import prettifyRole from "../utilities/prettifyRole";
   import Button from "./forms/Button.svelte";
   import ErrorMessages from "./forms/ErrorMessages.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import requestApi from "../api/requestApi";
 
   let email = "";
+  let name = "";
+  let organization = "";
+
   function onFormReset() {
     email = "";
+    name = "";
+    organization = "";
   }
 
-  const selectedRole = writable<"standard" | "admin">("standard");
-
   const handleOnSubmit = async () => {
-    await requestApi("userorganizations/request_invite", {
-      body: {
-        email,
-        role: $selectedRole,
-      },
-      isNotJSONAPI: true,
-      method: "POST",
-    });
+    try {
+      await requestApi("request_organization_access", {
+        body: {
+          email,
+          name,
+          organization,
+          url: window.location.href,
+          userAgent: navigator.userAgent,
+        },
+        isNotJSONAPI: true,
+        method: "POST",
+        urlPrefix: "open",
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
 
-    toast.success("User invited!", getCommonToastOptions());
+    toast.success("Access requested!", getCommonToastOptions());
   };
 </script>
 
 <MultiFieldFormModal
-  description="NOTE: invite emails can take up to a day or two to arrive. There is a manual step involved."
-  schema={yup.object({
-    email: commonSchema.email().label("Email"),
-    role: yup.string().label("Role").required(),
-  })}
   on:formReset={onFormReset}
+  schema={yup.object({
+    email: commonSchema.email().label("Email").required(),
+    name: yup.string().label("Name").required(),
+    organization: yup.string().label("Department / organization").required(),
+  })}
   onSubmit={handleOnSubmit}
-  title="Invite"
+  title="Train on your real response area"
 >
   <svelte:fragment
     slot="trigger"
@@ -63,11 +72,52 @@
     />
   </svelte:fragment>
 
+  <div
+    class="pro-plan-modal__description"
+    slot="content-top"
+  >
+    <p>Want to use a custom-shaped map instead of a circle?</p>
+    <p
+      >We can build a tailored version for your department using your exact
+      response area.</p
+    >
+    <ul>
+      <li>✅ Matches your real district boundaries.</li>
+      <li>✅ Break it into zones for training.</li>
+      <li>✅ Track staff progress over time.</li>
+      <li>✅ Add your logo, users, stats & more.</li>
+    </ul>
+  </div>
+
   <svelte:fragment
     slot="fields"
     let:form
     let:generalErrorMessages
   >
+    <Field
+      {form}
+      labelText="Name"
+      name="name"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <TextInput
+        aria-describedby={ariaDescribedby}
+        autocomplete="name"
+        bind:value={name}
+        class={_class}
+        name={_name}
+        {id}
+        required
+        {theme}
+        type="text"
+      />
+    </Field>
+
     <Field
       {form}
       labelText="Email"
@@ -81,6 +131,7 @@
     >
       <TextInput
         aria-describedby={ariaDescribedby}
+        autocomplete="email"
         bind:value={email}
         class={_class}
         name={_name}
@@ -93,8 +144,8 @@
 
     <Field
       {form}
-      labelText="Role"
-      name="role"
+      labelText="Department / organization"
+      name="organization"
       let:_class
       let:_name
       let:ariaDescribedby
@@ -102,28 +153,28 @@
       let:theme
       theme="dark"
     >
-      <SelectInput
+      <TextInput
         aria-describedby={ariaDescribedby}
-        bind:value={$selectedRole}
+        bind:value={organization}
         class={_class}
         name={_name}
         {id}
-        options={["admin", "standard"].map((role) => ({
-          label: prettifyRole(role),
-          value: role,
-        }))}
         required
         {theme}
+        type="text"
       />
     </Field>
 
     <ErrorMessages messages={generalErrorMessages} />
+
+    <p class="pro-plan-modal__disclaimer"
+      >🔒 We'll only use this info to contact you about access. No spam.</p
+    >
   </svelte:fragment>
 
   <svelte:fragment
     slot="footer"
     let:closeModal
-    let:isSubmitting
   >
     <Button
       on:click={(event) => {
@@ -134,13 +185,22 @@
       theme="dark">Cancel</Button
     >
     <Button
-      disabled={isSubmitting}
       theme="dark"
       type="submit"
-      variant="primary">Send invite</Button
+      variant="primary">Request access</Button
     >
   </svelte:fragment>
 </MultiFieldFormModal>
 
 <style>
+  .pro-plan-modal__description {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pro-plan-modal__disclaimer {
+    opacity: 0.9;
+    font-size: 12px;
+  }
 </style>

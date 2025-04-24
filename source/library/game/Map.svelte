@@ -228,7 +228,7 @@
       .fitBounds(areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds(areaBounds.pad(0.12))
-      .setMinZoom(12);
+      .setMinZoom(11);
 
     areaBoundsFeatureGroup.setStyle({
       color: "#37003c",

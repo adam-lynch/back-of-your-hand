@@ -110,6 +110,10 @@
 
     & option {
       background: var(--_background);
+
+      &:where(.select-input--theme-dark) {
+        background: #57265a; /* Can't have alpha */
+      }
     }
   }
 </style>

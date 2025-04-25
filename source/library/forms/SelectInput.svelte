@@ -66,7 +66,7 @@
     --_transition-motion-ok: box-shadow 145ms ease, border-color 145ms ease;
     --_transition: var(--_transition-motion-reduce);
 
-    background: var(--_background);
+    background-color: var(--_background);
     color: var(--_text);
     font-size: 1rem;
     outline: none;
@@ -109,11 +109,11 @@
     }
 
     & option {
-      background: var(--_background);
+      background-color: var(--_background);
+    }
 
-      &:where(.select-input--theme-dark) {
-        background: #57265a; /* Can't have alpha */
-      }
+    &:where(.select-input--theme-dark) option {
+      background-color: #57265a; /* Can't have alpha */
     }
   }
 </style>

@@ -763,6 +763,6 @@
   }
 
   .context-panel :global(.select-input) {
-    background: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.15);
   }
 </style>

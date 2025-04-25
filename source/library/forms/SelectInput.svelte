@@ -107,5 +107,9 @@
     @media (prefers-reduced-motion: no-preference) {
       --_transition: var(--_transition-motion-ok);
     }
+
+    & option {
+      background: var(--_background);
+    }
   }
 </style>

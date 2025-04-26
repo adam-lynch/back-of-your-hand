@@ -274,9 +274,7 @@
           <Button
             class="button--primary"
             disabled={!$chosenPoint}
-            on:click={makeClickHandlerIgnoreDoubleClicks(
-              onChosenPointConfirmed,
-            )}
+            on:click={onChosenPointConfirmed}
             variant="primary"
           >
             Confirm

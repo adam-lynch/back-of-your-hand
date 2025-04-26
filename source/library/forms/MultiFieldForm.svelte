@@ -50,6 +50,8 @@
     },
   });
 
+  const isSubmitting = form.isSubmitting;
+
   form.data.subscribe(() => {
     generalErrorMessages.set([]);
   });
@@ -64,6 +66,7 @@
 >
   <slot
     {form}
+    isSubmitting={$isSubmitting}
     generalErrorMessages={$generalErrorMessages}
   />
 </form>

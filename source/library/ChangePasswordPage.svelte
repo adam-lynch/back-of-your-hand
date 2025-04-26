@@ -172,13 +172,21 @@
 
         <ErrorMessages messages={generalErrorMessages} />
 
-        <footer class="change-password-page__footer">
+        <footer
+          class="change-password-page__footer"
+          let:isSubmitting
+        >
           <Link
             styleLevel="all-except-current-related"
             to={internalRoutes.profile.path}>Cancel</Link
           >
 
-          <Button type="submit">Update password</Button>
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+          >
+            Update password
+          </Button>
         </footer>
       </MultiFieldForm>
     </div>

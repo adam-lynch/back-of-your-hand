@@ -118,6 +118,7 @@
   <svelte:fragment
     slot="footer"
     let:closeModal
+    let:isSubmitting
   >
     <Button
       on:click={(event) => {
@@ -128,6 +129,7 @@
       theme="dark">Cancel</Button
     >
     <Button
+      disabled={isSubmitting}
       theme="dark"
       type="submit"
       variant="primary">Send invite</Button

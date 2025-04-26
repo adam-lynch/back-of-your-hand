@@ -54,6 +54,7 @@
     <MultiFieldForm
       action="#"
       let:form
+      let:isSubmitting
       let:generalErrorMessages
       onSubmit={handleOnSubmit}
       {schema}
@@ -69,6 +70,7 @@
       <footer class="multi-field-form-modal__footer">
         <slot
           {closeModal}
+          {isSubmitting}
           name="footer"
         />
       </footer>

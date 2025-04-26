@@ -13,6 +13,7 @@
   import type { Attribute } from "./types";
   import Table from "./Table.svelte";
   import PlaygroundPage from "./PlaygroundPage.svelte";
+  import makeClickHandlerIgnoreDoubleClicks from "../utilities/makeClickHandlerIgnoreDoubleClicks";
 
   const attributes: Attribute[] = [
     {
@@ -69,7 +70,10 @@
     >
       <Button
         {...props}
-        on:click={(event) => event.preventDefault()}
+        on:click={makeClickHandlerIgnoreDoubleClicks((event) => {
+          event.preventDefault();
+          console.log("Button clicked " + Math.random());
+        })}
         value={"Value prop"}
       >
         Slot content

@@ -9,6 +9,7 @@
 
 <script lang="ts">
   import debounce from "lodash/debounce";
+  // import throttle from "lodash/throttle";
   import { onMount } from "svelte";
   import * as svelteStore from "svelte/store";
 
@@ -202,6 +203,59 @@
       }),
     );
 
+    // const onRoundCompleted = throttle(async () => {
+    const onRoundCompleted = async () => {
+      if (!$round) {
+        throw new Error("round is falsy");
+      }
+      if ($totalScore === null) {
+        throw new Error("totalScore is undefined");
+      }
+      const newPotentialBestScore = computeTotalScore($totalScore, $round);
+      if (newPotentialBestScore > ($deviceBestScore ?? 0)) {
+        deviceBestScore.set(newPotentialBestScore);
+        round.update((value) => {
+          if (!value) {
+            throw new Error("round is falsy");
+          }
+          return {
+            ...value,
+            didSetNewDeviceBestScore: true,
+          };
+        });
+      }
+
+      if ($isOrganizationUrl) {
+        if (!$userOrganization) {
+          throw new Error("No userOrganization");
+        }
+        await api.postResource<Round>({
+          attributes: {
+            questionAmount: $round.questions.length,
+            score: newPotentialBestScore,
+          },
+          relationships: {
+            area: {
+              data: $areaSelection.areaId
+                ? {
+                    id: $areaSelection.areaId,
+                    type: "area",
+                  }
+                : null,
+            },
+            userorganization: {
+              data: {
+                id: $userOrganization.id,
+                type: "userOrganization",
+              },
+            },
+          },
+          type: "round",
+        });
+      }
+      // }, 300, { leading: true, trailing: false });
+    };
+
     // Do some stuff when the round is updated
     unsubscribers.push(
       round.subscribe(async (value) => {
@@ -219,54 +273,7 @@
 
         // Once the round ends, see if a new personal best was set
         if (value.status === "complete") {
-          if (!$round) {
-            throw new Error("round is falsy");
-          }
-          if ($totalScore === null) {
-            throw new Error("totalScore is undefined");
-          }
-          const newPotentialBestScore = computeTotalScore($totalScore, $round);
-          if (newPotentialBestScore > ($deviceBestScore ?? 0)) {
-            deviceBestScore.set(newPotentialBestScore);
-            round.update((value) => {
-              if (!value) {
-                throw new Error("round is falsy");
-              }
-              return {
-                ...value,
-                didSetNewDeviceBestScore: true,
-              };
-            });
-          }
-
-          if ($isOrganizationUrl) {
-            if (!$userOrganization) {
-              throw new Error("No userOrganization");
-            }
-            await api.postResource<Round>({
-              attributes: {
-                questionAmount: $round.questions.length,
-                score: newPotentialBestScore,
-              },
-              relationships: {
-                area: {
-                  data: $areaSelection.areaId
-                    ? {
-                        id: $areaSelection.areaId,
-                        type: "area",
-                      }
-                    : null,
-                },
-                userorganization: {
-                  data: {
-                    id: $userOrganization.id,
-                    type: "userOrganization",
-                  },
-                },
-              },
-              type: "round",
-            });
-          }
+          await onRoundCompleted();
         }
       }),
     );

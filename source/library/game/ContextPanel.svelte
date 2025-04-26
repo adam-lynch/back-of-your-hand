@@ -36,6 +36,7 @@
   import Button from "../forms/Button.svelte";
   import combineClasses from "../utilities/combineClasses";
   import prettifyDistance from "../utilities/prettifyDistance";
+  import makeClickHandlerIgnoreDoubleClicks from "../utilities/makeClickHandlerIgnoreDoubleClicks";
 
   export let areSettingsShown = writable(false);
   export let resetGame: () => void;
@@ -225,7 +226,7 @@
       >
         <Button
           class="button--primary"
-          on:click={onStartClicked}
+          on:click={makeClickHandlerIgnoreDoubleClicks(onStartClicked)}
           variant="primary"
         >
           Start
@@ -273,7 +274,9 @@
           <Button
             class="button--primary"
             disabled={!$chosenPoint}
-            on:click={onChosenPointConfirmed}
+            on:click={makeClickHandlerIgnoreDoubleClicks(
+              onChosenPointConfirmed,
+            )}
             variant="primary"
           >
             Confirm

@@ -23,10 +23,6 @@
   import requestApi from "../api/requestApi";
 
   let email = "";
-  function onFormReset() {
-    email = "";
-  }
-
   const selectedRole = writable<"standard" | "admin">("standard");
 
   const handleOnSubmit = async () => {
@@ -49,7 +45,6 @@
     email: commonSchema.email().label("Email"),
     role: yup.string().label("Role").required(),
   })}
-  on:formReset={onFormReset}
   onSubmit={handleOnSubmit}
   title="Invite"
 >

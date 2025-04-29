@@ -8,7 +8,6 @@
 -->
 
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import Modal from "./Modal.svelte";
   import MultiFieldForm from "./forms/MultiFieldForm.svelte";
   import type { MaybePromise } from "../utilities/utilityTypes";
@@ -26,17 +25,11 @@
   }>;
   export let title: string;
 
-  const isOpen = writable(false);
-  const dispatch = createEventDispatcher();
-
   const handleOnSubmit: typeof onSubmit = async (...args) => {
     await onSubmit(...args);
     isOpen.set(false);
   };
-
-  function bubbleEvent(event: CustomEvent) {
-    dispatch(event.type, event.detail);
-  }
+  const isOpen = writable(false);
 </script>
 
 <Modal
@@ -58,14 +51,11 @@
     let:closeModal
     slot="content"
   >
-    <slot name="content-top" />
     <MultiFieldForm
       action="#"
-      isVisible={isOpen}
       let:form
       let:isSubmitting
       let:generalErrorMessages
-      on:formReset={bubbleEvent}
       onSubmit={handleOnSubmit}
       {schema}
     >

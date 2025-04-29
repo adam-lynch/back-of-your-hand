@@ -13,22 +13,13 @@ import eventEmitter from "../utilities/eventEmitter";
 import type { MaybePromise } from "../utilities/utilityTypes";
 import * as JSONAPI from "./JSONAPI";
 import getCookie from "../utilities/getCookie";
-import { isOrganizationUrl as isOrganizationUrlStore } from "../userData/store";
-import * as svelteStore from "svelte/store";
-
-const isOrganizationUrl = svelteStore.get(isOrganizationUrlStore);
 
 const hostPieces = window.location.host.split(".");
-const subdomain =
-  isOrganizationUrl && hostPieces.length > 2
-    ? `${hostPieces[0]}--backend`
-    : "backend";
 const baseUrl =
-  `https://${subdomain}.` +
+  `https://${hostPieces[0]}--backend.` +
   (import.meta.env.DEV
     ? "local-backofyourhand--backend.com:8000"
-    : hostPieces.slice(1).join(".")
-  ).replace("backofyourhand.pages.dev", "backofyourhand.com");
+    : hostPieces.slice(1).join("."));
 
 export class ClientRequestError extends Error {
   name = "ClientRequestError";
@@ -108,12 +99,9 @@ export default async function requestApi<TSuccessfulResponsePayload>(
     "pre-api-fetch",
     args,
   )) as (typeof args | undefined)[];
-  let modifiedArgs = emitResponses.find(Boolean);
+  const modifiedArgs = emitResponses.find(Boolean);
   if (!modifiedArgs) {
-    if (subdomain !== "backend") {
-      throw new Error("pre-api-fetch failed");
-    }
-    modifiedArgs = args;
+    throw new Error("pre-api-fetch failed");
   }
 
   const response = await fetch(modifiedArgs.url, modifiedArgs.options);

@@ -8,13 +8,11 @@
 -->
 
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { reporter } from "@felte/reporter-svelte";
   import { validator } from "@felte/validator-yup";
   import { createForm } from "felte";
 
   import combineClasses from "../utilities/combineClasses";
-  import delay from "../../utilities/delay";
   import type { MaybePromise } from "../../utilities/utilityTypes";
   import type yup from "./yup";
   import onFormApiRequestError from "./onFormApiRequestError";
@@ -23,7 +21,6 @@
   export let decideIfGeneralErrorsAreUnexpected:
     | ((errorMessages: string[]) => boolean)
     | undefined = undefined;
-  export let isVisible = writable(true);
   export let onSubmit: (
     form: ReturnType<typeof createForm>,
   ) => MaybePromise<void>;
@@ -32,8 +29,8 @@
     [k: string]: any;
   }>;
 
-  const dispatch = createEventDispatcher();
   const generalErrorMessages = writable<string[]>([]);
+
   type Schema = yup.InferType<typeof schema>;
 
   const form = createForm<Schema>({
@@ -51,16 +48,6 @@
         );
       }
     },
-  });
-
-  isVisible.subscribe(async (value) => {
-    if (value) {
-      return;
-    }
-
-    await delay(150); // Wait for transitions to end
-    form.reset();
-    dispatch("formReset");
   });
 
   const isSubmitting = form.isSubmitting;

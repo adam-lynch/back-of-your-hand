@@ -17,18 +17,13 @@ import { isOrganizationUrl as isOrganizationUrlStore } from "../userData/store";
 import * as svelteStore from "svelte/store";
 
 const isOrganizationUrl = svelteStore.get(isOrganizationUrlStore);
-
-const hostPieces = window.location.host.split(".");
-const subdomain =
-  isOrganizationUrl && hostPieces.length > 2
-    ? `${hostPieces[0]}--backend`
-    : "backend";
-const baseUrl =
-  `https://${subdomain}.` +
-  (import.meta.env.DEV
-    ? "local-backofyourhand--backend.com:8000"
-    : hostPieces.slice(1).join(".")
-  ).replace("backofyourhand.pages.dev", "backofyourhand.com");
+const subdomain = isOrganizationUrl
+  ? `${window.location.host.split(".")[0]}--backend`
+  : "backend";
+const rest = import.meta.env.DEV
+  ? "local-backofyourhand--backend.com:8000"
+  : "backofyourhand.com";
+const baseUrl = `https://${subdomain}.${rest}`;
 
 export class ClientRequestError extends Error {
   name = "ClientRequestError";

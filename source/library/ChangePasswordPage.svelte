@@ -24,6 +24,7 @@
   import Field from "./forms/Field.svelte";
   import TextInput from "./forms/TextInput.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
+  import { ClientRequestError } from "../api/requestApi";
 
   const internalRoutes = getInternalRoutes();
   const internalRouteId = "changePassword";
@@ -56,6 +57,16 @@
 
     navigate(internalRoutes.profile.path, { replace: false });
   }
+
+  function decideIfErrorShouldBeReported(error: unknown): boolean {
+    return !(
+      error instanceof ClientRequestError &&
+      error.responseBody?.errors.length === 1 &&
+      error.responseBody.errors[0].detail?.includes(
+        "password was entered incorrectly",
+      )
+    );
+  }
 </script>
 
 <SettingsPage
@@ -69,6 +80,7 @@
         class="change-password-page__form"
         let:form
         let:generalErrorMessages
+        {decideIfErrorShouldBeReported}
         {onSubmit}
         {schema}
       >

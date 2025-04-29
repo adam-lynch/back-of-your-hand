@@ -30,14 +30,20 @@ function addErrorToFormField<TSchema extends Schema = Schema>(
   form.setErrors(fieldName, Array.from(errorMessageSet));
 }
 
-export default function onFormApiRequestError<TSchema extends Schema>(
-  form: ReturnType<typeof createForm<TSchema>>,
-  error: unknown,
-  decideIfGeneralErrorsAreUnexpected: (
-    errorMessages: string[],
-  ) => boolean = () => true,
-): string[] {
-  reportError(error);
+export default function onFormApiRequestError<TSchema extends Schema>({
+  form,
+  error,
+  decideIfGeneralErrorsAreUnexpected = () => true,
+  decideIfErrorShouldBeReported = () => true,
+}: {
+  decideIfGeneralErrorsAreUnexpected?: (errorMessages: string[]) => boolean;
+  decideIfErrorShouldBeReported?: (error: unknown) => boolean;
+  form: ReturnType<typeof createForm<TSchema>>;
+  error: unknown;
+}): string[] {
+  if (decideIfErrorShouldBeReported(error)) {
+    reportError(error);
+  }
 
   const errorMessages: string[] = [];
   const fieldNames = Object.keys(sveleteStore.get(form.data));

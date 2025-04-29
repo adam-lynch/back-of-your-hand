@@ -35,6 +35,8 @@ export const initializeErrorReporting = () => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const reportError = (error: any) => {
   if (import.meta.env.DEV) {
+    console.error("Would be reported to Sentry...");
+    console.error(error);
     return;
   }
   ignoreError(() => Sentry.captureException(error));

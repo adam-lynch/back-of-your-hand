@@ -59,7 +59,7 @@
             svelteStore.get(writable) as AnyResourceObject,
           );
         } catch (error) {
-          onFormApiRequestError<Schema>(form, error);
+          onFormApiRequestError<Schema>({ form, error });
         }
       }
     },

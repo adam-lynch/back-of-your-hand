@@ -20,6 +20,9 @@
   import onFormApiRequestError from "./onFormApiRequestError";
   import { writable } from "svelte/store";
 
+  export let decideIfErrorShouldBeReported:
+    | ((error: unknown) => boolean)
+    | undefined = undefined;
   export let decideIfGeneralErrorsAreUnexpected:
     | ((errorMessages: string[]) => boolean)
     | undefined = undefined;
@@ -43,11 +46,12 @@
         await onSubmit(form);
       } catch (e) {
         generalErrorMessages.set(
-          onFormApiRequestError<Schema>(
+          onFormApiRequestError<Schema>({
             form,
-            e,
+            error: e,
+            decideIfErrorShouldBeReported,
             decideIfGeneralErrorsAreUnexpected,
-          ),
+          }),
         );
       }
     },

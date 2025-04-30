@@ -15,6 +15,9 @@
   import AccountsPage from "./AccountsPage.svelte";
   import ErrorMessages from "../forms/ErrorMessages.svelte";
 
+  export let decideIfErrorShouldBeReported:
+    | ((error: unknown) => boolean)
+    | undefined = undefined;
   export let decideIfGeneralErrorsAreUnexpected:
     | ((errorMessages: string[]) => boolean)
     | undefined = undefined;
@@ -41,6 +44,7 @@
   <MultiFieldForm
     action="#"
     class="accounts-form-page__form"
+    {decideIfErrorShouldBeReported}
     {decideIfGeneralErrorsAreUnexpected}
     let:form
     let:generalErrorMessages

@@ -17,12 +17,21 @@
   import { navigate } from "svelte-routing";
   import authController from "../../userData/authController";
   import yup from "../forms/yup";
+  import { ClientRequestError } from "../../api/requestApi";
 
   const internalRoutes = getInternalRoutes();
 
   let email = "";
   let password = "";
   let topLevelErrorMessage = "";
+
+  function decideIfErrorShouldBeReported(error: unknown) {
+    return !(
+      error instanceof ClientRequestError &&
+      error.responseBody?.errors.length === 1 &&
+      error.responseBody.errors[0].detail?.includes("credentials")
+    );
+  }
 
   function decideIfGeneralErrorsAreUnexpected(errorMessages: string[]) {
     return !(
@@ -44,6 +53,7 @@
 </script>
 
 <AccountsFormPage
+  {decideIfErrorShouldBeReported}
   {decideIfGeneralErrorsAreUnexpected}
   internalRoute={internalRoutes.logIn}
   {onSubmit}

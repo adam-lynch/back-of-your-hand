@@ -7,6 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
+import * as Sentry from "@sentry/browser";
 import { get } from "svelte/store";
 import type {
   Organization,
@@ -30,12 +31,14 @@ export function setUserData(
   if (data === null) {
     userOrganization.set(null);
     user.set(null);
+    Sentry.setUser(null);
     return;
   }
 
   organization.set(data.organization);
   userOrganization.set(data.userOrganization);
   user.set(data.user);
+  Sentry.setUser({ id: data.userOrganization.id });
 }
 
 export function updateAreaSelectionCenter(latLng: LatLng) {

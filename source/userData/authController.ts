@@ -9,6 +9,7 @@
 
 import * as dateFns from "date-fns";
 import pick from "lodash/pick";
+import * as Sentry from "@sentry/browser";
 
 import api from "../api";
 import * as JSONAPI from "../api/JSONAPI";
@@ -123,6 +124,7 @@ async function onLackOfAuthenticationDetected(
   console.debug("lack of authentication detected", { ...context, wasLoggedIn });
   setAccessDetails(null);
   storeActions.setUserData(null);
+  Sentry.setUser(null);
 
   // Not sure this is necessary anymore. It doesn't *seem* to make a difference
   if (wasLoggedIn) {

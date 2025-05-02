@@ -38,6 +38,8 @@
           organization,
           url: window.location.href,
           userAgent: navigator.userAgent,
+          userAgentData:
+            "userAgentData" in navigator ? navigator.userAgentData : null,
         },
         isNotJSONAPI: true,
         method: "POST",

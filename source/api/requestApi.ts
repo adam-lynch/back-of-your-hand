@@ -27,15 +27,24 @@ const baseUrl = `https://${subdomain}.${rest}`;
 
 export class ClientRequestError extends Error {
   name = "ClientRequestError";
+  requestArgs: {
+    options: RequestInit;
+    url: string;
+  };
   response: Response;
   responseBody?: JSONAPI.DocWithErrors | undefined;
 
   constructor(
     message: string,
+    requestArgs: {
+      options: RequestInit;
+      url: string;
+    },
     response: Response,
     responseBody: JSONAPI.DocWithErrors | undefined,
   ) {
     super(message);
+    this.requestArgs = requestArgs;
     this.response = response;
     this.responseBody = responseBody;
   }
@@ -139,6 +148,7 @@ export default async function requestApi<TSuccessfulResponsePayload>(
 
     throw new ClientRequestError(
       `Status ${response.status}`,
+      modifiedArgs,
       response,
       responseBody,
     );

@@ -11,21 +11,12 @@ import * as svelteStore from "svelte/store";
 import api from "../api";
 import type { Organization } from "../api/resourceObjects";
 import { organization } from "./store";
-import { ClientRequestError } from "../api/requestApi";
 
 export default async function fetchAndStoreOrganization(): Promise<void> {
   if (svelteStore.get(organization)) {
     return;
   }
 
-  try {
-    const body = await api.fetchResource<Organization>("organization", "mine");
-    organization.set(body.data);
-  } catch (error) {
-    if (
-      !(error instanceof ClientRequestError && error.response.status === 404)
-    ) {
-      throw error;
-    }
-  }
+  const body = await api.fetchResource<Organization>("organization", "mine");
+  organization.set(body.data);
 }

@@ -8,9 +8,14 @@
 -->
 
 <script lang="ts">
+  import { ClientRequestError } from "../api/requestApi";
   import Button from "./forms/Button.svelte";
 
   export let error: Error | null = null;
+
+  const isOrganization404 =
+    error instanceof ClientRequestError &&
+    error.requestArgs.url.includes("/organizations/");
 
   const onFeedbackClicked = () => {
     // @ts-expect-error ...
@@ -24,16 +29,33 @@
 
 <div class="full-screen-display">
   <div class="full-screen-display__inner">
-    <h1>Something broke</h1>
-    <p>There was an unexpected error. Sorry about this.</p>
-    <Button
-      class="button--primary"
-      on:click={onRefreshClicked}
-      theme="light"
-      variant="primary"
-    >
-      Reset
-    </Button>
+    {#if isOrganization404}
+      <h1>Organization not found</h1>
+      <p
+        ><code>{window.location.host}</code> is not correct. There is no
+        <code>{window.location.host.split(".")[0]}</code>
+        organization on <em>Back Of Your Hand</em>.</p
+      >
+      <p
+        >If you're unsure what your organization URL is, please check your
+        invite email.</p
+      >
+    {:else}
+      <h1>Something broke</h1>
+      <p>There was an unexpected error. Sorry about this.</p>
+    {/if}
+
+    {#if !isOrganization404}
+      <Button
+        class="button--primary"
+        on:click={onRefreshClicked}
+        theme="light"
+        variant="primary"
+      >
+        Reset
+      </Button>
+    {/if}
+
     <Button
       class="button"
       on:click={onFeedbackClicked}
@@ -42,7 +64,7 @@
       Send feedback
     </Button>
 
-    {#if error}
+    {#if !isOrganization404 && error}
       <h2>Error details</h2>
       <pre>
         <code>{error.message + "\n" + error.stack}</code>

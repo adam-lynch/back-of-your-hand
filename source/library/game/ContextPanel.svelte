@@ -156,7 +156,7 @@
     };
   });
 
-  const timestampOfLastSettingsUpdate = 1728411648643; // Date.now()
+  const timestampOfLastSettingsUpdate = 1746269298034; // Date.now()
   const onSettingsButtonClicked = () => {
     areSettingsShown.update((previous) => !previous);
     const now = Date.now();

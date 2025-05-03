@@ -8,10 +8,18 @@
 -->
 
 <script>
+  import { onMount } from "svelte";
   import getInternalRoutes from "../routing/getInternalRoutes";
   import AccountsPage from "./AccountsPage.svelte";
+  import eventEmitter from "../../utilities/eventEmitter";
 
   const internalRoutes = getInternalRoutes();
+
+  onMount(() => {
+    eventEmitter.emit("lack-of-authentication-detected", {
+      cause: "own-user-organization-account-deleted",
+    });
+  });
 </script>
 
 <!--

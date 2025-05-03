@@ -86,7 +86,7 @@
 
   function resetGame() {
     // eslint-disable-next-line valid-typeof
-    if (typeof areSettingsShown === undefined) {
+    if (typeof areSettingsShown === "undefined") {
       // This only happens when going to /game on an organization subdomain which doesn't exist
       return;
     }

@@ -17,8 +17,6 @@ import * as store from "./store";
 import * as storeActions from "./storeActions";
 import eventEmitter from "../utilities/eventEmitter";
 import * as svelteStore from "svelte/store";
-import { navigate } from "svelte-routing";
-import getInternalRoutes from "../library/routing/getInternalRoutes";
 import { reportError } from "../utilities/setUpErrorReporting";
 
 async function getValidAccessToken(options: {
@@ -120,16 +118,10 @@ async function logOut() {
 async function onLackOfAuthenticationDetected(
   context: Record<string, unknown>,
 ) {
-  const wasLoggedIn = svelteStore.get(store.isLoggedIn);
-  console.debug("lack of authentication detected", { ...context, wasLoggedIn });
+  console.debug("lack-of-authentication-detected", context);
   setAccessDetails(null);
   storeActions.setUserData(null);
   Sentry.setUser(null);
-
-  // Not sure this is necessary anymore. It doesn't *seem* to make a difference
-  if (wasLoggedIn) {
-    navigate(getInternalRoutes().loggedOut.path, { replace: false });
-  }
 }
 
 async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {

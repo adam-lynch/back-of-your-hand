@@ -687,7 +687,7 @@
     & .leaflet-bar button,
     & .leaflet-touch .leaflet-bar a {
       font-size: 1.2rem !important;
-      font-weight: bold !important;
+      font-weight: 500 !important;
       text-align: left !important;
       color: black !important;
     }

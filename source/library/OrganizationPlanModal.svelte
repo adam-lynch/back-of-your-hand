@@ -167,11 +167,11 @@
       />
     </Field>
 
-    <ErrorMessages messages={generalErrorMessages} />
-
     <p class="pro-plan-modal__disclaimer"
       >🔒 We'll only use this info to contact you about access. No spam.</p
     >
+
+    <ErrorMessages messages={generalErrorMessages} />
   </svelte:fragment>
 
   <svelte:fragment
@@ -204,5 +204,6 @@
   .pro-plan-modal__disclaimer {
     opacity: 0.9;
     font-size: 12px;
+    margin-bottom: 0.75rem;
   }
 </style>

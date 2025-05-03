@@ -76,15 +76,20 @@ export default function onFormApiRequestError<TSchema extends Schema>({
     }
   }
 
-  if (!errorMessages.length) {
+  // 500s skip this, for example
+  if (!errorMessages.length && error instanceof ClientRequestError) {
     return [];
   }
 
   const allMessages = [];
-  if (decideIfGeneralErrorsAreUnexpected(errorMessages)) {
+  if (
+    !(error instanceof ClientRequestError) || // 5XX is always unexpected for example
+    decideIfGeneralErrorsAreUnexpected(errorMessages)
+  ) {
     allMessages.push(
       "Request failed. Unexpected server error" +
-        (errorMessages.length > 1 ? "s" : ""),
+        (errorMessages.length > 1 ? "s" : "") +
+        ". Please try again later",
     );
   }
 

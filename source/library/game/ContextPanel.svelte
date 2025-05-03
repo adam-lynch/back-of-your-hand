@@ -630,11 +630,11 @@
     text-shadow: none;
   }
 
-  .settings-button.hasUnseenSetting::before {
+  :global(.settings-button.hasUnseenSetting::before) {
     content: " ";
     position: absolute;
     top: -4px;
-    right: -2px;
+    right: -4px;
     background: red;
     border-radius: 10px;
     text-shadow: none;

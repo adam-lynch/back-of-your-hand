@@ -18,6 +18,7 @@
   onMount(() => {
     console.debug("Page mount", {
       internalRoute,
+      internalRouteId: internalRoute.id,
       location: window.location.pathname + window.location.search,
     });
 

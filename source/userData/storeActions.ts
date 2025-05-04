@@ -29,6 +29,7 @@ export function setUserData(
   } | null,
 ) {
   if (data === null) {
+    organization.set(null);
     userOrganization.set(null);
     user.set(null);
     Sentry.setUser(null);

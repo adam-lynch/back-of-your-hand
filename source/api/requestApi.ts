@@ -47,6 +47,8 @@ export class ClientRequestError extends Error {
     this.requestArgs = requestArgs;
     this.response = response;
     this.responseBody = responseBody;
+
+    this.name = `ClientRequestError (${this.response.status})`;
   }
 }
 

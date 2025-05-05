@@ -55,7 +55,7 @@
   }
 
   onMount(() => {
-    if (window.history.state.didSessionExpire) {
+    if (window.history.state?.didSessionExpire) {
       toast.error("Session expired!", getCommonToastOptions());
     }
   });

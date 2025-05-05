@@ -20,6 +20,7 @@ import {
   initialUrlSearchParams,
   hasEverPlayedARoundOnThisDevice,
 } from "../utilities/store";
+import { ClientRequestError } from "../api/requestApi";
 
 export default async function fetchAreas({
   sort,
@@ -29,41 +30,49 @@ export default async function fetchAreas({
     return valueFromStore;
   }
 
-  const result = await api.fetchResourceList<Area>("area", {
-    page: {
-      size: 500,
-    },
-    sort,
-  });
+  try {
+    const result = await api.fetchResourceList<Area>("area", {
+      page: {
+        size: 500,
+      },
+      sort,
+    });
+    areas.set(result.data);
 
-  areas.set(result.data);
+    if (result.data.length) {
+      const didOpenMultiplayerSessionUrlValue = get(
+        didOpenMultiplayerSessionUrl,
+      );
+      let areaIdToLookFor: Area["id"] | null;
+      if (didOpenMultiplayerSessionUrlValue) {
+        areaIdToLookFor = initialUrlSearchParams.get("areaIdForMultiplayer");
+      } else {
+        areaIdToLookFor = get(lastAreaSelectionAreaId);
+      }
 
-  if (result.data.length) {
-    const didOpenMultiplayerSessionUrlValue = get(didOpenMultiplayerSessionUrl);
-    let areaIdToLookFor: Area["id"] | null;
-    if (didOpenMultiplayerSessionUrlValue) {
-      areaIdToLookFor = initialUrlSearchParams.get("areaIdForMultiplayer");
-    } else {
-      areaIdToLookFor = get(lastAreaSelectionAreaId);
+      const area =
+        (areaIdToLookFor &&
+          result.data.find(({ id }) => id === areaIdToLookFor)) ||
+        (!didOpenMultiplayerSessionUrlValue &&
+          !hasEverPlayedARoundOnThisDevice &&
+          // TODO: get default area from API instead of assuming first?
+          result.data[0]);
+      if (area) {
+        const feature = createFeatureFromArea(area);
+        areaSelection.set({
+          areaId: area.id,
+          feature,
+          presetShape: PresetAreaShape.MultiPolygon,
+          radius: null,
+        });
+      }
     }
 
-    const area =
-      (areaIdToLookFor &&
-        result.data.find(({ id }) => id === areaIdToLookFor)) ||
-      (!didOpenMultiplayerSessionUrlValue &&
-        !hasEverPlayedARoundOnThisDevice &&
-        // TODO: get default area from API instead of assuming first?
-        result.data[0]);
-    if (area) {
-      const feature = createFeatureFromArea(area);
-      areaSelection.set({
-        areaId: area.id,
-        feature,
-        presetShape: PresetAreaShape.MultiPolygon,
-        radius: null,
-      });
+    return result.data;
+  } catch (error) {
+    if (error instanceof ClientRequestError && error.response.status === 401) {
+      return [];
     }
+    throw error;
   }
-
-  return result.data;
 }

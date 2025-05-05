@@ -8,16 +8,19 @@
 -->
 
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
+  import toast from "svelte-french-toast";
   import Button from "../forms/Button.svelte";
   import Field from "../forms/Field.svelte";
   import Link from "../Link.svelte";
   import TextInput from "../forms/TextInput.svelte";
   import getInternalRoutes from "../routing/getInternalRoutes";
   import AccountsFormPage from "./AccountsFormPage.svelte";
-  import { navigate } from "svelte-routing";
   import authController from "../../userData/authController";
   import yup from "../forms/yup";
   import { ClientRequestError } from "../../api/requestApi";
+  import getCommonToastOptions from "../utilities/getCommonToastOptions";
 
   const internalRoutes = getInternalRoutes();
 
@@ -50,6 +53,12 @@
     // TODO: continue param
     navigate("/", { replace: false });
   }
+
+  onMount(() => {
+    if (window.history.state.didSessionExpire) {
+      toast.error("Session expired!", getCommonToastOptions());
+    }
+  });
 </script>
 
 <AccountsFormPage

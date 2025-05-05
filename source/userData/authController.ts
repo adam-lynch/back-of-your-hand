@@ -7,9 +7,10 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
+import * as Sentry from "@sentry/browser";
 import * as dateFns from "date-fns";
 import pick from "lodash/pick";
-import * as Sentry from "@sentry/browser";
+import { navigate } from "svelte-routing";
 
 import api from "../api";
 import * as JSONAPI from "../api/JSONAPI";
@@ -18,6 +19,7 @@ import * as storeActions from "./storeActions";
 import eventEmitter from "../utilities/eventEmitter";
 import * as svelteStore from "svelte/store";
 import { reportError } from "../utilities/setUpErrorReporting";
+import getInternalRoutes from "../library/routing/getInternalRoutes";
 
 async function getValidAccessToken(options: {
   shouldRefreshAccessTokenIfExpiring: boolean;
@@ -94,7 +96,7 @@ async function logIn(data: { email: string; password: string }) {
       return status;
     },
   });
-  console.debug("Logged in", logInResponse);
+  console.debug("Logged in (backend)", logInResponse);
 
   if (!logInResponse.data.attributes) {
     throw new Error("!logInResponse.data.attributes");
@@ -102,6 +104,7 @@ async function logIn(data: { email: string; password: string }) {
   setAccessDetails(
     pick(logInResponse.data.attributes, ["access", "accessExpiration"]),
   );
+  console.debug("Logged in (setAccessDetails called)");
 }
 
 async function logOut() {
@@ -121,7 +124,16 @@ async function onLackOfAuthenticationDetected(
   console.debug("lack-of-authentication-detected", context);
   setAccessDetails(null);
   storeActions.setUserData(null);
+  store.areas.set(null);
   Sentry.setUser(null);
+
+  if (context.cause === "401") {
+    navigate(getInternalRoutes().logIn.path, {
+      state: {
+        didSessionExpire: true,
+      },
+    });
+  }
 }
 
 async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {

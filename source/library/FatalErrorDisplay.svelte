@@ -52,7 +52,7 @@
         theme="light"
         variant="primary"
       >
-        Reset
+        Refresh
       </Button>
     {/if}
 

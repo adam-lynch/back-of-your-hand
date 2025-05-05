@@ -156,7 +156,10 @@
     };
   });
 
-  const timestampOfLastSettingsUpdate = 1746269298034; // Date.now()
+  // Date.now()
+  const timestampOfLastSettingsUpdate = $isOrganizationUrl
+    ? 1728411648643
+    : 1746269298034;
   const onSettingsButtonClicked = () => {
     areSettingsShown.update((previous) => !previous);
     const now = Date.now();

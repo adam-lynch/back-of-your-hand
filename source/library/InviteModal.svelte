@@ -23,8 +23,12 @@
   import requestApi from "../api/requestApi";
 
   let email = "";
+  let jobTitle = "";
+  let name = "";
   function onFormReset() {
     email = "";
+    jobTitle = "";
+    name = "";
   }
 
   const selectedRole = writable<"standard" | "admin">("standard");
@@ -33,6 +37,8 @@
     await requestApi("userorganizations/request_invite", {
       body: {
         email,
+        jobTitle,
+        name,
         role: $selectedRole,
       },
       isNotJSONAPI: true,
@@ -47,6 +53,8 @@
   description="NOTE: invite emails can take up to a day or two to arrive. There is a manual step involved."
   schema={yup.object({
     email: commonSchema.email().label("Email"),
+    jobTitle: yup.string().label("jobTitle"),
+    name: yup.string().label("Full name").required(),
     role: yup.string().label("Role").required(),
   })}
   on:formReset={onFormReset}
@@ -93,6 +101,29 @@
 
     <Field
       {form}
+      labelText="Full name"
+      name="name"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <TextInput
+        aria-describedby={ariaDescribedby}
+        bind:value={name}
+        class={_class}
+        name={_name}
+        {id}
+        {theme}
+        required
+        type="text"
+      />
+    </Field>
+
+    <Field
+      {form}
       labelText="Role"
       name="role"
       let:_class
@@ -114,6 +145,28 @@
         }))}
         required
         {theme}
+      />
+    </Field>
+
+    <Field
+      {form}
+      labelText="Job title"
+      name="jobTitle"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <TextInput
+        aria-describedby={ariaDescribedby}
+        bind:value={jobTitle}
+        class={_class}
+        name={_name}
+        {id}
+        {theme}
+        type="text"
       />
     </Field>
 

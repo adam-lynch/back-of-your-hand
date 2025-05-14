@@ -18,6 +18,7 @@
   import ErrorMessages from "./forms/ErrorMessages.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import requestApi from "../api/requestApi";
+  import trackEvent from "../utilities/trackEvent";
 
   let email = "";
   let name = "";
@@ -51,11 +52,30 @@
     }
 
     toast.success("Access requested!", getCommonToastOptions());
+    trackEvent({
+      name: "organization-plan-modal-submitted-successfully",
+      title: "Organization plan modal submitted successfully",
+    });
   };
+
+  function onIsOpenedChanged(event: CustomEvent) {
+    if (event.detail) {
+      trackEvent({
+        name: "organization-plan-modal-opened",
+        title: "Organization plan modal opened",
+      });
+    } else {
+      trackEvent({
+        name: "organization-plan-modal-closed",
+        title: "Organization plan modal closed",
+      });
+    }
+  }
 </script>
 
 <MultiFieldFormModal
   on:formReset={onFormReset}
+  on:isOpenChanged={onIsOpenedChanged}
   schema={yup.object({
     email: commonSchema.email().label("Email").required(),
     name: yup.string().label("Name").required(),

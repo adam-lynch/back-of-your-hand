@@ -29,6 +29,10 @@
   const isOpen = writable(false);
   const dispatch = createEventDispatcher();
 
+  isOpen.subscribe((value) => {
+    dispatch("isOpenChanged", value);
+  });
+
   const handleOnSubmit: typeof onSubmit = async (...args) => {
     await onSubmit(...args);
     isOpen.set(false);

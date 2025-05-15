@@ -142,7 +142,7 @@
 
     <Field
       {form}
-      labelText="Email"
+      labelText="Email (one which can receive emails from us!)"
       name="email"
       let:_class
       let:_name

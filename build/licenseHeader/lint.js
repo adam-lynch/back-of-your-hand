@@ -11,7 +11,7 @@ import fs from "fs";
 import { globSync } from "glob";
 import createIgnoreInstance from "ignore";
 import path from "path";
-import { fileExtensionsWhichSupportComments } from "../lint-staged.config.js";
+import { fileExtensionsWhichSupportComments } from "../fileExtensions.mjs";
 
 // extension to header comment string
 let cache = {};

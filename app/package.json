@@ -6,6 +6,7 @@
   "browserslist": "> 0.25%, not dead",
   "scripts": {
     "build": "vite build",
+    "cf-pages-build": "npm run build && echo '/dist:' && ls -l dist && echo '/dist/assets:' && ls -l dist/assets && ./build/create-sentry-release.sh",
     "dev": "vite",
     "format": "prettier --write .",
     "lint-all": "npm run format && eslint --config ./eslint.config.js --fix . && npm run svelte-check && node ../build/licenseHeader/lint.js --all --write",

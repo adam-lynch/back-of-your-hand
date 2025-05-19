@@ -23,7 +23,7 @@ export default defineConfig({
     target: browserslistToEsbuild(),
   },
   define: {
-    COMMIT_ID: JSON.stringify(getCommitId({ cwd: "." }) || "unknown"),
+    COMMIT_ID: JSON.stringify(getCommitId({ cwd: ".." }) || "unknown"),
   },
   plugins: [
     svelte({

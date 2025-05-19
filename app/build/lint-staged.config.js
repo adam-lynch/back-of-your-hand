@@ -7,10 +7,15 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { fileExtensionsWhichSupportComments } from "./fileExtensions.mjs";
+import { commentableExtensionsWhichPrettierSupports } from "../../build/fileExtensions.mjs";
 
-const licenseHeader = "node ./build/licenseHeader/lint.js --write";
+const eslint = "eslint --config eslint.config.js --fix";
+const prettier = "prettier --write";
 
 export default {
-  [`*.{${fileExtensionsWhichSupportComments.join(",")}}`]: [licenseHeader],
+  [`*.{${commentableExtensionsWhichPrettierSupports.join(",")}}`]: [
+    prettier,
+    eslint,
+  ],
+  "*.{json,md}": [prettier],
 };

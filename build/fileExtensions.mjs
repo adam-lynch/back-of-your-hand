@@ -7,10 +7,18 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { fileExtensionsWhichSupportComments } from "./fileExtensions.mjs";
+export const fileExtensionsWhichSupportComments = [
+  "css",
+  "html",
+  "js",
+  "sh",
+  "svelte",
+  "ts",
+  "yaml",
+  "yml",
+];
 
-const licenseHeader = "node ./build/licenseHeader/lint.js --write";
-
-export default {
-  [`*.{${fileExtensionsWhichSupportComments.join(",")}}`]: [licenseHeader],
-};
+export const commentableExtensionsWhichPrettierSupports =
+  fileExtensionsWhichSupportComments.filter(
+    (extension) => !["sh", "yaml", "yml"].includes(extension),
+  );

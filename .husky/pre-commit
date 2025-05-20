@@ -1,2 +1,2 @@
 npx lint-staged --config build/lint-staged.config.js
-cd app && npx lint-staged --config build/lint-staged.config.js && npm run svelte-check
+cd app && npx lint-staged --config build/lint-staged.config.js && npm run svelte-check && cd ..

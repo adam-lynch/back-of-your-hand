@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "cf-pages-build": "cd app && npm run cf-pages-build"
+    "build-all": "cd app && npm ci && npm run build && echo '/dist:' && ls -l ../dist && echo '/dist/assets:' && ls -l ../dist/assets && ./build/create-sentry-release.sh"
   },
   "devDependencies": {
     "glob": "^11.0.2",

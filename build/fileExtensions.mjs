@@ -4,7 +4,7 @@
  *
  * Project: Back Of Your Hand (https://backofyourhand.com)
  * Repository: https://github.com/adam-lynch/back-of-your-hand
- * Copyright © 2024 Adam Lynch (https://adamlynch.com)
+ * Copyright © 2025 Adam Lynch (https://adamlynch.com)
  */
 
 export const fileExtensionsWhichSupportComments = [

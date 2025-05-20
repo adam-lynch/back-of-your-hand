@@ -4,6 +4,10 @@ Contributions are more than welcome! It's probably worth reading why and how I m
 
 If you'd like to exclude a certain street name from being selected (e.g. "alley"), you can edit [`app/source/utilities/exclusions.ts`](./app/source/utilities/exclusions.ts).
 
+# Set up project
+
+1. Run `npm install` at the root of the project.
+
 # Development
 
 This file contains project-level information. You probably also want to check out:

@@ -5,15 +5,17 @@
 # Repository: https://github.com/adam-lynch/back-of-your-hand
 # Copyright © 2024 Adam Lynch (https://adamlynch.com)
 
-name: lint
-on: [push]
+name: app
+on:
+  push:
+    paths:
+      - '.github/workflows/app.yml'
+      - 'app/**'
 defaults:
   run:
     working-directory: ./app
 jobs:
-  lint-app:
-    paths:
-      - 'app/**'
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

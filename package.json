@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "scripts": {
+    "cf-pages-build": "cd app && npm run cf-pages-build"
+  },
   "devDependencies": {
     "glob": "^11.0.2",
     "husky": "^9.1.7",

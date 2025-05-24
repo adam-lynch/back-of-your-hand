@@ -72,8 +72,13 @@
 
   :global(.accounts-form-page__footer) {
     margin-top: 20px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    &:has(> :only-child) {
+      justify-self: center;
+    }
   }
 </style>

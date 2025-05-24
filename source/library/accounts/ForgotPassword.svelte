@@ -8,6 +8,7 @@
 -->
 
 <script lang="ts">
+  import { writable } from "svelte/store";
   import requestPasswordReset from "../../userData/requestPasswordReset";
   import Button from "../forms/Button.svelte";
   import Field from "../forms/Field.svelte";
@@ -21,11 +22,16 @@
   const internalRoutes = getInternalRoutes();
 
   let email = "";
-  let wasResetRequested = false;
+  let wasResetRequested = writable(false);
 
   async function onSubmit() {
     await requestPasswordReset(email);
-    wasResetRequested = true;
+    wasResetRequested.set(true);
+  }
+
+  function reset() {
+    email = "";
+    wasResetRequested.set(false);
   }
 </script>
 
@@ -37,8 +43,13 @@
   })}
 >
   <svelte:fragment slot="top">
-    {#if wasResetRequested}
-      <p>Password reset e-mail has been sent. Check your inbox.</p>
+    {#if $wasResetRequested}
+      <p
+        >If the email you entered (<span class="forgot-password__email"
+          >{email}</span
+        >) corresponds to an account, we've sent password reset instructions to
+        that address. Check your inbox.</p
+      >
     {/if}
   </svelte:fragment>
 
@@ -46,7 +57,7 @@
     slot="fields"
     let:form
   >
-    {#if !wasResetRequested}
+    {#if !$wasResetRequested}
       <Field
         {form}
         labelText="Email"
@@ -74,7 +85,14 @@
   </svelte:fragment>
 
   <svelte:fragment slot="accounts-form-footer">
-    {#if !wasResetRequested}
+    {#if $wasResetRequested}
+      <Button
+        on:click={reset}
+        size="small"
+      >
+        Enter a different email address
+      </Button>
+    {:else}
       <Button type="submit">Reset password</Button>
 
       <!-- TODO: Pass email -->
@@ -84,4 +102,7 @@
 </AccountsFormPage>
 
 <style>
+  :global(.forgot-password__email) {
+    opacity: 0.8;
+  }
 </style>

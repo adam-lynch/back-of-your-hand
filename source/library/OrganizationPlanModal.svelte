@@ -166,7 +166,7 @@
 
     <Field
       {form}
-      labelText="Department / organization"
+      labelText="Department / organization / city"
       name="organization"
       let:_class
       let:_name
@@ -181,6 +181,7 @@
         class={_class}
         name={_name}
         {id}
+        placeholder="Fairhill Fire Department, Virginia"
         required
         {theme}
         type="text"

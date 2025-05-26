@@ -77,11 +77,21 @@
       }
 
       const main = document.createElement("main");
-      main.dataset.email = queryParameters.email;
-      main.dataset.name = queryParameters.name;
+      if ("email" in queryParameters) {
+        main.dataset.email = queryParameters.email;
+      }
+      if ("name" in queryParameters) {
+        main.dataset.name = queryParameters.name;
+      }
       main.id = "tidycal-embed";
-      const dataPathSuffix = "b" in queryParameters ? queryParameters.b : 30;
-      main.setAttribute("data-path", `adamlynch/${dataPathSuffix}`);
+
+      let dataPath = "adamlynch";
+      const dataPathSuffix = "b" in queryParameters ? queryParameters.b : "30";
+      if (dataPathSuffix) {
+        dataPath += "/" + dataPathSuffix;
+      }
+      main.setAttribute("data-path", dataPath);
+
       document.body.appendChild(main);
 
       const script = document.createElement("script");

@@ -1,0 +1,94 @@
+<!--
+  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  
+  Project: Back Of Your Hand (https://backofyourhand.com)
+  Repository: https://github.com/adam-lynch/back-of-your-hand
+  Copyright © 2025 Adam Lynch (https://adamlynch.com)
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Schedule | Back Of Your Hand</title>
+
+    <!-- Icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicon.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
+
+    <!-- Social media / sharing stuff -->
+    <meta
+      property="og:title"
+      content="Back Of Your Hand: Schedule"
+    />
+    <meta
+      property="og:description"
+      content="Schedule a meeting"
+    />
+    <meta
+      property="og:image"
+      content="/images/social-screenshot.png"
+    />
+    <meta
+      property="og:url"
+      content="https://backofyourhand.com"
+    />
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+
+    <!--  Non-essential, but recommended -->
+    <meta
+      property="og:site_name"
+      content="Back of Your Hand"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Screenshot of the game; on the left-hand side, the user is given a street name to find. The map is on the right-side, where a marker / guess has been placed by the user"
+    />
+    <meta
+      name="twitter:creator"
+      content="@lynchy010"
+    />
+  </head>
+  <body>
+    <script>
+      let dataPathSuffix = 30;
+
+      const pathnamePieces = window.location.pathname.split("/");
+      if (pathnamePieces.length) {
+        const lastPathnameSegment = pathnamePieces[pathnamePieces.length - 1];
+        if (!lastPathnameSegment.startsWith("schedule")) {
+          dataPathSuffix = lastPathnameSegment;
+        }
+      }
+
+      const main = document.createElement("main");
+      main.id = "tidycal-embed";
+      main.setAttribute("data-path", `adamlynch/${dataPathSuffix}`);
+      document.body.appendChild(main);
+
+      const script = document.createElement("script");
+      script.src = "https://asset-tidycal.b-cdn.net/js/embed.js";
+      document.head.appendChild(script);
+    </script>
+    <noscript
+      >Unfortunately you need JavaScript to read this page. We can arrange a
+      time over email instead though!</noscript
+    >
+  </body>
+</html>

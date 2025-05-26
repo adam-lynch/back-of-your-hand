@@ -67,18 +67,20 @@
   </head>
   <body>
     <script>
-      let dataPathSuffix = 30;
-
-      const pathnamePieces = window.location.pathname.split("/");
-      if (pathnamePieces.length) {
-        const lastPathnameSegment = pathnamePieces[pathnamePieces.length - 1];
-        if (!lastPathnameSegment.startsWith("schedule")) {
-          dataPathSuffix = lastPathnameSegment;
-        }
+      let queryParameters = {};
+      try {
+        queryParameters = Object.fromEntries(
+          new URLSearchParams(window.location.search).entries(),
+        );
+      } catch (e) {
+        console.error(e);
       }
 
       const main = document.createElement("main");
+      main.dataset.email = queryParameters.email;
+      main.dataset.name = queryParameters.name;
       main.id = "tidycal-embed";
+      const dataPathSuffix = "b" in queryParameters ? queryParameters.b : 30;
       main.setAttribute("data-path", `adamlynch/${dataPathSuffix}`);
       document.body.appendChild(main);
 

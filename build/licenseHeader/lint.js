@@ -66,28 +66,32 @@ function makeLicenseHeaderComment(extension) {
 let filePathsToCheck = [];
 let shouldModifyFiles = process.argv.includes("--write");
 
-if (process.argv.includes("--all")) {
-  const ignoreInstance = createIgnoreInstance();
-  for (const ignoreFilePath of [".gitignore", ".prettierignore"]) {
-    if (fs.existsSync(ignoreFilePath)) {
-      ignoreInstance.add(fs.readFileSync(ignoreFilePath).toString());
-    }
+const ignoreInstance = createIgnoreInstance();
+for (const ignoreFilePath of [".gitignore", ".prettierignore"]) {
+  if (fs.existsSync(ignoreFilePath)) {
+    ignoreInstance.add(fs.readFileSync(ignoreFilePath).toString());
   }
+}
+
+if (process.argv.includes("--all")) {
   filePathsToCheck = globSync(
     `./**/*.{${fileExtensionsWhichSupportComments.join(",")}}`,
-  ).filter((filePath) => !ignoreInstance.ignores(filePath));
+  );
 } else {
   filePathsToCheck = process.argv
     .slice(2)
     .filter((item) => !item.startsWith("--"));
 }
 
+filePathsToCheck = filePathsToCheck.filter((filePath) => {
+  const relativePath = path.relative(".", filePath);
+  return !ignoreInstance.ignores(relativePath);
+})
 filePathsToCheck.sort();
 
 let filePathsMissingHeader = [];
 
 for (const filePath of filePathsToCheck) {
-  console.log(filePath);
   const content = fs.readFileSync(filePath, "utf8");
   const extension = path.extname(filePath).replace(/^./, "");
   const licenseHeader = makeLicenseHeaderComment(extension);

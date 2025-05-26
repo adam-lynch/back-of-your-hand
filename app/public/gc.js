@@ -1,12 +1,3 @@
-/* 
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- * 
- * Project: Back Of Your Hand (https://backofyourhand.com)
- * Repository: https://github.com/adam-lynch/back-of-your-hand
- * Copyright © 2025 Adam Lynch (https://adamlynch.com)
- */
-
 // GoatCounter: https://www.goatcounter.com
 // This file (and *only* this file) is released under the ISC license:
 // https://opensource.org/licenses/ISC
@@ -126,7 +117,7 @@ goatcounter.filter = function () {
   if (
     !goatcounter.allow_local &&
     location.hostname.match(
-      /(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.)/
+      /(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.)/,
     )
   )
     return "localhost";
@@ -263,7 +254,7 @@ if (location.hash === "#toggle-goatcounter")
     alert(
       "GoatCounter tracking is now DISABLED in this browser until " +
         location +
-        " is loaded again."
+        " is loaded again.",
     );
   }
 
@@ -279,7 +270,7 @@ if (!goatcounter.no_onload) {
       function () {
         go();
       },
-      false
+      false,
     );
   else go();
 }

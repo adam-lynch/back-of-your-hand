@@ -87,6 +87,7 @@ filePathsToCheck.sort();
 let filePathsMissingHeader = [];
 
 for (const filePath of filePathsToCheck) {
+  console.log(filePath);
   const content = fs.readFileSync(filePath, "utf8");
   const extension = path.extname(filePath).replace(/^./, "");
   const licenseHeader = makeLicenseHeaderComment(extension);

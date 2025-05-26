@@ -66,11 +66,32 @@ function makeLicenseHeaderComment(extension) {
 let filePathsToCheck = [];
 let shouldModifyFiles = process.argv.includes("--write");
 
-const ignoreInstance = createIgnoreInstance();
-for (const ignoreFilePath of [".gitignore", ".prettierignore"]) {
-  if (fs.existsSync(ignoreFilePath)) {
-    ignoreInstance.add(fs.readFileSync(ignoreFilePath).toString());
-  }
+// Build up list of paths to ignore
+const globalIgnoreInstance = createIgnoreInstance();
+
+for (const relativePathToIgnoreFile of globSync(
+  './**/{.gitignore,.prettierignore}',
+)) {
+  const relativePathToIgnoreFileDirname = path.dirname(relativePathToIgnoreFile);
+
+  const ignoreFileContent = fs.readFileSync(relativePathToIgnoreFile).toString();
+  const lines = ignoreFileContent
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'));
+
+  // Prefix paths
+  const updatedContent = lines.map((line) => {
+    let prefix = "";
+    let rest = line;
+    if (line.startsWith('!')) {
+      prefix = line[0];
+      rest = line.slice(1);
+    }
+    return prefix + path.posix.join(relativePathToIgnoreFileDirname, rest);
+  }).join('\n');
+
+  globalIgnoreInstance.add(updatedContent);
 }
 
 if (process.argv.includes("--all")) {
@@ -85,7 +106,7 @@ if (process.argv.includes("--all")) {
 
 filePathsToCheck = filePathsToCheck.filter((filePath) => {
   const relativePath = path.relative(".", filePath);
-  return !ignoreInstance.ignores(relativePath);
+  return !globalIgnoreInstance.ignores(relativePath);
 })
 filePathsToCheck.sort();
 

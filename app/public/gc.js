@@ -117,7 +117,7 @@ goatcounter.filter = function () {
   if (
     !goatcounter.allow_local &&
     location.hostname.match(
-      /(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.)/,
+      /(localhost$|^127\.|^10\.|^172\.(1[6-9]|2[0-9]|3[0-1])\.|^192\.168\.)/
     )
   )
     return "localhost";
@@ -254,7 +254,7 @@ if (location.hash === "#toggle-goatcounter")
     alert(
       "GoatCounter tracking is now DISABLED in this browser until " +
         location +
-        " is loaded again.",
+        " is loaded again."
     );
   }
 
@@ -270,7 +270,7 @@ if (!goatcounter.no_onload) {
       function () {
         go();
       },
-      false,
+      false
     );
   else go();
 }

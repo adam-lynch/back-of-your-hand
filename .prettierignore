@@ -1,2 +1,8 @@
 .husky
+app/public/gc.js
+app/public/learn-more.html
+app/public/privacy.html
+app/public/terms-of-service.html
+app/source/third-party
+dist
 package-lock.json

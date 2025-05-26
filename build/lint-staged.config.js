@@ -7,31 +7,10 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-export const fileExtensionsWhichSupportComments = [
-  "css",
-  "html",
-  "js",
-  "sh",
-  "svelte",
-  "ts",
-  "yaml",
-  "yml",
-];
-const commentableExtensionsWhichPrettierSupports =
-  fileExtensionsWhichSupportComments.filter(
-    (extension) => !["sh", "yaml", "yml"].includes(extension),
-  );
+import { fileExtensionsWhichSupportComments } from "./fileExtensions.mjs";
 
-const eslint = "eslint --fix";
 const licenseHeader = "node ./build/licenseHeader/lint.js --write";
-const prettier = "prettier --write";
 
 export default {
-  [`*.{${commentableExtensionsWhichPrettierSupports.join(",")}}`]: [
-    licenseHeader,
-    prettier,
-    eslint,
-  ],
-  "*.{json,md}": [prettier],
-  [`*.{sh,yaml,yml}`]: [licenseHeader],
+  [`*.{${fileExtensionsWhichSupportComments.join(",")}}`]: [licenseHeader],
 };

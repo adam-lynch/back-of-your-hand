@@ -5,8 +5,15 @@
 # Repository: https://github.com/adam-lynch/back-of-your-hand
 # Copyright © 2024 Adam Lynch (https://adamlynch.com)
 
-name: lint
-on: [push]
+name: app
+on:
+  push:
+    paths:
+      - '.github/workflows/app.yml'
+      - 'app/**'
+defaults:
+  run:
+    working-directory: ./app
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -15,5 +22,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - run: cd .. && npm ci
       - run: npm ci
       - run: npm run lint-all--no-fix

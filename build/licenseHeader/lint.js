@@ -11,7 +11,7 @@ import fs from "fs";
 import { globSync } from "glob";
 import createIgnoreInstance from "ignore";
 import path from "path";
-import { fileExtensionsWhichSupportComments } from "../lint-staged.config.js";
+import { fileExtensionsWhichSupportComments } from "../fileExtensions.mjs";
 
 // extension to header comment string
 let cache = {};
@@ -66,22 +66,48 @@ function makeLicenseHeaderComment(extension) {
 let filePathsToCheck = [];
 let shouldModifyFiles = process.argv.includes("--write");
 
-if (process.argv.includes("--all")) {
-  const ignoreInstance = createIgnoreInstance();
-  for (const ignoreFilePath of [".gitignore", ".prettierignore"]) {
-    if (fs.existsSync(ignoreFilePath)) {
-      ignoreInstance.add(fs.readFileSync(ignoreFilePath).toString());
+// Build up list of paths to ignore
+const globalIgnoreInstance = createIgnoreInstance();
+
+for (const relativePathToIgnoreFile of globSync(
+  './**/{.gitignore,.prettierignore}',
+)) {
+  const relativePathToIgnoreFileDirname = path.dirname(relativePathToIgnoreFile);
+
+  const ignoreFileContent = fs.readFileSync(relativePathToIgnoreFile).toString();
+  const lines = ignoreFileContent
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'));
+
+  // Prefix paths
+  const updatedContent = lines.map((line) => {
+    let prefix = "";
+    let rest = line;
+    if (line.startsWith('!')) {
+      prefix = line[0];
+      rest = line.slice(1);
     }
-  }
+    return prefix + path.posix.join(relativePathToIgnoreFileDirname, rest);
+  }).join('\n');
+
+  globalIgnoreInstance.add(updatedContent);
+}
+
+if (process.argv.includes("--all")) {
   filePathsToCheck = globSync(
     `./**/*.{${fileExtensionsWhichSupportComments.join(",")}}`,
-  ).filter((filePath) => !ignoreInstance.ignores(filePath));
+  );
 } else {
   filePathsToCheck = process.argv
     .slice(2)
     .filter((item) => !item.startsWith("--"));
 }
 
+filePathsToCheck = filePathsToCheck.filter((filePath) => {
+  const relativePath = path.relative(".", filePath);
+  return !globalIgnoreInstance.ignores(relativePath);
+})
 filePathsToCheck.sort();
 
 let filePathsMissingHeader = [];

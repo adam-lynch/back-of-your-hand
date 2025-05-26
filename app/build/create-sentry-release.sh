@@ -8,7 +8,7 @@
 #!/bin/sh
 set -e
 
-COMMIT_ID=$(node -e "console.log(require('git-commit-id')())")
+COMMIT_ID=$(node -e "console.log(require('git-commit-id')({ cwd: '..' }))")
 
 echo "Creating Sentry release (COMMIT_ID: $COMMIT_ID)..."
 

@@ -122,7 +122,7 @@ const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
 
   const overpassQuery = makeOverpassQuery({ areaSelection });
 
-  const shouldCacheResponseInBrowser = !areaSelection.areaId && false;
+  const shouldCacheResponseInBrowser = !areaSelection.areaId;
   // If the query changes, the "cache" is automatically skipped
   const localStorageKey = `overpass-response2__${overpassQuery})`;
 

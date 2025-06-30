@@ -5,3 +5,7 @@ changed=$(git diff --name-only --cached)
 if echo "$changed" | grep -qE '^app/'; then
   cd app && npx lint-staged --config build/lint-staged.config.js && npm run svelte-check && cd ..
 fi
+
+if echo "$changed" | grep -qE '^marketing-site/'; then
+  cd marketing-site && npx lint-staged --config build/lint-staged.config.js && npm run astro check && cd ..
+fi

@@ -1,0 +1,35 @@
+/* 
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * 
+ * Project: Back Of Your Hand (https://backofyourhand.com)
+ * Repository: https://github.com/adam-lynch/back-of-your-hand
+ * Copyright © 2025 Adam Lynch (https://adamlynch.com)
+ */
+
+:root {
+  --max-width: 1300px;
+  --spacing: 1rem;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  margin-block-end: var(--spacing);
+  line-height: 1.25;
+}

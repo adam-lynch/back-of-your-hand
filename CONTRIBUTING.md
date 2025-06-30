@@ -15,6 +15,7 @@ If you'd like to exclude a certain street name from being selected (e.g. "alley"
 This file contains project-level information. You probably also want to check out:
 
 - [`app/README.md`](./app/README.md)
+- [`marketing-site/README.md`](./marketing-site/README.md)
 
 ### Edge handlers
 

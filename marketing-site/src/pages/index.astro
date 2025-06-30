@@ -1,0 +1,615 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import screenshotImage from '../assets/screenshot.avif';
+import screenshotSmallImage from '../assets/screenshot-small.avif';
+---
+
+<Layout>
+  <header class="header">
+    <div class="container">
+      <span>
+        <!-- TODO: actual logo -->
+        <a href="/" class="header__logo">🖐️ Back Of Your Hand</a> <span class="header__qualifier">for organizations</span>
+      </span>
+      <!-- TODO: show once header is sticky on scroll up -->
+      <!-- <button class="button button--primary">
+        Book a 15-min demo
+      </button> -->
+    </div>
+  </header>
+  
+  <section class="section section--hero">
+    <div class="container">
+      <div class="section--hero__content">
+        <h1 class="section__headline section--hero__headline">
+          Know every street like the <em>back of your hand</em>
+        </h1>
+        <p class="section--hero__subhead">
+          Drill response areas into memory
+        </p>
+        <button class="button button--primary button--large">
+          Book a 15-min demo
+        </button>
+        <!-- TODO: only if not coming from it? Or change the text? -->
+        <a href="/" class="button button--secondary">
+          Try the free version
+        </a>
+      </div>
+      <div class="section--hero__media">
+        <Image
+          alt="Back Of Your Hand gameplay screenshot"
+          class="section--hero__image"
+          height="630.102"
+          src={screenshotImage}
+          width="812.836"
+        />
+      </div>
+    </div>
+  </section>
+  
+  <section class="section section--proof">
+    <div class="container">
+      <blockquote class="section--proof__quote quote">
+        <p><span class="quote__mark quote__mark--start">"</span>It's a <strong><em>game-changer</em></strong> for us. My guys are loving it!</p>
+        <p>I will be telling all of my other training guys about this so they can utilize it as well.<span class="quote__mark quote__mark--end">"</span></p>
+        <cite>— Division Chief of Training/Safety, Kansas <span class="section--proof__stars">★★★★★</span></cite>
+      </blockquote>
+      <!-- TODO: five stars here? -->
+    </div>
+  </section>
+
+  <section class="section section--benefit">
+    <div class="container">
+      <div class="section__text">
+        <div class="section__text-inner">
+          <h2 class="section__headline section--benefit__headline">Mental maps that stick</h2>
+          <p class="section--benefit__main-point">Pin-drop drills hard-wire even tucked-away streets into memory, cutting wrong turns and trimming response times.</p>
+          <p class="section--benefit__support">30-second phone drills turn downtime into training; rookies ramp up, veterans stay sharp.</p>
+        </div>
+      </div>
+      <Image
+        alt="TODO"
+        class="section__feature-image"
+        height="327"
+        src={screenshotSmallImage}
+        width="600"
+      />
+    </div>
+  </section>
+
+  <!-- NOTE: this block would be the first one if the user is coming from the free version -->
+  <section class="section section--benefit">
+    <div class="container">
+      <div class="section__text">
+        <div class="section__text-inner">
+          <h2 class="section__headline section--benefit__headline">Tailored to your territory</h2>
+          <p class="section--benefit__main-point">Define your true response boundary, and even carve it into station zones, hotspots, or mutual-aid pockets.</p>
+          <p class="section--benefit__support">Streets refresh automatically, so every drill stays up to date.</p>
+        </div>
+      </div>
+      <Image
+        alt="TODO"
+        class="section__feature-image"
+        height="327"
+        src={screenshotSmallImage}
+        width="600"
+      />
+    </div>
+  </section>
+
+  <section class="section section--benefit">
+    <div class="container">
+      <div class="section__text">
+        <div class="section__text-inner">
+          <h2 class="section__headline section--benefit__headline">Progress you can prove</h2>
+          <p class="section--benefit__main-point">Real-time scores and history show who's field-ready and spotlight weak spots. Filter by user or zone, pull a report. Get hard numbers, not hunches.</p>
+          <p class="section--benefit__support">Get instant evidence for audits and accreditation, including ISO PPC, NFPA 1451, CPSE/CFAI, CALEA, and CAAS</p>
+        </div>
+      </div>
+      <Image
+        alt="TODO"
+        class="section__feature-image"
+        height="327"
+        src={screenshotSmallImage}
+        width="600"
+      />
+    </div>
+
+    <div class="section__cta-wrapper">
+      <button class="button button--primary button--large">
+        See it in action
+      </button>
+    </div>
+  </section>
+  
+  <section class="section section--more-proof">
+    <div class="container">
+      <h2 class="section__headline">2 million drills ran. 10 million pins dropped.</h2>
+      <div class="quotes">
+        <blockquote class="quotes__quote quote">
+          <div>
+            <p><span class="quote__mark quote__mark--start">"</span>I love your game. We have been using it at our fire department to help guys study our first due district.</p>
+            <p>I like to <strong>assign 5 streets a shift</strong> to all my firefighters and <strong>see who is getting what right and wrong</strong> to help me plan for who needs more help.<span class="quote__mark quote__mark--end">"</span></p>
+          </div>
+          <cite>— Anonymous, New York</cite>
+        </blockquote>
+        
+        <blockquote class="quotes__quote quote">
+          <div>
+            <p><span class="quote__mark quote__mark--start">"</span>It is fantastic! I have used your website to continue to <strong>stay up to date with our city's streets</strong> and <strong>keep our response times fast and efficient</strong>.</p>
+            <p>It has received nothing but good feedback from the other firefighters I have shown, so a big thank you.<span class="quote__mark quote__mark--end">"</span></p>
+          </div>
+          <cite>— Anonymous, Vancouver</cite>
+        </blockquote>
+        
+        <blockquote class="quotes__quote quote">
+          <div>
+            <p><span class="quote__mark quote__mark--start">"</span>You truly <strong>deserve an award</strong> for creating such a fantastic tool/game. I use it every day to improve my skills as a firefighter, and it's been especially helpful as I learn how to drive the truck in a new city where I've recently been hired.</p>
+            <p>The stress of learning the streets and navigating a new area is overwhelming, but <strong>your tool has made a huge difference</strong>. I can't thank you enough for your efforts.<span class="quote__mark quote__mark--end">"</span></p>
+          </div>
+          <cite>— Anonymous, Iowa</cite>
+        </blockquote>
+        
+        <blockquote class="quotes__quote quote">
+          <div>
+            <p><span class="quote__mark quote__mark--start">"</span>I love your game “Back Of Your Hand”! I'm a firefighter in Switzerland and <strong>this is perfect for learning the streets of my city</strong>.</p>
+            <p>I showed it to others, and they all loved it!<span class="quote__mark quote__mark--end">"</span></p>
+          </div>
+          <cite>— Anonymous, Switzerland</cite>
+        </blockquote>
+        
+        <blockquote class="quotes__quote quote">
+          <p><strong><span class="quote__mark quote__mark--start">"</span>My platoon loves your program</strong>, for studying our streets for fire responses.<span class="quote__mark quote__mark--end">"</span></p>
+          <cite>— Anonymous, Pennsylvania</cite>
+        </blockquote>
+        
+        <blockquote class="quotes__quote quote">
+          <p><span class="quote__mark quote__mark--start">"</span><strong>I love what you have created</strong> [...] Everyone I have shared it with has loved Back Of Your Hand!<span class="quote__mark quote__mark--end">"</span></p>
+          <cite>— Anonymous, Texas</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section section--pricing">
+    <div class="container">
+      <h2 class="section__headline">Simple pricing, no surprises</h2>
+      <div class="section--pricing_items">
+        <div class="section--pricing__item">
+          <h3 class="section--pricing__title">$45 per user per year</h3>
+          <p class="section--pricing__note">That's just $3.75/month — billed annually</p>
+        </div>
+        <div class="section--pricing__item">
+          <h3 class="section--pricing__title">One annual invoice</h3>
+          <p>No setup fees. No IT overhead.</p>
+        </div>
+        <div class="section--pricing__item">
+          <h3 class="section--pricing__title">30-day satisfaction guarantee</h3>
+          <p>Cancel in the first 30 days — we'll void or refund the invoice.</p>
+        </div>
+        <div class="section--pricing__item">
+          <h3 class="section--pricing__title">Volume discounts</h3>
+          <p>We reduce the price as the number of users increase. For example: 1,500 users averages out to $21/user/year.</p>
+        </div>
+      </div>
+
+      <div class="section__cta-wrapper">
+        <button class="button button--primary">
+          Talk to us
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section section--convince-boss">
+    <div class="container">
+      <div class="section__text">
+        <div class="section__text-inner">
+          <h2 class="section__headline">Convince your boss</h2>
+          <p>Not the decision maker? No problem. We'll send you a short, plain-English summary you can forward to your chief, captain, or training officer—no jargon, just the key points.</p>
+
+          <div class="section__cta-wrapper">
+            <button class="button button--primary">
+              Email me a 2-page pitch I can forward
+            </button>
+          </div>
+        </div>
+      </div>
+      <Image
+        alt="TODO"
+        class="section__feature-image"
+        height="327"
+        src={screenshotSmallImage}
+        width="600"
+      />
+    </div>
+    </div>
+  </section>
+  
+  <section class="section section--faq">
+    <div class="container">
+      <h2 class="section__headline">Frequently asked questions</h2>
+      <ul class="faq-list">
+        <details class="faq-list__item">
+          <!-- TODO: SVG -->
+          <summary class="faq-list__question"><span class="faq-list__question-text">How do you define our area?</span> <span class="faq-list__open-indicator">⌄</span></summary>
+          <div class="faq-list__answer">We'll build your training area to match your exact response zone, not a circle or zip code.</div>
+        </details>
+        <details class="faq-list__item">
+          <summary class="faq-list__question"><span class="faq-list__question-text">Can we start small and upgrade later?</span> <span class="faq-list__open-indicator">⌄</span></summary>
+          <div class="faq-list__answer">No problem, we're flexible. <button class="link">Book a call</button> and we'll sketch it out together.</div>
+        </details>
+        <details class="faq-list__item">
+          <summary class="faq-list__question"><span class="faq-list__question-text">What do you require from our IT department?</span> <span class="faq-list__open-indicator">⌄</span></summary>
+          <div class="faq-list__answer">Almost nothing. No install, no maintenance. Just tell us the zones you want included and we'll take care of the rest.</div>
+        </details>
+        <details class="faq-list__item">
+          <summary class="faq-list__question"><span class="faq-list__question-text">Is this secure?</span> <span class="faq-list__open-indicator">⌄</span></summary>
+          <div class="faq-list__answer">Yes. Your data is hosted in your own isolated, hardened cloud environment in an ISO 27001/9001 certified datacenter, with secure logins. No install, no maintenance. The frontend code is <a href="https://github.com/adam-lynch/back-of-your-hand" target="_blank">open-source</a> for transparency.</div>
+        </details>
+        <details class="faq-list__item">
+          <summary class="faq-list__question"><span class="faq-list__question-text">Other questions?</span> <span class="faq-list__open-indicator">⌄</span></summary>
+          <div class="faq-list__answer">Happy to answer them on a <button class="link">quick call</button>.</div>
+        </details>
+      </ul>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container">
+      <h2 class="section__headline">
+        Start training smarter
+      </h2>
+      <p>
+        Before versus after
+      </p>
+      <div class="section__cta-wrapper">
+        <button class="button button--primary button--large">
+          Book a 15-min demo
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section section--b2c">
+    <div class="container">
+      <h2 class="section__headline">Solo access</h2>
+      <p>We're rolling out to organizations first. Why? Team-level features deliver the largest impact, and training budgets (not your wallet) pick up the tab.</p>
+      <p>That said, a solo plan <em>is</em> on the roadmap.</p>
+      <div class="section__cta-wrapper">
+        <button class="button button--primary">Notify me when it's available</button>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section section--shaped-by">
+    <div class="container">
+      <div class="section__text">
+        <div class="section__text-inner">
+          <h2 class="section__headline">Built by me, shaped by you</h2>
+          <blockquote class="quote">
+            <p><span class="quote__mark quote__mark--start visually-hidden">"</span>What began as a Christmas gift for my dad spread by word-of-mouth until responders worldwide were running drills every day.</p>
+            <p>Custom district boundaries, drill analytics — those features started as customer calls. When your organization signs up, your feedback jumps straight to the top of the roadmap, and I'll release whatever shaves minutes off your response times.<span class="quote__mark quote__mark--end visually-hidden">"</span></p>
+            <cite>— Adam Lynch, founder.</cite>
+          </blockquote>
+        </div>
+      </div>
+      <Image
+        alt="TODO"
+        class="section__feature-image"
+        height="327"
+        src={screenshotSmallImage}
+        width="600"
+      />
+    </div>
+  </section>
+  
+  <footer class="section">
+    <div class="container">
+      <p>Footer</p>
+    </div>
+  </footer>
+</Layout>
+
+
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  
+  .button {
+    cursor: pointer;
+    text-transform: capitalize;
+    border-radius: 8px;
+  }
+
+  .link {
+    all: unset;
+    cursor: pointer;
+  }
+
+  a,
+  .link {
+    color: blue;
+    text-decoration: underline;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: min(100% - 2 * var(--spacing), var(--max-width));
+    margin-inline: auto;
+    padding-inline: var(--spacing);
+  }
+
+  .quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing);
+
+    font-size: 16px;
+    line-height: 1.25;
+    quotes: "\201C" "\201D";
+
+    p {
+      margin: 0;
+      position: relative;
+
+      .quote__mark {
+        line-height: 1;
+        font-size: 1.2em;
+      }
+
+      .quote__mark--start {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: -0.5em;
+      }
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    cite {
+      display: block;
+      margin-top: 0.85rem;
+      font-style: normal;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding-block: var(--spacing);
+  }
+
+  .header__logo {
+    font-weight: bold;
+  }
+
+  .header__qualifier {
+    font-style: italic;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    padding-block: calc(var(--spacing) * 4);
+    /* border-block: 1px solid rgba(0, 0, 0, 0.05); */
+  }
+
+  .section__headline {
+    font-size: 38px;
+    line-height: 1.15;
+    margin-bottom: calc(var(--spacing)*4);
+    align-self: center;
+  }
+
+  .section__cta-wrapper {
+    margin-top: calc(var(--spacing)*2);
+    text-align: center;
+
+    .section__text & {
+      text-align: start;
+    }
+  }
+
+  .section--hero {
+    padding-bottom: 0;
+
+    .container {
+      flex-direction: row;
+    }
+  }
+
+  .section--hero__headline {
+    font-size: 48px;
+    margin-bottom: var(--spacing);
+
+    em {
+      font-style: normal;
+      text-decoration: underline;
+      text-decoration-color: rgba(0,0,0,0.2);
+    }
+  }
+
+  .section--hero__subhead {
+    font-size: 32px;
+    margin-bottom: calc(var(--spacing) * 2);
+    line-height: 1.15;
+  }
+
+  .section--proof__quote {
+    gap: 0;
+
+    p {
+      font-size: 28px;
+    }
+
+    cite {
+      font-size: 16px;
+    }
+  }
+
+  .section--proof__stars {
+    color: rgba(0,0,0,0.2);
+    margin-inline-start: calc(var(--spacing)/2);
+  }
+
+  .section:has(.section__feature-image) {
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: calc(var(--spacing) * 2);
+    }
+    
+    .section__text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section__text-inner {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        max-width: 45ch;
+      }
+    }
+
+    .section__headline {
+      align-self: auto;
+      margin-bottom: calc(var(--spacing) * 2);
+    }
+  }
+
+  .section--benefit:nth-of-type(odd) {
+    background: rgba(0,0,0,0.03);
+  }
+
+  .section--benefit__headline {
+    font-size: 42px;
+    margin-bottom: calc(var(--spacing) * 2);
+  }
+
+  .section--benefit__support {
+    margin-top: calc(var(--spacing));
+  }
+
+  .quotes {
+    display: grid;
+    gap: calc(var(--spacing) * 4);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .quotes__quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing);
+
+    background: rgba(0,0,0,0.05);
+    padding: 1.5rem 1.75rem;
+    border-left: 4px solid gray;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+    p + p {
+      margin-top: var(--spacing);
+    }
+  }
+
+  .section--pricing_items {
+    display: grid;
+    gap: calc(var(--spacing) * 2);
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  }
+
+  .section--pricing__title {
+    margin-bottom: calc(var(--spacing)/2);
+  }
+
+  .section--faq .container {
+    align-items: center;
+  }
+  
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
+    min-width: 60vw;
+    max-width: 800px;
+    list-style: none;
+    padding: 0;
+  }
+
+  .faq-list__item {
+    border: 1px solid gray;
+    border-radius: 8px;
+
+    &:not(:first-child) {
+
+      border-top: 1px solid gray;
+    }
+  }
+
+  .faq-list__question,
+  .faq-list__answer {
+    padding: 20px;
+  }
+
+  /* TODO: hover */
+  .faq-list__question {
+    display: flex;
+    font-weight: bold;
+    user-select: none;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-list__question-text {
+    flex: 1;
+  }
+
+  .faq-list__open-indicator {
+    line-height: 1;
+
+    .faq-list__item[open] & {
+      transform: rotate(180deg);
+    }
+  }
+
+  .faq-list__answer {
+    padding-top: 0;
+
+    .faq-list__item[open] & {
+      animation: fadeIn 0.2s;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+</style>

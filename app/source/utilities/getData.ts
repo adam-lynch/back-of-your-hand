@@ -80,7 +80,11 @@ const adjustStreetDetails = (
 
   return {
     ...getNamesFromElement(targetElement),
-    isEnclosedArea: isElementAnEnclosedArea(targetElement, points),
+    isEnclosedArea: equivalentTargets.some((element) =>
+      isElementAnEnclosedArea(element, [
+        element.geometry.map(convertOverpassLatLngtoLatLng),
+      ]),
+    ),
     points,
     width,
   };

@@ -15,7 +15,7 @@ export default (element: Overpass.Element, points: LatLng[][]) => {
   }
 
   const flattenedPoints = points.flat(2);
-  const lastIndex = points.length - 1;
+  const lastIndex = flattenedPoints.length - 1;
 
   return (
     flattenedPoints[0].lat === flattenedPoints[lastIndex].lat &&

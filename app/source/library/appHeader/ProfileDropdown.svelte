@@ -83,11 +83,13 @@
   }
 
   :global(.profile-dropdown__organization-logo) {
+    height: calc(var(--profile-dropdown__line-height) * 2.2);
     max-width: calc(var(--profile-dropdown__line-height) * 2);
   }
 
   :global(.profile-dropdown__button) {
     flex: 1;
+    max-height: 100%;
   }
 
   .profile-dropdown__button-text {

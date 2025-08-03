@@ -6,13 +6,15 @@
   Tile images: network
 */
 
-const cacheName = "files-v3";
+const generalCacheName = "files-v4";
 const offlinePageUrl = "/offline";
+const tileCacheName = "tiles-v1";
+const tileMaxEntries = 5000; // first in, first out
 
 addEventListener("install", (installEvent) => {
   skipWaiting();
   installEvent.waitUntil(
-    caches.open(cacheName).then((cache) => {
+    caches.open(generalCacheName).then((cache) => {
       return cache.addAll([
         "/favicon.png",
         "/gc.js",
@@ -38,7 +40,7 @@ addEventListener("activate", (activateEvent) => {
       .then((keys) =>
         Promise.all(
           keys
-            .filter((key) => key !== cacheName)
+            .filter((key) => ![generalCacheName, tileCacheName].includes(key))
             .map((key) => caches.delete(key)),
         ),
       ),
@@ -55,33 +57,51 @@ addEventListener("fetch", (fetchEvent) => {
   }
 
   const request = fetchEvent.request;
+  const url = new URL(request.url);
   if (
     request.method !== "GET" ||
-    request.url.includes("count.backofyourhand.com") ||
-    request.url.includes("chrome-extension")
+    ["extension", "masked-url"].some((substring) =>
+      url.protocol.includes(substring),
+    ) ||
+    /(^count|backend)\.(local-backofyourhand--backend.com|backofyourhand.com|backofyourhand.pages.dev)$/.test(
+      url.hostname,
+    )
   ) {
     return;
   }
+
   fetchEvent.respondWith(
     (async function () {
+      const targetCacheName = request.url.includes("cartocdn.com")
+        ? tileCacheName
+        : generalCacheName;
+
       const responseFromFetch = fetch(request);
       if (request.headers.get("Accept").includes("text/html")) {
         try {
           const response = await responseFromFetch;
           return response;
         } catch (error) {
-          return (await caches.open(cacheName)).match(offlinePageUrl);
+          return (await caches.open(targetCacheName)).match(offlinePageUrl);
         }
       } else {
         fetchEvent.waitUntil(
           (async function () {
             const responseCopy = (await responseFromFetch).clone();
-            const myCache = await caches.open(cacheName);
+            const myCache = await caches.open(targetCacheName);
             await myCache.put(request, responseCopy);
+
+            if (targetCacheName === tileCacheName) {
+              const keys = await myCache.keys();
+              if (keys.length > tileMaxEntries) {
+                await myCache.delete(keys[0]); // FIFO delete oldest
+              }
+            }
           })(),
         );
+
         return (
-          (await (await caches.open(cacheName)).match(request)) ||
+          (await (await caches.open(targetCacheName)).match(request)) ||
           responseFromFetch
         );
       }

@@ -488,6 +488,14 @@
     map.fitBounds(resultFeatureGroup.getBounds().pad(0.1));
   }, 50);
 
+  const areaCenterAndSelection = svelteStore.derived(
+    [areaCenter, areaSelection],
+    ([$areaCenter, $areaSelection]) => ({
+      $areaCenter,
+      $areaSelection,
+    }),
+  );
+
   onMount(() => {
     const unsubscribers: (() => void)[] = [];
 
@@ -497,8 +505,8 @@
 
     // Mark the area bounds whenever the center point changes
     unsubscribers.push(
-      areaCenter.subscribe((value) => {
-        if (!value) {
+      areaCenterAndSelection.subscribe(() => {
+        if (!$areaCenter) {
           return;
         }
 
@@ -509,11 +517,11 @@
           roundNumber(
             currrentMapCenterLatLng.lat,
             numberOfDecimalPointsToConsider,
-          ) !== roundNumber(value.lat, numberOfDecimalPointsToConsider) ||
+          ) !== roundNumber($areaCenter.lat, numberOfDecimalPointsToConsider) ||
           roundNumber(
             currrentMapCenterLatLng.lng,
             numberOfDecimalPointsToConsider,
-          ) !== roundNumber(value.lng, numberOfDecimalPointsToConsider);
+          ) !== roundNumber($areaCenter.lng, numberOfDecimalPointsToConsider);
 
         if (!hasChanged) {
           map.zoomOut(1, {

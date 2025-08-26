@@ -206,11 +206,43 @@ function makeOverpassQuery({
       );
     }
 
+    /*
+      A polygon may have an outer ring and (optional) inner rings (to exclude). We use the "stitched
+      path" trick to exlude any inner rings. All rings get converted to`lat1 lng1 lat2 lng2..`, but
+      we also repeat the first (outer) vertice before and after each inner ring.
+      
+      Examples:
+      - Simple polygon: `lat1 lng1 lat2 lng2...`
+      - Polygon with two inner rings:
+          ```
+          outer-lat1 outer-lng1 outer-lat2 outer-lng2...
+          outer-lat1 outer-lng1
+          inner1-lat1 inner1-lng1 inner1-lat2 inner1-lng2...
+          outer-lat1 outer-lng1
+          inner2-lat1 inner2-lng1 inner2-lat2 inner2-lng2...
+          outer-lat1 outer-lng1
+          ```
+          Note: the newlines wouldn't actually exist
+    */
     spatialModifiers = areaSelection.feature.geometry.coordinates.map(
-      (polygonCoordinates) => {
-        const polyModifierValue = polygonCoordinates[0]
-          .map(([lng, lat]) => `${lat} ${lng}`)
-          .join(" ");
+      (polygons) => {
+        let polyModifierValue = "";
+        let firstLatLngPair: string | undefined;
+
+        for (let i = 0; i < polygons.length; i++) {
+          const latLngPairs = polygons[i].map(([lng, lat]) => `${lat} ${lng}`);
+
+          firstLatLngPair ??= latLngPairs[0];
+          if (i) {
+            latLngPairs.unshift(firstLatLngPair);
+          }
+          polyModifierValue += latLngPairs.join(" ");
+        }
+
+        if (polygons.length > 1) {
+          polyModifierValue += firstLatLngPair;
+        }
+
         return `(poly:"${polyModifierValue}")`;
       },
     );

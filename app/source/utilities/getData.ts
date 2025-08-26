@@ -225,22 +225,22 @@ function makeOverpassQuery({
           Note: the newlines wouldn't actually exist
     */
     spatialModifiers = areaSelection.feature.geometry.coordinates.map(
-      (polygons) => {
+      (rings) => {
         let polyModifierValue = "";
         let firstLatLngPair: string | undefined;
 
-        for (let i = 0; i < polygons.length; i++) {
-          const latLngPairs = polygons[i].map(([lng, lat]) => `${lat} ${lng}`);
+        for (let i = 0; i < rings.length; i++) {
+          const latLngPairs = rings[i].map(([lng, lat]) => `${lat} ${lng}`);
 
           firstLatLngPair ??= latLngPairs[0];
           if (i) {
-            latLngPairs.unshift(firstLatLngPair);
+            polyModifierValue += " " + firstLatLngPair + " ";
           }
           polyModifierValue += latLngPairs.join(" ");
         }
 
-        if (polygons.length > 1) {
-          polyModifierValue += firstLatLngPair;
+        if (rings.length > 1) {
+          polyModifierValue += " " + firstLatLngPair;
         }
 
         return `(poly:"${polyModifierValue}")`;

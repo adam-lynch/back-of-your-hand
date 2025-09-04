@@ -71,7 +71,7 @@ export type Round = JSONAPI.ResourceObject<
     extra: OptionalAttributeValue<AttributeValue>;
     questionAmount: number;
     score: number;
-    status: "abandoned" | "completed" | "ongoing";
+    status: "abandoned" | "completed" | "errored" | "ongoing";
   },
   {
     area: JSONAPI.ToOneRelationship<"optional">;

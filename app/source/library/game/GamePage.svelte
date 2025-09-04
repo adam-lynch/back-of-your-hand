@@ -238,6 +238,7 @@
             attributes: {
               questionAmount: $round.questions.length,
               score: newPotentialBestScore,
+              status: "completed",
             },
             relationships: {
               area: {

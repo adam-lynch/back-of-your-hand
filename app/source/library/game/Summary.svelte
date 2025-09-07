@@ -8,7 +8,11 @@
 -->
 
 <script lang="ts">
-  import { orderedQuestions, round, totalScore } from "../../utilities/store";
+  import {
+    orderedQuestions,
+    gameRound,
+    totalScore,
+  } from "../../utilities/store";
   import computeTotalScore from "../../utilities/computeTotalScore";
   import Button from "../forms/Button.svelte";
   export let onRestartClicked: () => void;
@@ -17,10 +21,10 @@
 
 <div class="summary">
   <h2 class="hide-accessibly">Summary</h2>
-  {#if $round && $totalScore}
+  {#if $gameRound && $totalScore}
     <p class="points-total">
-      <span>Overall score: {computeTotalScore($totalScore, $round)}%</span>
-      {#if $round.didSetNewDeviceBestScore}
+      <span>Overall score: {computeTotalScore($totalScore, $gameRound)}%</span>
+      {#if $gameRound.didSetNewDeviceBestScore}
         <span class="tada">New personal best!</span>
       {/if}
     </p>

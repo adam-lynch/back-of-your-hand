@@ -21,7 +21,7 @@
     multiplayerSessionJoinUrl,
     nextQuestion,
     numberOfQuestions,
-    round,
+    gameRound,
     seed,
     settingsLastOpenedAt,
     sidebarState,
@@ -52,7 +52,7 @@
 
   const onNextClicked = () => {
     // Activate next question
-    round.update((value) => {
+    gameRound.update((value) => {
       if (!value) {
         throw new Error("round is falsy");
       }
@@ -236,12 +236,12 @@
         </Button>
         <Button on:click={resetGame}>Back</Button>
       </div>
-    {:else if $round?.status && ["ongoing", "complete"].includes($round.status)}
+    {:else if $gameRound?.status && ["ongoing", "complete"].includes($gameRound.status)}
       <!-- Just to be safe-->
       {#if $currentQuestion}
         <p
           ><span class="question-index"
-            >{$currentQuestion.index + 1} / {$round.questions.length}</span
+            >{$currentQuestion.index + 1} / {$gameRound.questions.length}</span
           > Find the following:</p
         >
         <div class="street-sign-wrapper">
@@ -322,7 +322,7 @@
           {/if}
         {/if}
       </div>
-    {:else if !$round}
+    {:else if !$gameRound}
       <!-- No summary shown, no active round -->
       <p>
         How well do you know your area? Test your knowledge by locating streets.

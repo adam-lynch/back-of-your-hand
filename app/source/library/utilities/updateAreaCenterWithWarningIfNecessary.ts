@@ -13,7 +13,7 @@ import {
   areaSelection,
   didOpenMultiplayerSessionUrl,
   interactionVerb,
-  round,
+  gameRound,
 } from "../../utilities/store";
 import type { LatLng } from "../game/types";
 import trackEvent from "../../utilities/trackEvent";
@@ -27,7 +27,7 @@ export default function updateAreaCenterWithWarningIfNecessary(
   latLng: LatLng,
   wasCausedByMapClick: boolean,
 ) {
-  if (svelteStore.get(round)) {
+  if (svelteStore.get(gameRound)) {
     return;
   }
 

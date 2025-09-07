@@ -17,7 +17,7 @@
   import drawTarget from "../../utilities/drawTarget";
   import getNearestPointOnPolyLine from "../../utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "../../utilities/getViewportWidth";
-  import { type Question, type Round } from "./types";
+  import type { GameRound, Question } from "./types";
   import delay from "../../utilities/delay";
   import capLng from "../../utilities/capLng";
   import roundNumber from "../../utilities/roundNumber";
@@ -38,7 +38,7 @@
     isAreaConfirmed,
     isChosenPointConfirmed,
     ongoingZoomCount,
-    round,
+    gameRound,
     sidebarState,
   } from "../../utilities/store";
   import { isOrganizationUrl } from "../../userData/store";
@@ -292,12 +292,12 @@
       score,
       status: "complete",
     };
-    round.update((value) => {
+    gameRound.update((value) => {
       if (!value) {
         throw new Error("round is falsy");
       }
 
-      const result: Round = {
+      const result: GameRound = {
         ...value,
         questions: value.questions.map((question) => {
           if (question === $currentQuestion) {
@@ -452,7 +452,7 @@
 
   // Draw all streets on the map, etc.
   const showSummary = debounce(() => {
-    if (!$round) {
+    if (!$gameRound) {
       throw new Error("No round");
     }
     chosenPoint.set(null);
@@ -460,7 +460,7 @@
 
     resultFeatureGroup = leaflet.featureGroup().addTo(map);
 
-    $round.questions.forEach((question) => {
+    $gameRound.questions.forEach((question) => {
       const { targetLayer } = drawTarget({
         color: "#ff2882",
         layer: resultFeatureGroup as NonNullable<typeof resultFeatureGroup>,

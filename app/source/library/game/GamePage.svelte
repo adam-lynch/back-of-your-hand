@@ -9,7 +9,6 @@
 
 <script lang="ts">
   import debounce from "lodash/debounce";
-  import throttle from "lodash/throttle";
   import { onMount } from "svelte";
   import * as svelteStore from "svelte/store";
 
@@ -34,12 +33,13 @@
     isChosenPointConfirmed,
     nextQuestion,
     numberOfQuestions,
-    round,
+    gameRound,
+    gameRoundStatus,
     sidebarState,
     totalScore,
   } from "../../utilities/store";
   import loadRound from "../../utilities/loadRound";
-  import type { LatLng } from "./types";
+  import type { GameRound, LatLng } from "./types";
   import trackEvent from "../../utilities/trackEvent";
   import { defineCustomElements } from "../customElements";
   import { navigate } from "svelte-routing";
@@ -94,7 +94,7 @@
     chosenPoint.set(null);
     isChosenPointConfirmed.set(false);
     isAreaConfirmed.set(false);
-    round.set(null);
+    gameRound.set(null);
     didOpenMultiplayerSessionUrl.set(false);
     sidebarState.set("default");
   }
@@ -164,6 +164,7 @@
           isOrganizationUrl: svelteStore.get(isOrganizationUrl),
           numberOfQuestions: svelteStore.get(numberOfQuestions),
           radius: svelteStore.get(areaRadius),
+          userOrganization: svelteStore.get(userOrganization),
         });
 
         ignoreError(() => {
@@ -192,81 +193,24 @@
           value &&
           value.status === "complete" &&
           !$nextQuestion &&
-          $round &&
-          $round.status !== "complete"
+          $gameRound &&
+          $gameRound.status !== "completed"
         ) {
-          round.update((value) => {
+          gameRound.update((value) => {
             if (!value) {
               throw new Error("round is falsy");
             }
             return {
               ...value,
-              status: "complete",
+              status: $gameRound.status,
             };
           });
         }
       }),
     );
 
-    const onRoundCompleted = throttle(
-      async () => {
-        if (!$round) {
-          throw new Error("round is falsy");
-        }
-        if ($totalScore === null) {
-          throw new Error("totalScore is undefined");
-        }
-        const newPotentialBestScore = computeTotalScore($totalScore, $round);
-        if (newPotentialBestScore > ($deviceBestScore ?? 0)) {
-          deviceBestScore.set(newPotentialBestScore);
-          round.update((value) => {
-            if (!value) {
-              throw new Error("round is falsy");
-            }
-            return {
-              ...value,
-              didSetNewDeviceBestScore: true,
-            };
-          });
-        }
-
-        if ($isOrganizationUrl) {
-          if (!$userOrganization) {
-            throw new Error("No userOrganization");
-          }
-          await api.postResource<Round>({
-            attributes: {
-              questionAmount: $round.questions.length,
-              score: newPotentialBestScore,
-              status: "completed",
-            },
-            relationships: {
-              area: {
-                data: $areaSelection.areaId
-                  ? {
-                      id: $areaSelection.areaId,
-                      type: "area",
-                    }
-                  : null,
-              },
-              userorganization: {
-                data: {
-                  id: $userOrganization.id,
-                  type: "userOrganization",
-                },
-              },
-            },
-            type: "round",
-          });
-        }
-      },
-      300,
-      { leading: true, trailing: false },
-    );
-
-    // Do some stuff when the round is updated
     unsubscribers.push(
-      round.subscribe(async (value) => {
+      gameRound.subscribe(async (value) => {
         if (!value) {
           return;
         }
@@ -278,11 +222,71 @@
           // @ts-expect-error ...
           lastSeenSeed = value.seed;
         }
+      }),
+    );
 
-        // Once the round ends, see if a new personal best was set
-        if (value.status === "complete") {
-          await onRoundCompleted();
+    let lastSeenRoundStatus: GameRound["status"] | null = null;
+    unsubscribers.push(
+      gameRoundStatus.subscribe(async (value) => {
+        if (Boolean(value) !== Boolean($gameRound)) {
+          throw new Error("gameRoundStatus and $gameRound out of sync");
         }
+
+        /**
+         * Handle when the round ends in any way. PATCH the round in the backend (if applicable.)
+         * The `ongoing` / new round creation case (POST) is not handled here, see loadRound.
+         */
+        if (value !== "ongoing" && lastSeenRoundStatus === "ongoing") {
+          const roundAttributeUpdates: Partial<Round["attributes"]> = {};
+          if (!$gameRound) {
+            throw new Error("round is falsy");
+          }
+
+          if (value === "completed") {
+            if ($totalScore === null) {
+              throw new Error("totalScore is undefined");
+            }
+
+            roundAttributeUpdates.score = computeTotalScore(
+              $totalScore,
+              $gameRound,
+            );
+            roundAttributeUpdates.status = "completed";
+
+            // New device best score?
+            if (roundAttributeUpdates.score > ($deviceBestScore ?? 0)) {
+              deviceBestScore.set(roundAttributeUpdates.score);
+              gameRound.update((value) => {
+                if (!value) {
+                  throw new Error("round is falsy");
+                }
+                return {
+                  ...value,
+                  didSetNewDeviceBestScore: true,
+                };
+              });
+            }
+          } else if (value === "errored") {
+            // TODO: make it so this path is reached. From my testing, an error immediately causes the fatal error screen to show
+            roundAttributeUpdates.status = "errored";
+          } else {
+            // TODO: make it so this path is reached. From my testing, a navigation to another page does not trigger this
+            roundAttributeUpdates.status = "abandoned";
+          }
+
+          if ($isOrganizationUrl) {
+            if ($gameRound.id === "local-only") {
+              throw new Error("Round ID is 'local-only'");
+            }
+            await api.patchResource<Round>({
+              attributes: roundAttributeUpdates,
+              id: $gameRound.id,
+              type: "round",
+            });
+          }
+        }
+
+        lastSeenRoundStatus = value;
       }),
     );
 

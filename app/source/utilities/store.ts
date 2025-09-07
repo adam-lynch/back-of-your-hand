@@ -16,7 +16,7 @@ import getSeed from "./getSeed";
 import ignoreError from "./ignoreError";
 import isTouchDevice from "./isTouchDevice";
 import { Difficulty } from "../library/game/types";
-import type { LatLng, Round } from "../library/game/types";
+import type { GameRound, LatLng } from "../library/game/types";
 import { PresetAreaShape } from "../library/game/types";
 import createFeatureFromPresetAreaShape from "./createFeatureFromPresetAreaShape";
 import convertLatLngToPosition from "./convertLatLngToPosition";
@@ -178,7 +178,11 @@ subscribeIfNotDeepEqual(areaSelection, (value) => {
   setWritableIfDifferent(areaShape, value.presetShape);
 });
 
-export const round = writable<Round | null>(null);
+export const gameRound = writable<GameRound | null>(null);
+export const gameRoundStatus = derived(
+  [gameRound],
+  ([$gameRound]) => $gameRound?.status ?? null,
+);
 export const seed = writable<string>(
   (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed(),
 );
@@ -213,7 +217,7 @@ export const multiplayerSessionJoinUrl = derived(
   },
 );
 
-export const orderedQuestions = derived(round, ($value) => {
+export const orderedQuestions = derived(gameRound, ($value) => {
   if (!$value || !$value.questions || !$value.questions.length) {
     return null;
   }
@@ -247,7 +251,7 @@ export const nextQuestion = derived(orderedQuestions, ($value) => {
   return $value.find(({ status }) => status === "pending");
 });
 
-export const totalScore = derived(round, ($value) => {
+export const totalScore = derived(gameRound, ($value) => {
   if (!$value) {
     return null;
   }

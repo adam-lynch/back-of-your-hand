@@ -7,8 +7,8 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import type { Round } from "../library/game/types";
+import type { GameRound } from "../library/game/types";
 
-export default (total: number, round: Round): number => {
+export default (total: number, round: GameRound): number => {
   return total > 0 ? Math.round(total / round.questions.length) : 0;
 };

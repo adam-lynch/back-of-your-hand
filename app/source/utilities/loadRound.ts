@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { get } from "svelte/store";
+import * as svelteStore from "svelte/store";
 
 import delay from "./delay";
 import getData from "./getData";
@@ -15,11 +15,13 @@ import getRandomNumberGenerator from "./getRandomNumberGenerator";
 import {
   isAreaConfirmed,
   isLoading,
-  round,
+  gameRound,
   seed,
   type AreaSelection,
 } from "./store";
 import { Difficulty } from "../library/game/types";
+import api from "../api";
+import type { Round, UserOrganization } from "../api/resourceObjects";
 
 let getRandomNumber: ReturnType<typeof getRandomNumberGenerator>;
 export default async ({
@@ -27,17 +29,19 @@ export default async ({
   difficulty,
   isOrganizationUrl,
   numberOfQuestions,
+  userOrganization,
 }: {
   areaSelection: AreaSelection;
   difficulty: Difficulty;
   isOrganizationUrl: boolean;
   numberOfQuestions: number;
   radius: number;
+  userOrganization: UserOrganization | null;
 }) => {
   isLoading.set(true);
 
   if (!getRandomNumber) {
-    getRandomNumber = getRandomNumberGenerator(get(seed));
+    getRandomNumber = getRandomNumberGenerator(svelteStore.get(seed));
   }
   const targets = await getData({
     areaSelection,
@@ -73,7 +77,43 @@ export default async ({
     return;
   }
 
-  round.set({
+  let roundId = "local-only";
+
+  if (isOrganizationUrl) {
+    if (!userOrganization) {
+      throw new Error("No userOrganization");
+    }
+
+    const newRound = await api.postResource<Round>({
+      attributes: {
+        questionAmount: numberOfQuestions,
+        score: 0,
+        status: "ongoing",
+      },
+      relationships: {
+        area: {
+          data: areaSelection.areaId
+            ? {
+                id: areaSelection.areaId,
+                type: "area",
+              }
+            : null,
+        },
+        userorganization: {
+          data: {
+            id: userOrganization.id,
+            type: "userOrganization",
+          },
+        },
+      },
+      type: "round",
+    });
+
+    roundId = newRound.data.id;
+  }
+
+  gameRound.set({
+    id: roundId,
     questions: targets.map((target, index) => ({
       target,
       index,

@@ -17,7 +17,7 @@ export default function subscribeIfNotDeepEqual<T>(
 ) {
   let oldValue: T;
 
-  store.subscribe((newValue) => {
+  return store.subscribe((newValue) => {
     if (!isEqual(oldValue, newValue)) {
       if (debugName) {
         console.debug(`[${debugName}] changed`, oldValue, newValue);

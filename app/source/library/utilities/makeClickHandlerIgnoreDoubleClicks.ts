@@ -7,7 +7,7 @@
  * Copyright © 2025 Adam Lynch (https://adamlynch.com)
  */
 
-import { throttle } from "lodash";
+import throttle from "lodash/throttle";
 
 export default function makeClickHandlerIgnoreDoubleClicks(
   clickHandler: (event: CustomEvent) => unknown,

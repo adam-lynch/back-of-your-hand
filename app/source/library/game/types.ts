@@ -7,6 +7,8 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
+import type { Round } from "../../api/resourceObjects";
+
 export type LatLng = {
   lat: number;
   lng: number;
@@ -36,13 +38,12 @@ export type Question = {
   };
 };
 
-// TODO: maybe rename because now there is an API model (and associated TS type) called Round
-export type Round = {
-  didSetNewDeviceBestScore?: boolean;
-  // I couldn't think of a better name
-  questions: Question[];
-  status: "error" | "ongoing" | "complete";
-};
+export type GameRound = Pick<Round, "id"> &
+  Pick<Round["attributes"], "status"> & {
+    didSetNewDeviceBestScore?: boolean;
+    // I couldn't think of a better name
+    questions: Question[];
+  };
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Overpass {

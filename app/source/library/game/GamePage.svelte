@@ -191,6 +191,7 @@
     // To be safe, complete the round when the final question is complete
     unsubscribers.push(
       currentQuestion.subscribe((value) => {
+        console.debug("currentQuestion subscribe", value);
         if (
           value &&
           value.status === "complete" &&
@@ -198,6 +199,7 @@
           $gameRoundStatus &&
           $gameRoundStatus !== "completed"
         ) {
+          console.debug("currentQuestion subscribe updating gameRound", value);
           gameRound.update((value) => {
             if (!value) {
               throw new Error("round is falsy");
@@ -213,6 +215,7 @@
 
     unsubscribers.push(
       gameRound.subscribe((value) => {
+        console.debug("gameRound subscribe", value);
         if (!value) {
           return;
         }
@@ -230,6 +233,7 @@
     let lastSeenRoundStatus: GameRound["status"] | null = null;
     unsubscribers.push(
       gameRoundStatus.subscribe((value) => {
+        console.debug("gameRoundStatus subscribe", value);
         const previousValue = lastSeenRoundStatus;
         lastSeenRoundStatus = value;
         const gameRoundValue = svelteStore.get(gameRound);

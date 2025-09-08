@@ -151,7 +151,9 @@
     [userFilterSelectedOption],
     ([$userFilterSelectedOption]) =>
       (options: FetchResourceListOptions) => {
-        const filterOptions: Record<string, string> = {};
+        const filterOptions: Record<string, string> = {
+          status: "completed",
+        };
 
         if ($areaFilterSelectedOption !== "all") {
           filterOptions["area.id"] = $areaFilterSelectedOption;

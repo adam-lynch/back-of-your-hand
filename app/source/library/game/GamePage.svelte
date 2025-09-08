@@ -212,7 +212,7 @@
     );
 
     unsubscribers.push(
-      gameRound.subscribe(async (value) => {
+      gameRound.subscribe((value) => {
         if (!value) {
           return;
         }
@@ -230,7 +230,10 @@
     let lastSeenRoundStatus: GameRound["status"] | null = null;
     unsubscribers.push(
       gameRoundStatus.subscribe(async (value) => {
-        if (Boolean(value) !== Boolean($gameRound)) {
+        const previousValue = lastSeenRoundStatus;
+        lastSeenRoundStatus = value;
+        const gameRoundValue = svelteStore.get(gameRound);
+        if (Boolean(value) !== Boolean(gameRoundValue)) {
           throw new Error("gameRoundStatus and $gameRound out of sync");
         }
 
@@ -238,25 +241,26 @@
          * Handle when the round ends in any way. PATCH the round in the backend (if applicable.)
          * The `ongoing` / new round creation case (POST) is not handled here, see loadRound.
          */
-        if (value !== "ongoing" && lastSeenRoundStatus === "ongoing") {
+        if (value !== "ongoing" && previousValue === "ongoing") {
           const roundAttributeUpdates: Partial<Round["attributes"]> = {};
-          if (!$gameRound) {
+          if (!gameRoundValue) {
             throw new Error("round is falsy");
           }
 
           if (value === "completed") {
-            if ($totalScore === null) {
+            const totalScoreValue = svelteStore.get(totalScore);
+            if (totalScoreValue === null) {
               throw new Error("totalScore is undefined");
             }
 
             roundAttributeUpdates.score = computeTotalScore(
-              $totalScore,
-              $gameRound,
+              totalScoreValue,
+              gameRoundValue,
             );
             roundAttributeUpdates.status = "completed";
 
             // New device best score?
-            if (roundAttributeUpdates.score > ($deviceBestScore ?? 0)) {
+            if (roundAttributeUpdates.score > (svelteStore.get(deviceBestScore) ?? 0)) {
               deviceBestScore.set(roundAttributeUpdates.score);
               gameRound.update((value) => {
                 if (!value) {
@@ -276,19 +280,17 @@
             roundAttributeUpdates.status = "abandoned";
           }
 
-          if ($isOrganizationUrl) {
-            if ($gameRound.id === "local-only") {
+          if (svelteStore.get(isOrganizationUrl)) {
+            if (gameRoundValue.id === "local-only") {
               throw new Error("Round ID is 'local-only'");
             }
             await api.patchResource<Round>({
               attributes: roundAttributeUpdates,
-              id: $gameRound.id,
+              id: gameRoundValue.id,
               type: "round",
             });
           }
         }
-
-        lastSeenRoundStatus = value;
       }),
     );
 

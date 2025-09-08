@@ -236,7 +236,7 @@
         </Button>
         <Button on:click={resetGame}>Back</Button>
       </div>
-    {:else if $gameRound?.status && ["ongoing", "complete"].includes($gameRound.status)}
+    {:else if $gameRound?.status && ["ongoing", "completed"].includes($gameRound.status)}
       <!-- Just to be safe-->
       {#if $currentQuestion}
         <p

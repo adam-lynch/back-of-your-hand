@@ -38,6 +38,13 @@ export default async ({
   radius: number;
   userOrganization: UserOrganization | null;
 }) => {
+  console.debug("loadRound", {
+    areaSelection,
+    difficulty,
+    isOrganizationUrl,
+    numberOfQuestions,
+    userOrganization,
+  });
   isLoading.set(true);
 
   if (!getRandomNumber) {

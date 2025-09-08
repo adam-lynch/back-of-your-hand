@@ -100,6 +100,8 @@
   }
 
   onMount(() => {
+    console.debug("GamePage: onMount");
+    debugger;
     const unsubscribers: svelteStore.Unsubscriber[] = [];
 
     // Update the URL path when the area center changes
@@ -193,8 +195,8 @@
           value &&
           value.status === "complete" &&
           !$nextQuestion &&
-          $gameRound &&
-          $gameRound.status !== "completed"
+          $gameRoundStatus &&
+          $gameRoundStatus !== "completed"
         ) {
           gameRound.update((value) => {
             if (!value) {
@@ -202,7 +204,7 @@
             }
             return {
               ...value,
-              status: $gameRound.status,
+              status: $gameRoundStatus,
             };
           });
         }

@@ -54,6 +54,7 @@
   import api from "../../api";
   import type { Round } from "../../api/resourceObjects";
   import MapWrapper from "./MapWrapper.svelte";
+    import subscribeIfNotDeepEqual from "../utilities/subscribeIfNotDeepEqual";
 
   export let unhandledError: Error | null = null;
 
@@ -190,7 +191,7 @@
 
     // To be safe, complete the round when the final question is complete
     unsubscribers.push(
-      currentQuestion.subscribe((value) => {
+      subscribeIfNotDeepEqual(currentQuestion, (value) => {
         console.debug("currentQuestion subscribe", value);
         if (
           value &&
@@ -214,7 +215,7 @@
     );
 
     unsubscribers.push(
-      gameRound.subscribe((value) => {
+      subscribeIfNotDeepEqual(gameRound, (value) => {
         console.debug("gameRound subscribe", value);
         if (!value) {
           return;

@@ -153,7 +153,7 @@
 
     // Load round of streets once area is confirmed
     unsubscribers.push(
-      isAreaConfirmed.subscribe(async (isConfirmed) => {
+      isAreaConfirmed.subscribe((isConfirmed) => {
         if (!isConfirmed) {
           return;
         }
@@ -229,7 +229,7 @@
 
     let lastSeenRoundStatus: GameRound["status"] | null = null;
     unsubscribers.push(
-      gameRoundStatus.subscribe(async (value) => {
+      gameRoundStatus.subscribe((value) => {
         const previousValue = lastSeenRoundStatus;
         lastSeenRoundStatus = value;
         const gameRoundValue = svelteStore.get(gameRound);
@@ -284,7 +284,7 @@
             if (gameRoundValue.id === "local-only") {
               throw new Error("Round ID is 'local-only'");
             }
-            await api.patchResource<Round>({
+            api.patchResource<Round>({
               attributes: roundAttributeUpdates,
               id: gameRoundValue.id,
               type: "round",

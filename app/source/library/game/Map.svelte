@@ -292,7 +292,6 @@
       score,
       status: "complete",
     };
-    console.debug("onChosenPointConfirmed: updating gameRound")
     gameRound.update((value) => {
       if (!value) {
         throw new Error("round is falsy");

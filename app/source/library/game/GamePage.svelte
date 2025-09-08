@@ -54,7 +54,7 @@
   import api from "../../api";
   import type { Round } from "../../api/resourceObjects";
   import MapWrapper from "./MapWrapper.svelte";
-    import subscribeIfNotDeepEqual from "../utilities/subscribeIfNotDeepEqual";
+  import subscribeIfNotDeepEqual from "../utilities/subscribeIfNotDeepEqual";
 
   export let unhandledError: Error | null = null;
 
@@ -101,8 +101,6 @@
   }
 
   onMount(() => {
-    console.debug("GamePage: onMount");
-    debugger;
     const unsubscribers: svelteStore.Unsubscriber[] = [];
 
     // Update the URL path when the area center changes
@@ -192,7 +190,6 @@
     // To be safe, complete the round when the final question is complete
     unsubscribers.push(
       subscribeIfNotDeepEqual(currentQuestion, (value) => {
-        console.debug("currentQuestion subscribe", value);
         if (
           value &&
           value.status === "complete" &&
@@ -200,7 +197,6 @@
           $gameRound &&
           $gameRound.status !== "completed"
         ) {
-          console.debug("currentQuestion subscribe updating gameRound", value);
           gameRound.update((value) => {
             if (!value) {
               throw new Error("round is falsy");
@@ -216,7 +212,6 @@
 
     unsubscribers.push(
       subscribeIfNotDeepEqual(gameRound, (value) => {
-        console.debug("gameRound subscribe", value);
         if (!value) {
           return;
         }
@@ -234,7 +229,6 @@
     let lastSeenRoundStatus: GameRound["status"] | null = null;
     unsubscribers.push(
       gameRoundStatus.subscribe((value) => {
-        console.debug("gameRoundStatus subscribe", value);
         const previousValue = lastSeenRoundStatus;
         lastSeenRoundStatus = value;
         const gameRoundValue = svelteStore.get(gameRound);
@@ -265,7 +259,10 @@
             roundAttributeUpdates.status = "completed";
 
             // New device best score?
-            if (roundAttributeUpdates.score > (svelteStore.get(deviceBestScore) ?? 0)) {
+            if (
+              roundAttributeUpdates.score >
+              (svelteStore.get(deviceBestScore) ?? 0)
+            ) {
               deviceBestScore.set(roundAttributeUpdates.score);
               gameRound.update((value) => {
                 if (!value) {

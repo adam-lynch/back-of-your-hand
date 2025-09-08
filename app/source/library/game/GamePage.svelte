@@ -197,8 +197,8 @@
           value &&
           value.status === "complete" &&
           !$nextQuestion &&
-          $gameRoundStatus &&
-          $gameRoundStatus !== "completed"
+          $gameRound &&
+          $gameRound.status !== "completed"
         ) {
           console.debug("currentQuestion subscribe updating gameRound", value);
           gameRound.update((value) => {
@@ -207,7 +207,7 @@
             }
             return {
               ...value,
-              status: $gameRoundStatus,
+              status: "completed",
             };
           });
         }

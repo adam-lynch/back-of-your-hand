@@ -8,7 +8,7 @@
 
 const generalCacheName = "files-v4";
 const offlinePageUrl = "/offline";
-const tileCacheName = "tiles-v1";
+const tileCacheName = "tiles-v2";
 const tileMaxEntries = 5000; // first in, first out
 
 addEventListener("install", (installEvent) => {

@@ -19,15 +19,31 @@
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import requestApi from "../api/requestApi";
   import trackEvent from "../utilities/trackEvent";
+  import SelectInput from "./forms/SelectInput.svelte";
+
+  const userCountOptions = [
+    "Just me",
+    "2-4",
+    "5-20",
+    "20-50",
+    "50-100",
+    "100-200",
+    "200+",
+  ].map((label) => ({
+    label,
+    value: label,
+  }));
 
   let email = "";
   let name = "";
   let organization = "";
+  let userCount = userCountOptions[0].value;
 
   function onFormReset() {
     email = "";
     name = "";
     organization = "";
+    userCount = userCountOptions[0].value;
   }
 
   const handleOnSubmit = async () => {
@@ -41,6 +57,7 @@
           userAgent: navigator.userAgent,
           userAgentData:
             "userAgentData" in navigator ? navigator.userAgentData : null,
+          userCount,
         },
         isNotJSONAPI: true,
         method: "POST",
@@ -80,6 +97,7 @@
     email: commonSchema.email().label("Email").required(),
     name: yup.string().label("Name").required(),
     organization: yup.string().label("Department / organization").required(),
+    userCount: yup.string().label("Person count").required(),
   })}
   onSubmit={handleOnSubmit}
   title="Train on your real response area"
@@ -185,6 +203,29 @@
         required
         {theme}
         type="text"
+      />
+    </Field>
+
+    <Field
+      {form}
+      labelText="How many people is this for? (Roughly)"
+      name="userCount"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <SelectInput
+        aria-describedby={ariaDescribedby}
+        bind:value={userCount}
+        class={_class}
+        {id}
+        name={_name}
+        options={userCountOptions}
+        required
+        {theme}
       />
     </Field>
 

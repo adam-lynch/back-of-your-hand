@@ -50,7 +50,7 @@
 </script>
 
 <MultiFieldFormModal
-  description="NOTE: invite emails can take up to a day or two to arrive. There is a manual step involved."
+  description="NOTE: invite emails can take up to a day to arrive."
   schema={yup.object({
     email: commonSchema.email().label("Email"),
     jobTitle: yup.string().label("jobTitle"),

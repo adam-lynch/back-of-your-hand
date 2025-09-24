@@ -21,6 +21,11 @@
   import ErrorMessages from "./forms/ErrorMessages.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import requestApi from "../api/requestApi";
+  import { organization } from "../userData/store";
+  import type {
+    OmitTimestampedResourceAttributes,
+    UserOrganization,
+  } from "../api/resourceObjects";
 
   let email = "";
   let jobTitle = "";
@@ -34,14 +39,39 @@
   const selectedRole = writable<"standard" | "admin">("standard");
 
   const handleOnSubmit = async () => {
-    await requestApi("userorganizations/request_invite", {
-      body: {
-        email,
+    if (!$organization) {
+      throw new Error("No organization");
+    }
+
+    const userOrganization: Omit<
+      OmitTimestampedResourceAttributes<UserOrganization>,
+      "id"
+    > = {
+      attributes: {
+        inviteUserEmail: email,
+        inviteUserFirstName: name,
+        inviteUserLastName: name,
         jobTitle,
-        name,
         role: $selectedRole,
       },
-      isNotJSONAPI: true,
+      relationships: {
+        organization: {
+          data: {
+            id: $organization.id,
+            type: "organization",
+          },
+        },
+        user: {
+          data: null,
+        },
+      },
+      type: "userOrganization",
+    };
+
+    await requestApi("userorganizations/actions/invite", {
+      body: {
+        data: userOrganization,
+      },
       method: "POST",
     });
 

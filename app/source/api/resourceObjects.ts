@@ -100,6 +100,6 @@ export type UserOrganization = JSONAPI.ResourceObject<
   },
   {
     organization: JSONAPI.ToOneRelationship;
-    user: JSONAPI.ToOneRelationship;
+    user: JSONAPI.ToOneRelationship<"optional">;
   }
 >;

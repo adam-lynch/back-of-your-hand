@@ -36,6 +36,7 @@ export default async function fetchUserOrganizations({
     if (!userOrganization.relationships) {
       throw new Error("userOrganization has no relationships");
     }
+    // TODO: user might not exist?
     const userId = userOrganization.relationships.user.data.id;
     const user = pickFromIncluded<User>(
       result,

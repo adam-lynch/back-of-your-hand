@@ -59,7 +59,6 @@
             "userAgentData" in navigator ? navigator.userAgentData : null,
           userCount,
         },
-        isNotJSONAPI: true,
         method: "POST",
         urlPrefix: "open",
       });

@@ -25,7 +25,6 @@
   import { areas } from "../userData/store";
   import { derived, writable } from "svelte/store";
   import { onMount } from "svelte";
-  import userOrganizationsSort from "./utilities/userOrganizationsSort";
   import makeDateRange from "../utilities/makeDateRange";
   import { pickFromIncluded } from "../api/pickFromResponse";
   import isNotEmpty from "../utilities/isNotEmpty";
@@ -79,7 +78,6 @@
         page: {
           size: 500,
         },
-        sort: userOrganizationsSort,
       },
     );
     users.set(
@@ -89,6 +87,7 @@
             result,
             (includedItem) =>
               includedItem.type === "user" &&
+              // TODO: user might not exist?
               includedItem.id === userOrganization.relationships?.user.data.id,
           ),
         )

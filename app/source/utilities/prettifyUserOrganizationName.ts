@@ -26,7 +26,9 @@ export default function prettifyUserOrganizationName(
   } else if (user) {
     customTitlePieces.push(user.attributes.firstName, user.attributes.lastName);
   } else {
-    // TODO
+    throw new Error(
+      "UserOrganization.inviteStatus is 'accepted' but it has no user",
+    );
   }
   return customTitlePieces.join(" ");
 }

@@ -170,7 +170,6 @@
           filterOptions["area.id"] = $areaFilterSelectedOption;
         }
         if ($userFilterSelectedOption !== "all") {
-          // TODO: test
           filterOptions["userorganization.id"] = $userFilterSelectedOption;
         }
         const dateRange = makeDateRange($dateFilterSelectedOption);

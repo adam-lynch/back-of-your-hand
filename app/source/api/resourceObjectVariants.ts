@@ -17,10 +17,3 @@ export type AcceptedUserOrganization = UserOrganization & {
     user: NonNullable<NonNullable<UserOrganization["relationships"]>["user"]>;
   };
 };
-
-// TODO: delte if not used
-export function isAcceptedUserOrganization(
-  input: UserOrganization,
-): input is AcceptedUserOrganization {
-  return input.attributes.inviteStatus === "accepted";
-}

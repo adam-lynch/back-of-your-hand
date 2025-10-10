@@ -117,8 +117,13 @@
           required: true,
           type: "email",
         }}
-        writable={userStore}
-        writableSelector={"attributes.email"}
+        writable={$userOrganizationStore.attributes.inviteStatus === "accepted"
+          ? userStore
+          : userOrganizationStore}
+        writableSelector={$userOrganizationStore.attributes.inviteStatus ===
+        "accepted"
+          ? "attributes.email"
+          : "attributes.inviteUserEmail"}
       />
       <AutoSavingTextField
         fieldProps={{
@@ -131,8 +136,13 @@
           autocomplete: "given-name",
           required: true,
         }}
-        writable={userStore}
-        writableSelector={"attributes.firstName"}
+        writable={$userOrganizationStore.attributes.inviteStatus === "accepted"
+          ? userStore
+          : userOrganizationStore}
+        writableSelector={$userOrganizationStore.attributes.inviteStatus ===
+        "accepted"
+          ? "attributes.firstName"
+          : "attributes.inviteUserFirstName"}
       />
       <AutoSavingTextField
         fieldProps={{
@@ -144,8 +154,13 @@
           autocomplete: "surname",
           required: true,
         }}
-        writable={userStore}
-        writableSelector={"attributes.lastName"}
+        writable={$userOrganizationStore.attributes.inviteStatus === "accepted"
+          ? userStore
+          : userOrganizationStore}
+        writableSelector={$userOrganizationStore.attributes.inviteStatus ===
+        "accepted"
+          ? "attributes.lastName"
+          : "attributes.inviteUserLastName"}
       />
       <AutoSavingTextField
         fieldProps={{

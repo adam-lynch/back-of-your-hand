@@ -181,6 +181,9 @@
                 castRowData(rowData),
                 castRowData(rowData).relationships.user.data,
               )}
+              {#if castRowData(rowData).attributes.inviteStatus !== "accepted"}
+                ({castRowData(rowData).attributes.inviteStatus})
+              {/if}
             </Link>
           </p>
           <p class="users__email"

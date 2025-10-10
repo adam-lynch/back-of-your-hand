@@ -95,10 +95,10 @@ export type User = JSONAPI.ResourceObject<
 export type UserOrganization = JSONAPI.ResourceObject<
   "userOrganization",
   TimestampedResourceAttributes & {
+    inviteStatus: "accepted" | "invited" | "uninvited";
     inviteUserEmail: string;
     inviteUserFirstName: string;
     inviteUserLastName: string;
-    inviteStatus: "accepted" | "invited" | "unvited";
     jobTitle: OptionalAttributeValue<string>;
     role: "admin" | "standard";
   },

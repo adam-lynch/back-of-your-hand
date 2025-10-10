@@ -80,6 +80,9 @@
     const result = await api.fetchResourceList<UserOrganization>(
       "userOrganization",
       {
+        filter: {
+          invite_status: "accepted",
+        },
         include: ["user"],
         page: {
           size: 500,

@@ -66,7 +66,13 @@
       if (internalRouteId === "profile" || !$userOrganization || !$user) {
         return null;
       }
-      return prettifyUserOrganizationName($userOrganization, $user);
+
+      let result = prettifyUserOrganizationName($userOrganization, $user);
+      if ($userOrganization.attributes.inviteStatus !== "accepted") {
+        result += ` (${$userOrganization.attributes.inviteStatus})`;
+      }
+
+      return result;
     },
   );
 

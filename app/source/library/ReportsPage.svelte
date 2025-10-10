@@ -13,7 +13,7 @@
   import ResourceListInfiniteScrollTable from "./ResourceListInfiniteScrollTable.svelte";
   import prettifyDate from "./utilities/prettifyDate";
   import makePercentage from "./utilities/makePercentage";
-  import prettifyUserName from "../utilities/prettifyUserName";
+  import prettifyUserOrganizationName from "../utilities/prettifyUserOrganizationName";
   import api, { type FetchResourceListOptions } from "../api";
   import type {
     Area,
@@ -28,6 +28,7 @@
   import makeDateRange from "../utilities/makeDateRange";
   import { pickFromIncluded } from "../api/pickFromResponse";
   import isNotEmpty from "../utilities/isNotEmpty";
+  import { type AcceptedUserOrganization } from "../api/resourceObjectVariants";
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const castRowData = (input: any) =>
@@ -37,7 +38,7 @@
           data: Area;
         };
         userorganization: {
-          data: {
+          data: AcceptedUserOrganization & {
             relationships: {
               user: {
                 data: User;
@@ -69,7 +70,12 @@
   });
   const areaFilterSelectedOption = writable($areaFilterOptions[0].value);
 
-  const users = writable<User[]>([]);
+  const userItems = writable<
+    {
+      user: User | undefined;
+      userOrganization: UserOrganization;
+    }[]
+  >([]);
   onMount(async () => {
     const result = await api.fetchResourceList<UserOrganization>(
       "userOrganization",
@@ -80,22 +86,25 @@
         },
       },
     );
-    users.set(
+    userItems.set(
       result.data
-        .map((userOrganization) =>
-          pickFromIncluded<User>(
+        .map((userOrganization) => {
+          const user = pickFromIncluded<User>(
             result,
             (includedItem) =>
               includedItem.type === "user" &&
-              // TODO: user might not exist?
-              includedItem.id === userOrganization.relationships?.user.data.id,
-          ),
-        )
+              includedItem.id === userOrganization.relationships?.user.data?.id,
+          );
+          return {
+            user,
+            userOrganization,
+          };
+        })
         .filter(isNotEmpty),
     );
   });
 
-  const userFilterOptions = derived([users], ([$users]) => {
+  const userFilterOptions = derived([userItems], ([$userItems]) => {
     const results = [
       {
         label: "All",
@@ -103,9 +112,12 @@
       },
     ];
     results.push(
-      ...$users.map((user) => ({
-        label: prettifyUserName(user),
-        value: user.id,
+      ...$userItems.map((userItem) => ({
+        label: prettifyUserOrganizationName(
+          userItem.userOrganization,
+          userItem.user,
+        ),
+        value: userItem.userOrganization.id,
       })),
     );
     return results;
@@ -158,7 +170,8 @@
           filterOptions["area.id"] = $areaFilterSelectedOption;
         }
         if ($userFilterSelectedOption !== "all") {
-          filterOptions["userorganization.user.id"] = $userFilterSelectedOption;
+          // TODO: test
+          filterOptions["userorganization.id"] = $userFilterSelectedOption;
         }
         const dateRange = makeDateRange($dateFilterSelectedOption);
         if (dateRange?.start) {
@@ -270,7 +283,8 @@
           slot="body-cell"
         >
           {#if column.name === "User"}
-            {prettifyUserName(
+            {prettifyUserOrganizationName(
+              castRowData(rowData).relationships.userorganization.data,
               castRowData(rowData).relationships.userorganization.data
                 .relationships.user.data,
             )}

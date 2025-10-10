@@ -18,13 +18,13 @@
   import Link from "./Link.svelte";
   import getInternalRoutes from "./routing/getInternalRoutes";
   import replacePathParameters from "./routing/replacePathParameters";
-  import DeleteUserConfirmationModal from "./DeleteUserConfirmationModal.svelte";
+  import DeleteUserConfirmationModal from "./DeleteUserOrganizationConfirmationModal.svelte";
   import eventEmitter from "../utilities/eventEmitter";
   import type { User, UserOrganization } from "../api/resourceObjects";
   import ResourceListInfiniteScrollTable from "./ResourceListInfiniteScrollTable.svelte";
   import type { FetchResourceListOptions } from "../api";
   import api from "../api";
-  import prettifyUserName from "../utilities/prettifyUserName";
+  import prettifyUserOrganizationName from "../utilities/prettifyUserOrganizationName";
   import * as svelteStore from "svelte/store";
   import InviteModal from "./InviteModal.svelte";
   import combineClasses from "./utilities/combineClasses";
@@ -32,16 +32,18 @@
   import getClosestElement from "../utilities/getClosestElement";
   import { userOrganization } from "../userData/store";
 
+  // TODO: test delete
+
   type UserOrganizationWithRelationships = UserOrganization & {
     relationships: {
       user: {
-        data: User;
+        data: User | null;
       };
     };
   };
 
   const internalRoutes = getInternalRoutes();
-  const userIdsToExcludeWritable = svelteStore.writable<
+  const userOrganizationIdsToExcludeWritable = svelteStore.writable<
     UserOrganization["id"][]
   >([]);
 
@@ -71,21 +73,42 @@
     navigate(makeUserPageLink(rowData));
   };
 
-  const onUserDeleted = (userId: string) => {
-    if (!svelteStore.get(userIdsToExcludeWritable).includes(userId)) {
-      userIdsToExcludeWritable.update((old) => [...old, userId]);
+  const onUserOrganizationDeleted = ({
+    userOrganizationId,
+  }: {
+    isCurrentUser: boolean;
+    userOrganizationId: string;
+  }) => {
+    if (
+      !svelteStore
+        .get(userOrganizationIdsToExcludeWritable)
+        .includes(userOrganizationId)
+    ) {
+      userOrganizationIdsToExcludeWritable.update((old) => [
+        ...old,
+        userOrganizationId,
+      ]);
     }
   };
 
-  const onUserDeletionConfirmed = (user: User) => {
-    onUserDeleted(user.id);
+  const onUserOrganizationDeletionConfirmed = ({
+    isCurrentUser,
+    userOrganizationId,
+  }: {
+    isCurrentUser: boolean;
+    userOrganizationId: string;
+  }) => {
+    onUserOrganizationDeleted({
+      isCurrentUser,
+      userOrganizationId,
+    });
   };
 
   onMount(() => {
-    eventEmitter.on("user-deleted", onUserDeleted);
+    eventEmitter.on("user-organization-deleted", onUserOrganizationDeleted);
 
     return () => {
-      eventEmitter.off("user-deleted", onUserDeleted);
+      eventEmitter.off("user-organization-deleted", onUserOrganizationDeleted);
     };
   });
 
@@ -96,12 +119,10 @@
     });
 
   const postFilter = svelteStore.derived(
-    [userIdsToExcludeWritable],
-    ([$userIdsToExcludeWritable]) => {
+    [userOrganizationIdsToExcludeWritable],
+    ([$userOrganizationIdsToExclude]) => {
       return (resourceObject: UserOrganizationWithRelationships) =>
-        !$userIdsToExcludeWritable.includes(
-          resourceObject.relationships.user.data.id,
-        );
+        !$userOrganizationIdsToExclude.includes(resourceObject.id);
     },
   );
 </script>
@@ -158,11 +179,15 @@
         <th class="users__personal-details">
           <p class="users__name">
             <Link to={makeUserPageLink(rowData)}>
-              {prettifyUserName(castRowData(rowData).relationships.user.data)}
+              {prettifyUserOrganizationName(
+                castRowData(rowData),
+                castRowData(rowData).relationships.user.data,
+              )}
             </Link>
           </p>
           <p class="users__email"
-            >{castRowData(rowData).relationships.user.data.attributes.email}</p
+            >{castRowData(rowData).relationships.user.data?.attributes.email ||
+              castRowData(rowData).attributes.inviteUserEmail}</p
           >
         </th>
       {:else if column.name === "Role"}
@@ -176,7 +201,7 @@
       {:else if column.name === "Actions"}
         <td>
           <DeleteUserConfirmationModal
-            onConfirm={onUserDeletionConfirmed}
+            onConfirm={onUserOrganizationDeletionConfirmed}
             user={castRowData(rowData).relationships.user.data}
             userOrganization={castRowData(rowData)}
           >

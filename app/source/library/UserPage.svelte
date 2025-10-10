@@ -23,14 +23,16 @@
   import prettifyRole from "../utilities/prettifyRole";
   import type { User, UserOrganization } from "../api/resourceObjects";
   import * as svelteStore from "svelte/store";
-  import prettifyUserName from "../utilities/prettifyUserName";
-  import DeleteUserConfirmationModal from "./DeleteUserConfirmationModal.svelte";
+  import prettifyUserOrganizationName from "../utilities/prettifyUserOrganizationName";
+  import DeleteUserConfirmationModal from "./DeleteUserOrganizationConfirmationModal.svelte";
   import getInternalRoutes from "./routing/getInternalRoutes";
   import yup from "./forms/yup";
   import commonSchema from "./forms/commonSchema";
   import fetchUserOrganizationWithAllIncludes from "../userData/fetchUserOrganizationWithAllIncludes";
   import LoadingIndicator from "./LoadingIndicator.svelte";
   import { ClientRequestError } from "../api/requestApi";
+
+  // TODO: test delete
 
   export let internalRouteId = "user";
   export let routePathParameters: {
@@ -48,20 +50,27 @@
 
   const internalRoutes = getInternalRoutes();
 
-  const onDeletionConfirmed = (userDeleted: User) => {
-    if (userDeleted.id === $currentUser?.id) {
+  const onDeletionConfirmed = ({
+    isCurrentUser,
+  }: {
+    isCurrentUser: boolean;
+  }) => {
+    if (isCurrentUser) {
       navigate(internalRoutes.accountDeleted.path, { replace: false });
       return;
     }
     navigate(internalRoutes.users.path, { replace: false });
   };
 
-  const customTitleStore = svelteStore.derived([userStore], ([$userStore]) => {
-    if (internalRouteId === "profile" || !$userStore) {
-      return null;
-    }
-    return prettifyUserName($userStore);
-  });
+  const customTitleStore = svelteStore.derived(
+    [userOrganizationStore, userStore],
+    ([$userOrganization, $user]) => {
+      if (internalRouteId === "profile" || !$userOrganization || !$user) {
+        return null;
+      }
+      return prettifyUserOrganizationName($userOrganization, $user);
+    },
+  );
 
   const did404 = svelteStore.writable(false);
 

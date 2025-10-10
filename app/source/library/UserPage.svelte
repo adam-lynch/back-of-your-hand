@@ -32,7 +32,7 @@
   import LoadingIndicator from "./LoadingIndicator.svelte";
   import { ClientRequestError } from "../api/requestApi";
 
-    export let internalRouteId = "user";
+  export let internalRouteId = "user";
   export let routePathParameters: {
     userOrganizationId: string;
   };

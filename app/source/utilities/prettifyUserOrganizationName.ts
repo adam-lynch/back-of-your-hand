@@ -9,7 +9,6 @@
 
 import type { User, UserOrganization } from "../api/resourceObjects";
 
-// TODO: every caller's UI
 export default function prettifyUserOrganizationName(
   userOrganization:
     | UserOrganization

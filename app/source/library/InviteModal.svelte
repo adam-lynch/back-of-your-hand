@@ -77,6 +77,7 @@
 
     toast.success("User invited!", getCommonToastOptions());
   };
+  // TODO: remove NOTE below
 </script>
 
 <MultiFieldFormModal

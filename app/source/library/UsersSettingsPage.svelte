@@ -32,8 +32,6 @@
   import getClosestElement from "../utilities/getClosestElement";
   import { userOrganization } from "../userData/store";
 
-  // TODO: test delete
-
   type UserOrganizationWithRelationships = UserOrganization & {
     relationships: {
       user: {

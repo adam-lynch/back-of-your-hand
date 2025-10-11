@@ -10,6 +10,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
+  import EnvelopeIcon from "~icons/solar/letter-line-duotone";
 
   import SettingsPage from "./SettingsPage.svelte";
   import AutoSavingTextField from "./forms/autoSavingFields/AutoSavingTextField.svelte";
@@ -198,6 +199,11 @@
         {#if $isCurrentUser}
           <Link to={internalRoutes.changePassword.path}>Change Password</Link>
         {/if}
+
+        {#if $userOrganizationStore.attributes.inviteStatus !== "accepted"}
+          <Button Icon={EnvelopeIcon}>Resend invite</Button>
+        {/if}
+
         <DeleteUserConfirmationModal
           onConfirm={onDeletionConfirmed}
           user={$userStore}
@@ -207,8 +213,10 @@
             slot="trigger"
             let:builder
             builders={[builder]}
-            consequence="destruction">Delete account</Button
+            consequence="destruction"
           >
+            Delete account
+          </Button>
         </DeleteUserConfirmationModal>
       </div>
     </div>

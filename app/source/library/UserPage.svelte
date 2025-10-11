@@ -69,7 +69,9 @@
 
       let result = prettifyUserOrganizationName($userOrganization, $user);
       if ($userOrganization.attributes.inviteStatus !== "accepted") {
-        result += ` (${$userOrganization.attributes.inviteStatus})`;
+        result += `<span class="hide-accessibly">(</span>
+          <span class="user-page__invite-status-label">${$userOrganization.attributes.inviteStatus}</span>
+          <span class="hide-accessibly">(</span>`;
       }
 
       return result;
@@ -229,5 +231,17 @@
     gap: 1rem;
     align-items: center;
     margin-top: 1.5rem;
+  }
+
+  :global(.user-page__invite-status-label) {
+    margin-left: 0.5rem;
+    padding: 0 0.2rem;
+    background: white;
+    color: black;
+    opacity: 0.8;
+    border-radius: 5px;
+    font-size: 1rem;
+    line-height: 1;
+    vertical-align: middle;
   }
 </style>

@@ -182,7 +182,11 @@
                 castRowData(rowData).relationships.user.data,
               )}
               {#if castRowData(rowData).attributes.inviteStatus !== "accepted"}
-                ({castRowData(rowData).attributes.inviteStatus})
+                <span class="hide-accessibly">(</span>
+                <span class="users__invite-status-label"
+                  >{castRowData(rowData).attributes.inviteStatus}</span
+                >
+                <span class="hide-accessibly">)</span>
               {/if}
             </Link>
           </p>
@@ -300,5 +304,17 @@
     & svg {
       color: rgba(255, 255, 255, 0.4);
     }
+  }
+
+  :global(.users__invite-status-label) {
+    margin-left: 0.25rem;
+    padding: 0 0.2rem;
+    background: white;
+    color: black;
+    opacity: 0.8;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    line-height: 1;
+    vertical-align: baseline;
   }
 </style>

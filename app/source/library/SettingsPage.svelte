@@ -48,7 +48,11 @@
       <div
         class={combineClasses(classNameToUse, "settings-page__title-wrapper")}
       >
-        <h1>{title}</h1>
+        <h1
+          {...{
+            /* eslint-disable-next-line svelte/no-at-html-tags */
+          }}>{@html title}</h1
+        >
       </div>
     </slot>
   </svelte:fragment>

@@ -32,6 +32,7 @@
   import fetchUserOrganizationWithAllIncludes from "../userData/fetchUserOrganizationWithAllIncludes";
   import LoadingIndicator from "./LoadingIndicator.svelte";
   import { ClientRequestError } from "../api/requestApi";
+  import prettifyUserOrganizationInviteStatus from "../utilities/prettifyUserOrganizationInviteStatus";
 
   export let internalRouteId = "user";
   export let routePathParameters: {
@@ -69,9 +70,12 @@
       }
 
       let result = prettifyUserOrganizationName($userOrganization, $user);
-      if ($userOrganization.attributes.inviteStatus !== "accepted") {
+
+      const { labelText, statusId } =
+        prettifyUserOrganizationInviteStatus($userOrganization);
+      if (labelText) {
         result += `<span class="hide-accessibly">(</span>
-          <span class="user-page__invite-status-label">${$userOrganization.attributes.inviteStatus}</span>
+          <span class="user-page__invite-status-label user-page__invite-status-label--${statusId}">${labelText}</span>
           <span class="hide-accessibly">(</span>`;
       }
 
@@ -201,7 +205,14 @@
         {/if}
 
         {#if $userOrganizationStore.attributes.inviteStatus !== "accepted"}
-          <Button Icon={EnvelopeIcon}>Resend invite</Button>
+          <Button
+            Icon={EnvelopeIcon}
+            variant={prettifyUserOrganizationInviteStatus(
+              $userOrganizationStore,
+            ).statusId === "expired"
+              ? "primary"
+              : undefined}>Resend invite</Button
+          >
         {/if}
 
         <DeleteUserConfirmationModal
@@ -243,7 +254,7 @@
 
   :global(.user-page__invite-status-label) {
     margin-left: 0.5rem;
-    padding: 0 0.2rem;
+    padding: 0.2rem;
     background: white;
     color: black;
     opacity: 0.8;
@@ -251,5 +262,9 @@
     font-size: 1rem;
     line-height: 1;
     vertical-align: middle;
+  }
+
+  :global(.user-page__invite-status-label--expired) {
+    background: #fdb2b2;
   }
 </style>

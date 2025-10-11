@@ -95,7 +95,9 @@ export type User = JSONAPI.ResourceObject<
 export type UserOrganization = JSONAPI.ResourceObject<
   "userOrganization",
   TimestampedResourceAttributes & {
+    inviteIssuedAt: string | null;
     inviteStatus: "accepted" | "invited" | "uninvited";
+    inviteTokenMaxAge: number;
     inviteUserEmail: string;
     inviteUserFirstName: string;
     inviteUserLastName: string;

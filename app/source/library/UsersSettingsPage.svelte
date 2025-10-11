@@ -31,6 +31,7 @@
   import { navigate } from "svelte-routing";
   import getClosestElement from "../utilities/getClosestElement";
   import { userOrganization } from "../userData/store";
+  import prettifyUserOrganizationInviteStatus from "../utilities/prettifyUserOrganizationInviteStatus";
 
   type UserOrganizationWithRelationships = UserOrganization & {
     relationships: {
@@ -181,10 +182,15 @@
                 castRowData(rowData),
                 castRowData(rowData).relationships.user.data,
               )}
-              {#if castRowData(rowData).attributes.inviteStatus !== "accepted"}
+              {#if prettifyUserOrganizationInviteStatus(castRowData(rowData)).labelText}
                 <span class="hide-accessibly">(</span>
-                <span class="users__invite-status-label"
-                  >{castRowData(rowData).attributes.inviteStatus}</span
+                <span
+                  class={combineClasses(
+                    "users__invite-status-label",
+                    `users__invite-status-label--${prettifyUserOrganizationInviteStatus(castRowData(rowData)).statusId}`,
+                  )}
+                  >{prettifyUserOrganizationInviteStatus(castRowData(rowData))
+                    .labelText}</span
                 >
                 <span class="hide-accessibly">)</span>
               {/if}
@@ -316,5 +322,9 @@
     font-size: 0.85rem;
     line-height: 1;
     vertical-align: baseline;
+  }
+
+  :global(.users__invite-status-label--expired) {
+    background: #fdb2b2;
   }
 </style>

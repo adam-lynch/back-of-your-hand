@@ -77,11 +77,9 @@
 
     toast.success("User invited!", getCommonToastOptions());
   };
-  // TODO: remove NOTE below
 </script>
 
 <MultiFieldFormModal
-  description="NOTE: invite emails can take up to a day or two to arrive. There is a manual step involved."
   schema={yup.object({
     email: commonSchema.email().label("Email"),
     jobTitle: yup.string().label("jobTitle"),

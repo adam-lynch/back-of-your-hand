@@ -85,9 +85,9 @@
     opacity: 0.8;
   }
 
-  :global(.field:has(.field__control)) {
-    &[disabled],
-    &[required] {
+  :global(.field) {
+    &:has(.field__control[disabled]),
+    &:has(.field__control[required]) {
       & .field__optional-indicator {
         display: none;
       }

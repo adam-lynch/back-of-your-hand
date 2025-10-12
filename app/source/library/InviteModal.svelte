@@ -29,12 +29,14 @@
   } from "../api/resourceObjects";
 
   let email = "";
+  let firstName = "";
   let jobTitle = "";
-  let name = "";
+  let lastName = "";
   function onFormReset() {
     email = "";
+    firstName = "";
     jobTitle = "";
-    name = "";
+    lastName = "";
   }
 
   const selectedRole = writable<"standard" | "admin">("standard");
@@ -45,10 +47,6 @@
     if (!$organization) {
       throw new Error("No organization");
     }
-
-    let namePieces = name.trim().split(" ");
-    const firstName = namePieces[0];
-    const lastName = namePieces.slice(1).join(" ");
 
     const userOrganization: Omit<
       OmitTimestampedResourceAttributes<UserOrganization>,
@@ -91,8 +89,9 @@
 <MultiFieldFormModal
   schema={yup.object({
     email: commonSchema.email().label("Email"),
-    jobTitle: yup.string().label("jobTitle"),
-    name: yup.string().label("Full name").required(),
+    firstName: yup.string().label("First name").required(),
+    jobTitle: yup.string().label("Job title"),
+    lastName: yup.string().label("Last name").required(),
     role: yup.string().label("Role").required(),
   })}
   on:formReset={onFormReset}
@@ -129,8 +128,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={email}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         required
         {theme}
         type="email"
@@ -139,8 +138,8 @@
 
     <Field
       {form}
-      labelText="Full name"
-      name="name"
+      labelText="First name"
+      name="firstName"
       let:_class
       let:_name
       let:ariaDescribedby
@@ -150,10 +149,33 @@
     >
       <TextInput
         aria-describedby={ariaDescribedby}
-        bind:value={name}
+        bind:value={firstName}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
+        {theme}
+        required
+        type="text"
+      />
+    </Field>
+
+    <Field
+      {form}
+      labelText="Last name"
+      name="lastName"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <TextInput
+        aria-describedby={ariaDescribedby}
+        bind:value={lastName}
+        class={_class}
+        {id}
+        name={_name}
         {theme}
         required
         type="text"
@@ -175,8 +197,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={$selectedRole}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         options={["admin", "standard"].map((role) => ({
           label: prettifyRole(role),
           value: role,
@@ -201,8 +223,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={jobTitle}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         {theme}
         type="text"
       />

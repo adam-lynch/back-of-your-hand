@@ -38,6 +38,8 @@
   import Field from "./forms/Field.svelte";
   import TextInput from "./forms/TextInput.svelte";
   import prettifyDate from "./utilities/prettifyDate";
+  import api from "../api";
+  import { reportError } from "../utilities/setUpErrorReporting";
 
   export let internalRouteId = "user";
   export let routePathParameters: {
@@ -70,7 +72,7 @@
   const customTitleStore = svelteStore.derived(
     [userOrganizationStore, userStore],
     ([$userOrganization, $user]) => {
-      if (internalRouteId === "profile" || !$userOrganization || !$user) {
+      if (internalRouteId === "profile" || !$userOrganization) {
         return null;
       }
 
@@ -109,11 +111,25 @@
     }
   });
 
-  function resendInvite() {
+  async function resendInvite() {
     try {
-      // TODO
+      if (!$userOrganizationStore) {
+        throw new Error("No userOrganization");
+      }
+
+      const response: { data: UserOrganization } = await api.requestApi(
+        `userOrganizations/${$userOrganizationStore.id}/actions/issue-invite`,
+        {
+          method: "POST",
+        },
+      );
+      userOrganizationStore.set(response.data);
     } catch (error) {
-      // TODO
+      reportError(error);
+      toast.error(
+        "Error occurred while sending invite email",
+        getCommonToastOptions(),
+      );
       return;
     }
 
@@ -127,7 +143,7 @@
 >
   {#if $did404}
     <p>User not found</p>
-  {:else if $userStore && $userOrganizationStore}
+  {:else if $userOrganizationStore}
     <div class="user-page__inner">
       <AutoSavingTextField
         fieldProps={{

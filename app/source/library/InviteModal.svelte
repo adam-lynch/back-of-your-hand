@@ -8,6 +8,7 @@
 -->
 
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import toast from "svelte-french-toast";
   import MultiFieldFormModal from "./MultiFieldFormModal.svelte";
@@ -37,6 +38,8 @@
   }
 
   const selectedRole = writable<"standard" | "admin">("standard");
+
+  const dispatch = createEventDispatcher();
 
   const handleOnSubmit = async () => {
     if (!$organization) {
@@ -74,6 +77,8 @@
       },
       method: "POST",
     });
+
+    dispatch("invited");
 
     toast.success("User invited!", getCommonToastOptions());
   };

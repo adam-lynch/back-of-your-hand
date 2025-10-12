@@ -124,6 +124,12 @@
         !$userOrganizationIdsToExclude.includes(resourceObject.id);
     },
   );
+
+  let tableKey = 1;
+
+  function refreshUserOrganizations() {
+    tableKey++;
+  }
 </script>
 
 <SettingsPage internalRouteId="users">
@@ -134,7 +140,7 @@
   >
     <div class={combineClasses(classNameToUse, "users__title-wrapper")}>
       <h1 class="users__title-heading">{title}</h1>
-      <InviteModal>
+      <InviteModal on:invited={refreshUserOrganizations}>
         <Button
           slot="trigger"
           let:builder
@@ -146,92 +152,94 @@
     </div>
   </svelte:fragment>
 
-  <ResourceListInfiniteScrollTable
-    class="users__table-wrapper"
-    columns={[
-      {
-        minWidth: "230px",
-        name: "Personal details",
-      },
-      {
-        minWidth: "140px",
-        maxWidth: "0.33fr",
-        name: "Role",
-      },
-      {
-        minWidth: "130px",
-        name: "Actions",
-      },
-    ]}
-    {fetchResourceList}
-    {onClickBodyRow}
-    postFilter={$postFilter}
-    tHeadClass="hide-accessibly--important users__thead"
-  >
-    <svelte:fragment
-      let:column
-      let:defaultValue
-      let:rowData
-      slot="body-cell"
+  {#key tableKey}
+    <ResourceListInfiniteScrollTable
+      class="users__table-wrapper"
+      columns={[
+        {
+          minWidth: "230px",
+          name: "Personal details",
+        },
+        {
+          minWidth: "140px",
+          maxWidth: "0.33fr",
+          name: "Role",
+        },
+        {
+          minWidth: "130px",
+          name: "Actions",
+        },
+      ]}
+      {fetchResourceList}
+      {onClickBodyRow}
+      postFilter={$postFilter}
+      tHeadClass="hide-accessibly--important users__thead"
     >
-      {#if column.name === "Personal details"}
-        <th class="users__personal-details">
-          <p class="users__name">
-            <Link to={makeUserPageLink(rowData)}>
-              {prettifyUserOrganizationName(
-                castRowData(rowData),
-                castRowData(rowData).relationships.user.data,
-              )}
-              {#if prettifyUserOrganizationInviteStatus(castRowData(rowData)).labelText}
-                <span class="hide-accessibly">(</span>
-                <span
-                  class={combineClasses(
-                    "users__invite-status-label",
-                    `users__invite-status-label--${prettifyUserOrganizationInviteStatus(castRowData(rowData)).statusId}`,
-                  )}
-                  >{prettifyUserOrganizationInviteStatus(castRowData(rowData))
-                    .labelText}</span
-                >
-                <span class="hide-accessibly">)</span>
-              {/if}
-            </Link>
-          </p>
-          <p class="users__email"
-            >{castRowData(rowData).relationships.user.data?.attributes.email ||
-              castRowData(rowData).attributes.inviteUserEmail}</p
-          >
-        </th>
-      {:else if column.name === "Role"}
-        <td
-          class={`users__role-cell users__role-cell--${castRowData(rowData).attributes.role}`}
-        >
-          {#if castRowData(rowData).attributes.role === "admin"}<AdminIcon
-            />{:else}<UserIcon />{/if}
-          {prettifyRole(castRowData(rowData).attributes.role)}</td
-        >
-      {:else if column.name === "Actions"}
-        <td>
-          <DeleteUserConfirmationModal
-            onConfirm={onUserOrganizationDeletionConfirmed}
-            user={castRowData(rowData).relationships.user.data}
-            userOrganization={castRowData(rowData)}
-          >
-            <Button
-              slot="trigger"
-              let:builder
-              builders={[builder]}
-              consequence="destruction"
-              size="small">Remove</Button
+      <svelte:fragment
+        let:column
+        let:defaultValue
+        let:rowData
+        slot="body-cell"
+      >
+        {#if column.name === "Personal details"}
+          <th class="users__personal-details">
+            <p class="users__name">
+              <Link to={makeUserPageLink(rowData)}>
+                {prettifyUserOrganizationName(
+                  castRowData(rowData),
+                  castRowData(rowData).relationships.user.data,
+                )}
+                {#if prettifyUserOrganizationInviteStatus(castRowData(rowData)).labelText}
+                  <span class="hide-accessibly">(</span>
+                  <span
+                    class={combineClasses(
+                      "users__invite-status-label",
+                      `users__invite-status-label--${prettifyUserOrganizationInviteStatus(castRowData(rowData)).statusId}`,
+                    )}
+                    >{prettifyUserOrganizationInviteStatus(castRowData(rowData))
+                      .labelText}</span
+                  >
+                  <span class="hide-accessibly">)</span>
+                {/if}
+              </Link>
+            </p>
+            <p class="users__email"
+              >{castRowData(rowData).relationships.user.data?.attributes
+                .email || castRowData(rowData).attributes.inviteUserEmail}</p
             >
-          </DeleteUserConfirmationModal>
-        </td>
-      {:else}
-        <td>
-          {defaultValue}
-        </td>
-      {/if}
-    </svelte:fragment>
-  </ResourceListInfiniteScrollTable>
+          </th>
+        {:else if column.name === "Role"}
+          <td
+            class={`users__role-cell users__role-cell--${castRowData(rowData).attributes.role}`}
+          >
+            {#if castRowData(rowData).attributes.role === "admin"}<AdminIcon
+              />{:else}<UserIcon />{/if}
+            {prettifyRole(castRowData(rowData).attributes.role)}</td
+          >
+        {:else if column.name === "Actions"}
+          <td>
+            <DeleteUserConfirmationModal
+              onConfirm={onUserOrganizationDeletionConfirmed}
+              user={castRowData(rowData).relationships.user.data}
+              userOrganization={castRowData(rowData)}
+            >
+              <Button
+                slot="trigger"
+                let:builder
+                builders={[builder]}
+                consequence="destruction"
+                size="small">Remove</Button
+              >
+            </DeleteUserConfirmationModal>
+          </td>
+        {:else}
+          <td>
+            {defaultValue}
+          </td>
+        {/if}
+      </svelte:fragment>
+    </ResourceListInfiniteScrollTable>
+  {/key}
 </SettingsPage>
 
 <style>

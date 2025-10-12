@@ -15,7 +15,7 @@
   import type { Theme } from "../themes";
   import ErrorMessages from "./ErrorMessages.svelte";
 
-  export let form: ReturnType<typeof createForm>;
+  export let form: ReturnType<typeof createForm> | null;
   export let labelText: string;
   export let name: string;
   export let theme: Theme = "dark";
@@ -23,7 +23,7 @@
   const classes = ["field", `field--theme-${theme}`, $$restProps.class];
   const errorMessagesId = `${name}__error-messages`;
 
-  $: isInvalid = Boolean(form.errors?.[name]?.length);
+  $: isInvalid = Boolean(form?.errors?.[name]?.length);
 </script>
 
 <div
@@ -85,8 +85,13 @@
     opacity: 0.8;
   }
 
-  :global(.field:has(.field__control[required]) .field__optional-indicator) {
-    display: none;
+  :global(.field:has(.field__control)) {
+    &[disabled],
+    &[required] {
+      & .field__optional-indicator {
+        display: none;
+      }
+    }
   }
 
   .field :global(.field-error-messages) {

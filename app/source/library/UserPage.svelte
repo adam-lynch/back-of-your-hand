@@ -9,6 +9,7 @@
 
 <script lang="ts">
   import { onMount } from "svelte";
+  import toast from "svelte-french-toast";
   import { navigate } from "svelte-routing";
   import EnvelopeIcon from "~icons/solar/letter-line-duotone";
 
@@ -33,6 +34,10 @@
   import LoadingIndicator from "./LoadingIndicator.svelte";
   import { ClientRequestError } from "../api/requestApi";
   import prettifyUserOrganizationInviteStatus from "../utilities/prettifyUserOrganizationInviteStatus";
+  import getCommonToastOptions from "./utilities/getCommonToastOptions";
+  import Field from "./forms/Field.svelte";
+  import TextInput from "./forms/TextInput.svelte";
+  import prettifyDate from "./utilities/prettifyDate";
 
   export let internalRouteId = "user";
   export let routePathParameters: {
@@ -103,6 +108,17 @@
       throw error;
     }
   });
+
+  function resendInvite() {
+    try {
+      // TODO
+    } catch (error) {
+      // TODO
+      return;
+    }
+
+    toast.success("Invite email sent!", getCommonToastOptions());
+  }
 </script>
 
 <SettingsPage
@@ -199,6 +215,30 @@
         writableSelector={"attributes.role"}
       />
 
+      {#if $userOrganizationStore.attributes.inviteStatus !== "accepted"}
+        <Field
+          disabled
+          form={null}
+          labelText="Most recent invite email"
+          let:_class
+          let:_name
+          let:ariaDescribedby
+          let:id
+          name="invited-at"
+        >
+          <TextInput
+            aria-describedby={ariaDescribedby}
+            class={_class}
+            disabled
+            {id}
+            name={_name}
+            value={$userOrganizationStore.attributes.inviteIssuedAt
+              ? prettifyDate($userOrganizationStore.attributes.inviteIssuedAt)
+              : ""}
+          />
+        </Field>
+      {/if}
+
       <div class="user-page__actions">
         {#if $isCurrentUser}
           <Link to={internalRoutes.changePassword.path}>Change Password</Link>
@@ -207,6 +247,7 @@
         {#if $userOrganizationStore.attributes.inviteStatus !== "accepted"}
           <Button
             Icon={EnvelopeIcon}
+            on:click={resendInvite}
             variant={prettifyUserOrganizationInviteStatus(
               $userOrganizationStore,
             ).statusId === "expired"

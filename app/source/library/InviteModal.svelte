@@ -46,14 +46,18 @@
       throw new Error("No organization");
     }
 
+    let namePieces = name.trim().split(" ");
+    const firstName = namePieces[0];
+    const lastName = namePieces.slice(1).join(" ");
+
     const userOrganization: Omit<
       OmitTimestampedResourceAttributes<UserOrganization>,
       "id"
     > = {
       attributes: {
         inviteUserEmail: email,
-        inviteUserFirstName: name,
-        inviteUserLastName: name,
+        inviteUserFirstName: firstName,
+        inviteUserLastName: lastName,
         jobTitle,
         role: $selectedRole,
       },

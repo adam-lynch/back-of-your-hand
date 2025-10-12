@@ -118,7 +118,7 @@
       }
 
       const response: { data: UserOrganization } = await api.requestApi(
-        `userOrganizations/${$userOrganizationStore.id}/actions/issue-invite`,
+        `userorganizations/${$userOrganizationStore.id}/actions/issue-invite`,
         {
           method: "POST",
         },
@@ -126,10 +126,16 @@
       userOrganizationStore.set(response.data);
     } catch (error) {
       reportError(error);
-      toast.error(
-        "Error occurred while sending invite email",
-        getCommonToastOptions(),
-      );
+
+      let errorMessage = "Error occurred while sending invite email";
+      if (
+        error instanceof ClientRequestError &&
+        error.responseBody?.errors.length &&
+        error.responseBody.errors[0].detail
+      ) {
+        errorMessage += `. Detail: ${error.responseBody?.errors[0].detail}`;
+      }
+      toast.error(errorMessage, getCommonToastOptions());
       return;
     }
 

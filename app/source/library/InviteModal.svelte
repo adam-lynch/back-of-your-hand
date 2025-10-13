@@ -87,6 +87,10 @@
 </script>
 
 <MultiFieldFormModal
+  decideIfGeneralErrorsAreUnexpected={(errorMessages) =>
+    !errorMessages.every((errorMessage) =>
+      errorMessage.includes("already exists"),
+    )}
   schema={yup.object({
     email: commonSchema.email().label("Email"),
     firstName: yup.string().label("First name").required(),

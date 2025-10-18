@@ -28,8 +28,6 @@
   import type { UserOrganization } from "../../api/resourceObjects";
   import { ClientRequestError } from "../../api/requestApi";
 
-  // TODO: revise class names
-
   const pageStatusOptions = [
     "already-accepted",
     "does-not-exist",
@@ -66,7 +64,7 @@
   let token = "";
   let userOrganizationId = "";
 
-  // form fields data
+  // Form fields data
   let isAgreeingWithComplianceDocuments = false;
   let password1 = "abcdef123"; // TODO
   let password2 = "abcdef123"; // TODO
@@ -264,8 +262,10 @@
 </AccountsFormPage>
 
 <style>
-  :global(.confirm-description) {
-    color: #c3c3c3;
+  :global(.accept-invite__compliance-link) {
+    text-decoration: underline;
+    text-decoration-color: gray;
+    text-underline-offset: 2px;
   }
 
   :global(.accept-invite__link-cta) {
@@ -274,11 +274,5 @@
     text-align: center;
     font-size: 20px;
     color: white;
-  }
-
-  :global(.accept-invite__compliance-link) {
-    text-decoration: underline;
-    text-decoration-color: gray;
-    text-underline-offset: 2px;
   }
 </style>

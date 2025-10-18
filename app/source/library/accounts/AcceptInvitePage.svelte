@@ -63,13 +63,13 @@
     },
   );
 
+  let token = "";
   let userOrganizationId = "";
 
   // form fields data
   let isAgreeingWithComplianceDocuments = false;
   let password1 = "abcdef123"; // TODO
   let password2 = "abcdef123"; // TODO
-  let token = "";
 
   onMount(async () => {
     const urlSearchParams = new URLSearchParams(window.location.search);

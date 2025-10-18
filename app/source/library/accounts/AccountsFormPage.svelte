@@ -28,12 +28,14 @@
     [k: string]: any;
   }>;
   export let shouldRedirectIfUserExists = true;
+  export let titleOverride: string | null = null;
   export let topLevelErrorMessage = "";
 </script>
 
 <AccountsPage
   {internalRoute}
   {shouldRedirectIfUserExists}
+  {titleOverride}
 >
   <slot name="top" />
 

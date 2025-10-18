@@ -101,9 +101,7 @@ async function logIn(data: { email: string; password: string }) {
   if (!logInResponse.data.attributes) {
     throw new Error("!logInResponse.data.attributes");
   }
-  setAccessDetails(
-    pick(logInResponse.data.attributes, ["access", "accessExpiration"]),
-  );
+  setAccessDetails(logInResponse.data.attributes);
   console.debug("Logged in (setAccessDetails called)");
 }
 
@@ -174,14 +172,20 @@ async function refreshAccessToken() {
   });
 }
 
-function setAccessDetails(value: store.AccessDetailsAttributes | null) {
-  console.debug("authController.setAccessDetails", value);
-  store.accessDetails.set(value);
+function setAccessDetails(
+  potentiallyUnsafeValue: store.AccessDetailsAttributes | null,
+) {
+  console.debug("authController.setAccessDetails", potentiallyUnsafeValue);
+  const safeValue = pick(potentiallyUnsafeValue, [
+    "access",
+    "accessExpiration",
+  ]) as store.AccessDetailsAttributes | null;
+  store.accessDetails.set(safeValue);
 
-  if (value) {
+  if (safeValue) {
     localStorage.setItem(
       store.accessDetailsLocalStorageName,
-      JSON.stringify(value),
+      JSON.stringify(safeValue),
     );
     return;
   }
@@ -192,4 +196,5 @@ export default {
   init,
   logIn,
   logOut,
+  setAccessDetails,
 };

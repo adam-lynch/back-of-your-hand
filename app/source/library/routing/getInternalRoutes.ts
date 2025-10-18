@@ -21,6 +21,7 @@ import LoggedOutPage from "../accounts/LoggedOutPage.svelte";
 import ReportsPage from "../ReportsPage.svelte";
 import ResetPassword from "../accounts/ResetPassword.svelte";
 import ProfileSettingsPage from "../ProfileSettingsPage.svelte";
+import AcceptInvitePage from "../accounts/AcceptInvitePage.svelte";
 
 export type InternalRoute = Pick<SvelteRouting.Route, "component" | "path"> & {
   alternativePath?: SvelteRouting.Route["path"];
@@ -36,6 +37,14 @@ export type InternalRoute = Pick<SvelteRouting.Route, "component" | "path"> & {
 
 export default function getInternalRoutes(): Record<string, InternalRoute> {
   return {
+    acceptInvite: {
+      component: AcceptInvitePage,
+      doesNotRequireAuth: true,
+      id: "acceptInvite",
+      path: "/accounts/accept-invite",
+      requirementsToExist: ["organization-plan"],
+      title: "Accept invite",
+    },
     accountDeleted: {
       component: AccountDeletedPage,
       doesNotRequireAuth: false,

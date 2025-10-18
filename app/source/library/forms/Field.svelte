@@ -17,6 +17,7 @@
 
   export let form: ReturnType<typeof createForm> | null;
   export let labelText: string;
+  export let mustPutControlFirst = false;
   export let name: string;
   export let theme: Theme = "dark";
 
@@ -30,22 +31,41 @@
   {...$$restProps}
   class={combineClasses(...classes)}
 >
-  <label
-    class="field__label"
-    for={name}
-  >
-    <span class="field__label-inner">{labelText}</span>
-    <span class="field__optional-indicator">(optional)</span>
-  </label>
+  <div class="field__label_and_control">
+    {#if mustPutControlFirst}
+      <!-- This slot exists multiple times. Edits must be synced -->
+      <!-- felte handles stuff like the `aria-invalid` attribute -->
+      <slot
+        _class="field__control"
+        _name={name}
+        ariaDescribedby={isInvalid ? errorMessagesId : undefined}
+        id={name}
+        {theme}
+      />
+    {/if}
 
-  <!-- felte handles stuff like the `aria-invalid` attribute -->
-  <slot
-    _class="field__control"
-    _name={name}
-    ariaDescribedby={isInvalid ? errorMessagesId : undefined}
-    id={name}
-    {theme}
-  />
+    <label
+      class="field__label"
+      for={name}
+    >
+      <span class="field__label-inner">
+        <slot name="label">{labelText}</slot>
+      </span>
+      <span class="field__optional-indicator">(optional)</span>
+    </label>
+
+    {#if !mustPutControlFirst}
+      <!-- This slot exists multiple times. Edits must be synced -->
+      <!-- felte handles stuff like the `aria-invalid` attribute -->
+      <slot
+        _class="field__control"
+        _name={name}
+        ariaDescribedby={isInvalid ? errorMessagesId : undefined}
+        id={name}
+        {theme}
+      />
+    {/if}
+  </div>
 
   <ValidationMessage
     for={name}
@@ -61,7 +81,8 @@
 </div>
 
 <style>
-  .field {
+  .field,
+  .field__label_and_control {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -72,6 +93,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  :global(.field__label_and_control:has(.field__control[type="checkbox"])) {
+    flex-direction: row;
+    align-items: center;
+
+    & .field__label {
+      font-weight: 200;
+    }
   }
 
   .field__label-inner {
@@ -87,7 +117,8 @@
 
   :global(.field) {
     &:has(.field__control[disabled]),
-    &:has(.field__control[required]) {
+    &:has(.field__control[required]),
+    &:has(.field__control[type="checkbox"]) {
       & .field__optional-indicator {
         display: none;
       }

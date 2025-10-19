@@ -69,6 +69,24 @@
   let password1 = "abcdef123"; // TODO
   let password2 = "abcdef123"; // TODO
 
+  const formSchema = derived([pageStatus], ([$pageStatus]) => {
+    if ($pageStatus === "joinable-as-is") {
+      return yup.object({});
+    }
+
+    return yup.object({
+      compliance: commonSchema
+        .checkbox(true, "You must agree to the Terms of Service")
+        .label("I accept the Terms of Service"),
+      password1: commonSchema.newPassword().label("Password"),
+      password2: yup
+        .string()
+        .oneOf([yup.ref("password1"), ""], "Passwords must match")
+        .required("Please confirm your password")
+        .label("Confirm Password"),
+    });
+  });
+
   onMount(async () => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     token = urlSearchParams.get("token") || "";
@@ -132,17 +150,7 @@
 <AccountsFormPage
   internalRoute={internalRoutes.acceptInvite}
   {onSubmit}
-  schema={yup.object({
-    compliance: commonSchema
-      .checkbox(true, "You must agree to the Terms of Service")
-      .label("I accept the Terms of Service"),
-    password1: commonSchema.newPassword().label("Password"),
-    password2: yup
-      .string()
-      .oneOf([yup.ref("password1"), ""], "Passwords must match")
-      .required("Please confirm your password")
-      .label("Confirm Password"),
-  })}
+  schema={$formSchema}
   titleOverride={$inPageTitle}
   shouldRedirectIfUserExists={false}
 >

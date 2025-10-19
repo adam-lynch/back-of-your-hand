@@ -77,7 +77,11 @@ export default function onFormApiRequestError<TSchema extends Schema>({
   }
 
   // 500s skip this, for example
-  if (!errorMessages.length && error instanceof ClientRequestError) {
+  if (
+    error instanceof ClientRequestError &&
+    error.responseBody &&
+    !errorMessages.length
+  ) {
     return [];
   }
 

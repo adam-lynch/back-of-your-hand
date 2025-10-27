@@ -20,6 +20,7 @@ import eventEmitter from "../utilities/eventEmitter";
 import * as svelteStore from "svelte/store";
 import { reportError } from "../utilities/setUpErrorReporting";
 import getInternalRoutes from "../library/routing/getInternalRoutes";
+import getCurrentInternalRoute from "../library/routing/getCurrentInternalRoute";
 
 async function getValidAccessToken(options: {
   shouldRefreshAccessTokenIfExpiring: boolean;
@@ -126,11 +127,15 @@ async function onLackOfAuthenticationDetected(
   Sentry.setUser(null);
 
   if (context.cause === "401") {
-    navigate(getInternalRoutes().logIn.path, {
-      state: {
-        didSessionExpire: true,
-      },
-    });
+    const currentInternalRoute = getCurrentInternalRoute();
+    if (!currentInternalRoute?.doesNotRequireAuth) {
+      alert("a");
+      navigate(getInternalRoutes().logIn.path, {
+        state: {
+          didSessionExpire: true,
+        },
+      });
+    }
   }
 }
 

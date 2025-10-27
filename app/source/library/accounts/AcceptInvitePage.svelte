@@ -92,11 +92,6 @@
     token = urlSearchParams.get("token") || "";
     let resultPageStatus: PageStatus = "must-sign-up";
 
-    if (Math.random() > -1) {
-      pageStatus.set(resultPageStatus);
-      return;
-    }
-
     try {
       const response: JSONAPI.DocWithData<
         Omit<UserOrganization, "attributes" | "relationships"> & {
@@ -105,25 +100,27 @@
             "user"
           >;
         }
-      > = await api.requestApi(`/invited-userorganizations/${token}`, {});
+      > = await api.requestApi(`/invites/${token}`, {});
       userOrganizationId = response.data.id;
-      if (response.data.relationships.user) {
+      if (response.data.relationships.user.data) {
         resultPageStatus = "joinable-as-is";
       }
     } catch (error) {
-      if (
-        error instanceof ClientRequestError &&
-        error.responseBody?.errors.length &&
-        error.responseBody.errors[0].code &&
-        pageStatusOptions.includes(
-          error.responseBody.errors[0].code as PageStatus,
-        )
-      ) {
-        resultPageStatus = error.responseBody.errors[0].code as PageStatus;
-        return;
+      if (error instanceof ClientRequestError) {
+        if (error.response.status === 404) {
+          resultPageStatus = "does-not-exist";
+        } else if (
+          error.responseBody?.errors.length &&
+          error.responseBody.errors[0].code &&
+          pageStatusOptions.includes(
+            error.responseBody.errors[0].code as PageStatus,
+          )
+        ) {
+          resultPageStatus = error.responseBody.errors[0].code as PageStatus;
+        }
+      } else {
+        throw error;
       }
-
-      throw error;
     }
 
     pageStatus.set(resultPageStatus);
@@ -133,21 +130,29 @@
     const response: JSONAPI.DocWithData<
       JSONAPI.ResourceObject<"InviteAcceptance", AccessDetailsAttributes>
     > = await api.requestApi(
-      `/userorganizations/${userOrganizationId}/accept-invite`,
+      `userorganizations/${userOrganizationId}/actions/accept-invite`,
       {
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: {
-          token,
+          data: {
+            password: password1,
+            token,
+          },
         },
         method: "POST",
       },
     );
 
     authController.setAccessDetails(response.data.attributes);
-    navigate("/", { replace: false });
+    navigate("/game", { replace: false });
   }
 </script>
 
 <AccountsFormPage
+  decideIfGeneralErrorsAreUnexpected={(errorMessages) =>
+    !errorMessages.every((errorMessage) => errorMessage.includes("code:"))}
   internalRoute={internalRoutes.acceptInvite}
   {onSubmit}
   schema={$formSchema}

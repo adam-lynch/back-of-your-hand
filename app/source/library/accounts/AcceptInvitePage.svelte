@@ -66,8 +66,8 @@
 
   // Form fields data
   let isAgreeingWithComplianceDocuments = false;
-  let password1 = "abcdef123"; // TODO
-  let password2 = "abcdef123"; // TODO
+  let password1 = "";
+  let password2 = "";
 
   const formSchema = derived([pageStatus], ([$pageStatus]) => {
     if ($pageStatus === "joinable-as-is") {

@@ -129,7 +129,6 @@ async function onLackOfAuthenticationDetected(
   if (context.cause === "401") {
     const currentInternalRoute = getCurrentInternalRoute();
     if (!currentInternalRoute?.doesNotRequireAuth) {
-      alert("a");
       navigate(getInternalRoutes().logIn.path, {
         state: {
           didSessionExpire: true,

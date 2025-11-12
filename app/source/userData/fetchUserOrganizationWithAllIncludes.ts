@@ -19,7 +19,7 @@ export default async function fetchUserOrganizationWithAllIncludes(
   id = "me",
 ): Promise<{
   organization: Organization;
-  user: User;
+  user: User | null;
   userOrganization: UserOrganization;
 }> {
   const result = await api.fetchResource<UserOrganization>(
@@ -33,8 +33,9 @@ export default async function fetchUserOrganizationWithAllIncludes(
     result,
     ({ type }) => type === "organization",
   );
-  const user = pickFromIncluded<User>(result, ({ type }) => type === "user");
-  if (!organization || !user) {
+  const user =
+    pickFromIncluded<User>(result, ({ type }) => type === "user") ?? null;
+  if (!organization) {
     throw new Error("Expected included resources missing");
   }
   return {

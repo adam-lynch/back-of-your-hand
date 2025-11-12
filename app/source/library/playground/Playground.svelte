@@ -16,6 +16,7 @@
   <ul>
     <li><Link to="/playground/auto-saving-fields">Auto-saving fields</Link></li>
     <li><Link to="/playground/button">Button</Link></li>
+    <li><Link to="/playground/checkbox">Checkbox</Link></li>
     <li><Link to="/playground/text-input">TextInput</Link></li>
     <li><Link to="/playground/select-input">SelectInput</Link></li>
     <li><Link to="/playground/form">Form</Link></li>

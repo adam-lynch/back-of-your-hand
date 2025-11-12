@@ -9,6 +9,17 @@
 
 import yup from "./yup";
 
+function checkbox(
+  mustBeChecked = false,
+  errorText = "You must check this checkbox",
+) {
+  let result = yup.boolean();
+  if (mustBeChecked) {
+    result = result.oneOf([true], errorText).required();
+  }
+  return result;
+}
+
 function email() {
   return yup.string().email().required();
 }
@@ -28,6 +39,7 @@ function newPassword() {
 }
 
 export default {
+  checkbox,
   email,
   newPassword,
 };

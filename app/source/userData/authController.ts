@@ -20,9 +20,11 @@ import eventEmitter from "../utilities/eventEmitter";
 import * as svelteStore from "svelte/store";
 import { reportError } from "../utilities/setUpErrorReporting";
 import getInternalRoutes from "../library/routing/getInternalRoutes";
+import getCurrentInternalRoute from "../library/routing/getCurrentInternalRoute";
 
 async function getValidAccessToken(options: {
   shouldRefreshAccessTokenIfExpiring: boolean;
+  url: string;
 }): Promise<store.AccessDetailsAttributes["access"] | undefined> {
   let accessDetails = svelteStore.get(store.accessDetails);
   if (!accessDetails) {
@@ -101,9 +103,7 @@ async function logIn(data: { email: string; password: string }) {
   if (!logInResponse.data.attributes) {
     throw new Error("!logInResponse.data.attributes");
   }
-  setAccessDetails(
-    pick(logInResponse.data.attributes, ["access", "accessExpiration"]),
-  );
+  setAccessDetails(logInResponse.data.attributes);
   console.debug("Logged in (setAccessDetails called)");
 }
 
@@ -128,16 +128,24 @@ async function onLackOfAuthenticationDetected(
   Sentry.setUser(null);
 
   if (context.cause === "401") {
-    navigate(getInternalRoutes().logIn.path, {
-      state: {
-        didSessionExpire: true,
-      },
-    });
+    const currentInternalRoute = getCurrentInternalRoute();
+    if (!currentInternalRoute?.doesNotRequireAuth) {
+      navigate(getInternalRoutes().logIn.path, {
+        state: {
+          didSessionExpire: true,
+        },
+      });
+    }
   }
 }
 
 async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
-  if (fetchArgs.url.includes("/auth/login")) {
+  if (
+    fetchArgs.url.includes("/actions/accept-invite") ||
+    fetchArgs.url.includes("/auth/login") ||
+    fetchArgs.url.includes("/invites/") ||
+    fetchArgs.url.includes("password/reset")
+  ) {
     return fetchArgs;
   }
 
@@ -147,6 +155,7 @@ async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
       shouldRefreshAccessTokenIfExpiring: !fetchArgs.url.includes(
         "/auth/token/refresh",
       ),
+      url: fetchArgs.url,
     });
   } catch (error) {
     reportError(error);
@@ -174,16 +183,25 @@ async function refreshAccessToken() {
   });
 }
 
-function setAccessDetails(value: store.AccessDetailsAttributes | null) {
-  console.debug("authController.setAccessDetails", value);
-  store.accessDetails.set(value);
+function setAccessDetails(
+  potentiallyUnsafeValue: store.AccessDetailsAttributes | null,
+) {
+  console.debug("authController.setAccessDetails", potentiallyUnsafeValue);
 
-  if (value) {
-    localStorage.setItem(
-      store.accessDetailsLocalStorageName,
-      JSON.stringify(value),
-    );
-    return;
+  if (potentiallyUnsafeValue) {
+    const safeValue = pick(potentiallyUnsafeValue, [
+      "access",
+      "accessExpiration",
+    ]) as store.AccessDetailsAttributes;
+    store.accessDetails.set(safeValue);
+
+    if (safeValue) {
+      localStorage.setItem(
+        store.accessDetailsLocalStorageName,
+        JSON.stringify(safeValue),
+      );
+      return;
+    }
   }
   localStorage.removeItem(store.accessDetailsLocalStorageName);
 }
@@ -192,4 +210,5 @@ export default {
   init,
   logIn,
   logOut,
+  setAccessDetails,
 };

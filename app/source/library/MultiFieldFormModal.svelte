@@ -16,6 +16,9 @@
   import type { createForm } from "felte";
   import { writable } from "svelte/store";
 
+  export let decideIfGeneralErrorsAreUnexpected:
+    | ((errorMessages: string[]) => boolean)
+    | undefined = undefined;
   export let description = "";
   export let onSubmit: (
     form: ReturnType<typeof createForm>,
@@ -65,6 +68,7 @@
     <slot name="content-top" />
     <MultiFieldForm
       action="#"
+      {decideIfGeneralErrorsAreUnexpected}
       isVisible={isOpen}
       let:form
       let:isSubmitting

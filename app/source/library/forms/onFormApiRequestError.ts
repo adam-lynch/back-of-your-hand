@@ -72,12 +72,20 @@ export default function onFormApiRequestError<TSchema extends Schema>({
         }
 
         errorMessages.push(responseError.detail);
+      } else if (error.response.status === 409 && responseError.code) {
+        errorMessages.push(
+          `Server errored due to conflict (code: ${responseError.code})`,
+        );
       }
     }
   }
 
   // 500s skip this, for example
-  if (!errorMessages.length && error instanceof ClientRequestError) {
+  if (
+    error instanceof ClientRequestError &&
+    error.responseBody &&
+    !errorMessages.length
+  ) {
     return [];
   }
 

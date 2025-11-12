@@ -20,6 +20,7 @@
 
   export let internalRoute: InternalRoute;
   export let shouldRedirectIfUserExists = true;
+  export let titleOverride: string | null = null;
 
   onMount(() => {
     const unsubscribe = user.subscribe((value) => {
@@ -55,7 +56,9 @@
             />
           {/if}
         </div>
-        <h1 class="accounts-page__title">{internalRoute.title}</h1>
+        <h1 class="accounts-page__title"
+          >{titleOverride || internalRoute.title}</h1
+        >
 
         <slot />
       </main>

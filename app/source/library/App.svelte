@@ -31,6 +31,7 @@
   import AutoSavingFieldsPlayground from "./playground/AutoSavingFieldsPlayground.svelte";
   import RouteGuard from "./routing/RouteGuard.svelte";
   import { ClientRequestError } from "../api/requestApi";
+  import CheckboxPlayground from "./playground/CheckboxPlayground.svelte";
 
   export let unhandledError: Error | null = null;
   export let url = "";
@@ -135,6 +136,10 @@
         <Route
           path="/playground/button"
           component={ButtonPlayground}
+        />
+        <Route
+          path="/playground/checkbox"
+          component={CheckboxPlayground}
         />
         <Route
           path="/playground/form"

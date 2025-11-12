@@ -8,6 +8,7 @@
 -->
 
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
   import toast from "svelte-french-toast";
   import MultiFieldFormModal from "./MultiFieldFormModal.svelte";
@@ -21,40 +22,80 @@
   import ErrorMessages from "./forms/ErrorMessages.svelte";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import requestApi from "../api/requestApi";
+  import { organization } from "../userData/store";
+  import type {
+    OmitTimestampedResourceAttributes,
+    UserOrganization,
+  } from "../api/resourceObjects";
 
   let email = "";
+  let firstName = "";
   let jobTitle = "";
-  let name = "";
+  let lastName = "";
   function onFormReset() {
     email = "";
+    firstName = "";
     jobTitle = "";
-    name = "";
+    lastName = "";
   }
 
   const selectedRole = writable<"standard" | "admin">("standard");
 
+  const dispatch = createEventDispatcher();
+
   const handleOnSubmit = async () => {
-    await requestApi("userorganizations/request_invite", {
-      body: {
-        email,
+    if (!$organization) {
+      throw new Error("No organization");
+    }
+
+    const userOrganization: Omit<
+      OmitTimestampedResourceAttributes<UserOrganization>,
+      "id"
+    > = {
+      attributes: {
+        inviteUserEmail: email,
+        inviteUserFirstName: firstName,
+        inviteUserLastName: lastName,
         jobTitle,
-        name,
         role: $selectedRole,
       },
-      isNotJSONAPI: true,
+      relationships: {
+        organization: {
+          data: {
+            id: $organization.id,
+            type: "organization",
+          },
+        },
+        user: {
+          data: null,
+        },
+      },
+      type: "userOrganization",
+    };
+
+    await requestApi("userorganizations/actions/invite", {
+      body: {
+        data: userOrganization,
+      },
       method: "POST",
     });
+
+    dispatch("invited");
 
     toast.success("User invited!", getCommonToastOptions());
   };
 </script>
 
 <MultiFieldFormModal
-  description="NOTE: invite emails can take up to a day to arrive."
+  decideIfGeneralErrorsAreUnexpected={(errorMessages) =>
+    !errorMessages.every((errorMessage) =>
+      errorMessage.includes("already exists"),
+    )}
   schema={yup.object({
     email: commonSchema.email().label("Email"),
-    jobTitle: yup.string().label("jobTitle"),
-    name: yup.string().label("Full name").required(),
+    firstName: yup.string().label("First name").required(),
+    jobTitle: yup.string().label("Job title"),
+    lastName: yup.string().label("Last name").required(),
     role: yup.string().label("Role").required(),
   })}
   on:formReset={onFormReset}
@@ -91,8 +132,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={email}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         required
         {theme}
         type="email"
@@ -101,8 +142,8 @@
 
     <Field
       {form}
-      labelText="Full name"
-      name="name"
+      labelText="First name"
+      name="firstName"
       let:_class
       let:_name
       let:ariaDescribedby
@@ -112,10 +153,33 @@
     >
       <TextInput
         aria-describedby={ariaDescribedby}
-        bind:value={name}
+        bind:value={firstName}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
+        {theme}
+        required
+        type="text"
+      />
+    </Field>
+
+    <Field
+      {form}
+      labelText="Last name"
+      name="lastName"
+      let:_class
+      let:_name
+      let:ariaDescribedby
+      let:id
+      let:theme
+      theme="dark"
+    >
+      <TextInput
+        aria-describedby={ariaDescribedby}
+        bind:value={lastName}
+        class={_class}
+        {id}
+        name={_name}
         {theme}
         required
         type="text"
@@ -137,8 +201,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={$selectedRole}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         options={["admin", "standard"].map((role) => ({
           label: prettifyRole(role),
           value: role,
@@ -163,8 +227,8 @@
         aria-describedby={ariaDescribedby}
         bind:value={jobTitle}
         class={_class}
-        name={_name}
         {id}
+        name={_name}
         {theme}
         type="text"
       />

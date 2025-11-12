@@ -24,7 +24,7 @@ import createFeatureFromPresetAreaShape from "../utilities/createFeatureFromPres
 export function setUserData(
   data: {
     organization: Organization;
-    user: User;
+    user: User | null;
     userOrganization: UserOrganization;
   } | null,
 ) {

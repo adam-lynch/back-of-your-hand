@@ -11,35 +11,40 @@
   import { derived } from "svelte/store";
   import toast from "svelte-french-toast";
   import type { User, UserOrganization } from "../api/resourceObjects";
-  import prettifyUserName from "../utilities/prettifyUserName";
+  import prettifyUserOrganizationName from "../utilities/prettifyUserOrganizationName";
   import ConfirmationModal from "./ConfirmationModal.svelte";
   import { user as currentUser } from "../userData/store";
   import api from "../api";
   import eventEmitter from "../utilities/eventEmitter";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
 
-  export let onConfirm: (
-    user: User,
-    userOrganization: UserOrganization,
-  ) => void = () => {};
-  export let user: User;
+  export let onConfirm: (data: {
+    isCurrentUser: boolean;
+    userOrganizationId: string;
+  }) => void = () => {};
+  export let user: User | null;
   export let userOrganization: UserOrganization;
 
-  let isCurrentUser = derived(
-    currentUser,
-    ($currentUser) => $currentUser?.id === user.id,
+  let isCurrentUser = derived(currentUser, ($currentUser) =>
+    $currentUser && user ? $currentUser.id === user.id : false,
   );
 
-  const title = `Delete ${$isCurrentUser ? "your account" : prettifyUserName(user)}?`;
+  const title = `Delete ${$isCurrentUser ? "your account" : prettifyUserOrganizationName(userOrganization, user)}?`;
 
   const handleConfirm = async () => {
     const userOrganizationId = userOrganization.id;
-    onConfirm(user, userOrganization);
+    onConfirm({
+      isCurrentUser: $isCurrentUser,
+      userOrganizationId: userOrganization.id,
+    });
     await api.deleteResource<UserOrganization>(
       "userOrganization",
       userOrganizationId,
     );
-    eventEmitter.emit("user-deleted", user.id);
+    eventEmitter.emit("user-organization-deleted", {
+      isCurrentUser: $isCurrentUser,
+      userOrganizationId,
+    });
     toast.success("User deleted!", getCommonToastOptions());
   };
 </script>

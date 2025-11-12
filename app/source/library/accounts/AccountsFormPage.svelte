@@ -28,12 +28,14 @@
     [k: string]: any;
   }>;
   export let shouldRedirectIfUserExists = true;
+  export let titleOverride: string | null = null;
   export let topLevelErrorMessage = "";
 </script>
 
 <AccountsPage
   {internalRoute}
   {shouldRedirectIfUserExists}
+  {titleOverride}
 >
   <slot name="top" />
 
@@ -41,27 +43,29 @@
     <p>Error: {topLevelErrorMessage}</p>
   {/if}
 
-  <MultiFieldForm
-    action="#"
-    class="accounts-form-page__form"
-    {decideIfErrorShouldBeReported}
-    {decideIfGeneralErrorsAreUnexpected}
-    let:form
-    let:generalErrorMessages
-    {onSubmit}
-    {schema}
-  >
-    <slot
-      name="fields"
-      {form}
-    />
+  {#key schema}
+    <MultiFieldForm
+      action="#"
+      class="accounts-form-page__form"
+      {decideIfErrorShouldBeReported}
+      {decideIfGeneralErrorsAreUnexpected}
+      let:form
+      let:generalErrorMessages
+      {onSubmit}
+      {schema}
+    >
+      <slot
+        name="fields"
+        {form}
+      />
 
-    <ErrorMessages messages={generalErrorMessages} />
+      <ErrorMessages messages={generalErrorMessages} />
 
-    <footer class="accounts-form-page__footer">
-      <slot name="accounts-form-footer" />
-    </footer>
-  </MultiFieldForm>
+      <footer class="accounts-form-page__footer">
+        <slot name="accounts-form-footer" />
+      </footer>
+    </MultiFieldForm>
+  {/key}
 </AccountsPage>
 
 <style>

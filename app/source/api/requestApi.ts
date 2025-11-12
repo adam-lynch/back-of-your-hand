@@ -71,7 +71,6 @@ export default async function requestApi<TSuccessfulResponsePayload>(
       responseBody: JSONAPI.DocWithErrors | undefined,
     ) => MaybePromise<number>;
     headers?: Record<string, string>;
-    isNotJSONAPI?: boolean;
     urlSearchParams?: URLSearchParams;
     urlPrefix?: string;
   },

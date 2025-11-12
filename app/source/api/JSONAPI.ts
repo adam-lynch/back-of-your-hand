@@ -15,6 +15,7 @@ export type {
   DocWithErrors,
   DocWithMeta,
   RelationshipsWithData,
+  ResourceIdentifierObject,
 } from "jsonapi-typescript";
 
 export interface ToOneRelationship<

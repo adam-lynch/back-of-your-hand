@@ -17,6 +17,7 @@
   import yup from "../forms/yup";
   import commonSchema from "../forms/commonSchema";
   import SelectInput from "../forms/SelectInput.svelte";
+  import CheckboxInput from "../forms/CheckboxInput.svelte";
 
   const attributes: Attribute[] = [];
 </script>
@@ -35,6 +36,7 @@
         let:form
         onSubmit={() => {}}
         schema={yup.object({
+          checkbox: commonSchema.checkbox(true).label("Checkbox"),
           email: commonSchema.email().label("Email"),
           firstName: yup.string().label("First name").max(3).required(),
           lastName: yup.string().label("Last name").required(),
@@ -122,6 +124,7 @@
           let:id
           let:theme
           name="password1"
+          theme={pageTheme}
         >
           <TextInput
             aria-describedby={ariaDescribedby}
@@ -145,6 +148,7 @@
           let:theme
           name="password2"
           required
+          theme={pageTheme}
         >
           <TextInput
             aria-describedby={ariaDescribedby}
@@ -168,6 +172,7 @@
           let:theme
           name="select"
           required
+          theme={pageTheme}
         >
           <SelectInput
             aria-describedby={ariaDescribedby}
@@ -178,6 +183,28 @@
               { label: "Hello", value: "hello" },
               { label: "World", value: "world" },
             ]}
+            required
+            {theme}
+          />
+        </Field>
+
+        <Field
+          {form}
+          labelText="Checkbox"
+          let:_class
+          let:_name
+          let:ariaDescribedby
+          let:id
+          let:theme
+          name="checkbox"
+          required
+          theme={pageTheme}
+        >
+          <CheckboxInput
+            aria-describedby={ariaDescribedby}
+            class={_class}
+            {id}
+            name={_name}
             required
             {theme}
           />

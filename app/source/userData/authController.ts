@@ -139,7 +139,10 @@ async function onLackOfAuthenticationDetected(
 }
 
 async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
-  if (fetchArgs.url.includes("/auth/login")) {
+  if (
+    fetchArgs.url.includes("/auth/login") ||
+    fetchArgs.url.includes("password/reset")
+  ) {
     return fetchArgs;
   }
 
@@ -180,18 +183,21 @@ function setAccessDetails(
   potentiallyUnsafeValue: store.AccessDetailsAttributes | null,
 ) {
   console.debug("authController.setAccessDetails", potentiallyUnsafeValue);
-  const safeValue = pick(potentiallyUnsafeValue, [
-    "access",
-    "accessExpiration",
-  ]) as store.AccessDetailsAttributes | null;
-  store.accessDetails.set(safeValue);
 
-  if (safeValue) {
-    localStorage.setItem(
-      store.accessDetailsLocalStorageName,
-      JSON.stringify(safeValue),
-    );
-    return;
+  if (potentiallyUnsafeValue) {
+    const safeValue = pick(potentiallyUnsafeValue, [
+      "access",
+      "accessExpiration",
+    ]) as store.AccessDetailsAttributes;
+    store.accessDetails.set(safeValue);
+
+    if (safeValue) {
+      localStorage.setItem(
+        store.accessDetailsLocalStorageName,
+        JSON.stringify(safeValue),
+      );
+      return;
+    }
   }
   localStorage.removeItem(store.accessDetailsLocalStorageName);
 }

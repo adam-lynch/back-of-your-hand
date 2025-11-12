@@ -24,6 +24,7 @@ import getCurrentInternalRoute from "../library/routing/getCurrentInternalRoute"
 
 async function getValidAccessToken(options: {
   shouldRefreshAccessTokenIfExpiring: boolean;
+  url: string;
 }): Promise<store.AccessDetailsAttributes["access"] | undefined> {
   let accessDetails = svelteStore.get(store.accessDetails);
   if (!accessDetails) {
@@ -140,7 +141,9 @@ async function onLackOfAuthenticationDetected(
 
 async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
   if (
+    fetchArgs.url.includes("/actions/accept-invite") ||
     fetchArgs.url.includes("/auth/login") ||
+    fetchArgs.url.includes("/invites/") ||
     fetchArgs.url.includes("password/reset")
   ) {
     return fetchArgs;
@@ -152,6 +155,7 @@ async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
       shouldRefreshAccessTokenIfExpiring: !fetchArgs.url.includes(
         "/auth/token/refresh",
       ),
+      url: fetchArgs.url,
     });
   } catch (error) {
     reportError(error);

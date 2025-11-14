@@ -24,6 +24,7 @@ import getCenterOfFeature from "./getCenterOfFeature";
 import convertPositionToLatLng from "./convertPositionToLatLng";
 import getBboxOfFeature from "./getBboxOfFeature";
 import { reportError } from "./setUpErrorReporting";
+import { usMajorStateRoadRegex } from "./elementRegularExpressions";
 
 const difficultiesToHighwayCategories: {
   [difficulty: string]: string[];
@@ -304,6 +305,8 @@ export default async ({
     const key = element.tags.name?.toLowerCase();
 
     if (
+      (difficulty === Difficulty.MajorStateRoads &&
+        !(element.tags?.ref && usMajorStateRoadRegex.test(element.tags.ref))) ||
       exclusions.some((exclusion) => {
         if (
           element.tags.highway &&
@@ -317,7 +320,8 @@ export default async ({
         }
         return exclusion.name === key;
       }) ||
-      (element.tags.highway &&
+      (difficulty in difficultiesToHighwayCategories &&
+        element.tags.highway &&
         !difficultiesToHighwayCategories[difficulty].includes(
           element.tags.highway,
         )) ||

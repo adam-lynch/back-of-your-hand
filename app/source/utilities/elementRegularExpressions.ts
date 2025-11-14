@@ -7,4 +7,4 @@
  * Copyright © 2025 Adam Lynch (https://adamlynch.com)
  */
 
-export const usInterstateRoadRegex = /(I|US|PA)[ -]?[0-9]{1,4}/;
+export const usMajorStateRoadRegex = /(I|US|PA)[ -]?[0-9]{1,4}/;

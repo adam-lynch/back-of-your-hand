@@ -8,7 +8,7 @@
  */
 
 import type { Overpass } from "../library/game/types";
-import { usInterstateRoadRegex } from "./elementRegularExpressions";
+import { usMajorStateRoadRegex } from "./elementRegularExpressions";
 
 const isUsableAlternativeName = (
   alternativeName: string | void,
@@ -41,7 +41,7 @@ const getAlternativeName = (
 
   if (
     isUsableAlternativeName(element.tags.ref, mainName) &&
-    usInterstateRoadRegex.test(element.tags.ref)
+    usMajorStateRoadRegex.test(element.tags.ref)
   ) {
     return { name: element.tags.ref };
   }

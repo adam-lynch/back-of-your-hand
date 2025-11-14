@@ -385,6 +385,27 @@
           <div class="wideSetting">
             <p class="radioButtonGroupTitle">Difficulty</p>
             <fieldset class="difficultyRadioButtonGroup">
+              {#if $isOrganizationUrl && $organization?.attributes.difficulties.some((customDifficulty) => customDifficulty.id === Difficulty.MajorStateRoads)}
+                <label
+                  class:selectedRadioButtonLabel={formDifficultyGroup ===
+                    Difficulty.MajorStateRoads}
+                >
+                  <input
+                    bind:group={formDifficultyGroup}
+                    on:input={onDifficultyInput}
+                    type="radio"
+                    value={Difficulty.MajorStateRoads}
+                  />
+                  <span class="difficultyLabelTextWrapper">
+                    <span class="difficultyLabelMainText"
+                      >Major state roads</span
+                    >
+                    <span class="difficultyLabelDescription"
+                      >Interstate and major state roads only</span
+                    >
+                  </span>
+                </label>
+              {/if}
               <label
                 class:selectedRadioButtonLabel={formDifficultyGroup ===
                   Difficulty.Tourist}

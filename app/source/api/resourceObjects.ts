@@ -58,6 +58,9 @@ export type OmitTimestampedResourceAttributes<T extends AnyResourceObject> =
 export type Organization = JSONAPI.ResourceObject<
   "organization",
   TimestampedResourceAttributes & {
+    difficulties: {
+      id: string;
+    }[];
     location: OptionalAttributeValue<string>;
     logo: OptionalAttributeValue<string>;
     name: string;

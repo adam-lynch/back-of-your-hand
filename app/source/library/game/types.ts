@@ -74,6 +74,7 @@ export namespace Overpass {
 }
 
 export enum Difficulty {
+  MajorStateRoads = "major-state-roads",
   Tourist = "tourist",
   Resident = "resident",
   TaxiDriver = "taxi-driver",

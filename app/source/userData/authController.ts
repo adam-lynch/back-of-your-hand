@@ -188,20 +188,22 @@ function setAccessDetails(
 ) {
   console.debug("authController.setAccessDetails", potentiallyUnsafeValue);
 
+  let safeValue = potentiallyUnsafeValue;
   if (potentiallyUnsafeValue) {
-    const safeValue = pick(potentiallyUnsafeValue, [
+    safeValue = pick(potentiallyUnsafeValue, [
       "access",
       "accessExpiration",
     ]) as store.AccessDetailsAttributes;
-    store.accessDetails.set(safeValue);
+  }
 
-    if (safeValue) {
-      localStorage.setItem(
-        store.accessDetailsLocalStorageName,
-        JSON.stringify(safeValue),
-      );
-      return;
-    }
+  store.accessDetails.set(safeValue);
+
+  if (safeValue) {
+    localStorage.setItem(
+      store.accessDetailsLocalStorageName,
+      JSON.stringify(safeValue),
+    );
+    return;
   }
   localStorage.removeItem(store.accessDetailsLocalStorageName);
 }

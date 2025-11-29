@@ -704,7 +704,10 @@
       & .leaflet-bar a,
       & .leaflet-bar button,
       & .leaflet-touch .leaflet-right a {
-        padding: 2px 7px 2px 10px !important;
+        font-size: 1rem !important;
+      }
+
+      & .leaflet-container .leaflet-control-attribution {
         font-size: 1rem !important;
       }
     }

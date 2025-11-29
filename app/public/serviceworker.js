@@ -72,9 +72,12 @@ addEventListener("fetch", (fetchEvent) => {
 
   fetchEvent.respondWith(
     (async function () {
-      const targetCacheName = request.url.includes("cartocdn.com")
-        ? tileCacheName
-        : generalCacheName;
+      const targetCacheName =
+        // TODO: remove
+        request.url.includes("cartocdn.com") ||
+        request.url.includes("tile.openstreetmap.org")
+          ? tileCacheName
+          : generalCacheName;
 
       const responseFromFetch = fetch(request);
       if (request.headers.get("Accept").includes("text/html")) {

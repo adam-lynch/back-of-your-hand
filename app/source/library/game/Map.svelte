@@ -23,7 +23,6 @@
   import roundNumber from "../../utilities/roundNumber";
   import waitForAnyOngoingZoomsToEnd from "../../utilities/waitForAnyOngoingZoomsToEnd";
   import { writable } from "svelte/store";
-  import type { HTMLSharpImage } from "../customElements";
   import createLeafletFeatureGroupFromAreaSelection from "../utilities/createLeafletFeatureGroupFromAreaSelection";
   import updateAreaCenterWithWarningIfNecessary from "../utilities/updateAreaCenterWithWarningIfNecessary";
   import {
@@ -43,8 +42,8 @@
   } from "../../utilities/store";
   import { isOrganizationUrl } from "../../userData/store";
 
-  const shouldUseSimpleTileLayers = true;
-  const shouldAlwaysShowBaseTileLayer = !shouldUseSimpleTileLayers;
+  const shouldAlwaysShowBaseTileLayer = true;
+  const shouldOnlyShowBaseTileLayer = true;
   const getBoundsPaddingWhenMarkingBounds = () =>
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
@@ -62,30 +61,15 @@
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup | null;
 
-  const CustomTileLayer = leaflet.TileLayer.extend({
-    createTile: function (coords: unknown, done: () => void) {
-      const tile = document.createElement("sharp-img") as HTMLSharpImage;
-      tile.onload = leaflet.bind(this._tileOnLoad, this, done, tile);
-      tile.onerror = leaflet.bind(this._tileOnError, this, done, tile);
-
-      tile.alt = "";
-      tile.src = this.getTileUrl(coords);
-      tile.setAttribute("role", "presentation");
-
-      return tile;
-    },
-  }) as unknown as typeof leaflet.TileLayer;
-
   const getTileLayer = (name: "base" | "labels") => {
     const nameToUrlMap = {
-      base: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
-      labels:
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png",
+      base: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      labels: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     };
 
-    return new CustomTileLayer(nameToUrlMap[name], {
+    return new leaflet.TileLayer(nameToUrlMap[name], {
       attribution:
-        '\u003ca href="https://carto.com/legal/" target="_blank"\u003e\u0026copy; Carto\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e',
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxNativeZoom: 18,
       maxZoom: maxMapZoom,
     });
@@ -189,7 +173,7 @@
   };
 
   const hideElementLabels = async (): Promise<void> => {
-    if (!areElementLabelsShown) {
+    if (shouldOnlyShowBaseTileLayer || !areElementLabelsShown) {
       return;
     }
 
@@ -204,7 +188,7 @@
   };
 
   const showElementLabels = async (): Promise<void> => {
-    if (areElementLabelsShown) {
+    if (shouldOnlyShowBaseTileLayer || areElementLabelsShown) {
       return;
     }
 
@@ -798,22 +782,6 @@
     & .leaflet-tooltip {
       color: black;
       opacity: 0.8 !important;
-    }
-
-    & #map:not(.leaflet-safari) .leaflet-tile-container {
-      filter: grayscale(0.8);
-    }
-
-    & #map:not(.leaflet-safari) .leaflet-tile {
-      filter: saturate(8) hue-rotate(-10deg);
-    }
-
-    /* Safari filters are broken */
-    & .leaflet-safari .leaflet-tile-pane .leaflet-layer {
-      filter: grayscale(0.9);
-    }
-    & .leaflet-safari .leaflet-tile-container {
-      filter: saturate(4) hue-rotate(-10deg);
     }
 
     & sharp-img {

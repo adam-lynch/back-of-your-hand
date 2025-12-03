@@ -8,6 +8,8 @@
 -->
 
 <script lang="ts">
+  import "@maplibre/maplibre-gl-leaflet";
+  import * as versatilesStyles from "@versatiles/style";
   import leaflet, { type LeafletMouseEventHandlerFn } from "leaflet";
   import debounce from "lodash/debounce";
   import { onMount } from "svelte";
@@ -42,8 +44,6 @@
   } from "../../utilities/store";
   import { isOrganizationUrl } from "../../userData/store";
 
-  const shouldAlwaysShowBaseTileLayer = true;
-  const shouldOnlyShowBaseTileLayer = true;
   const getBoundsPaddingWhenMarkingBounds = () =>
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
@@ -61,23 +61,26 @@
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup | null;
 
-  const getTileLayer = (name: "base" | "labels") => {
-    const nameToUrlMap = {
-      base: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-      labels: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-    };
+  function createStyle(name: "base" | "labels") {
+    return versatilesStyles.colorful({
+      baseUrl: "https://tiles.versatiles.org/tiles/osm",
+      hideLabels: name === "base",
+    });
+  }
 
-    return new leaflet.TileLayer(nameToUrlMap[name], {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxNativeZoom: 18,
+  const getTileLayer = (name: "base" | "labels") => {
+    const style = createStyle(name);
+
+    return new leaflet.MaplibreGL({
       maxZoom: maxMapZoom,
+      style,
     });
   };
 
-  const tileLayers = {
-    base: getTileLayer("base"),
-    labels: getTileLayer("labels"),
+  const tileLayer = getTileLayer("labels");
+  const tileLayerStyles = {
+    base: createStyle("base"),
+    labels: createStyle("labels"),
   };
 
   let areElementLabelsShown = true;
@@ -173,32 +176,20 @@
   };
 
   const hideElementLabels = async (): Promise<void> => {
-    if (shouldOnlyShowBaseTileLayer || !areElementLabelsShown) {
+    if (!areElementLabelsShown) {
       return;
     }
 
-    if (!shouldAlwaysShowBaseTileLayer) {
-      await new Promise<void>((resolve) => {
-        tileLayers.base.once("add", () => resolve()).addTo(map);
-      });
-    }
-
-    map.removeLayer(tileLayers.labels);
+    tileLayer.getMaplibreMap().setStyle(tileLayerStyles.base);
     areElementLabelsShown = false;
   };
 
   const showElementLabels = async (): Promise<void> => {
-    if (shouldOnlyShowBaseTileLayer || areElementLabelsShown) {
+    if (areElementLabelsShown) {
       return;
     }
 
-    await new Promise<void>((resolve) => {
-      tileLayers.labels.once("add", () => resolve()).addTo(map);
-    });
-
-    if (!shouldAlwaysShowBaseTileLayer) {
-      map.removeLayer(tileLayers.base);
-    }
+    tileLayer.getMaplibreMap().setStyle(tileLayerStyles.labels);
     areElementLabelsShown = true;
   };
 
@@ -356,9 +347,7 @@
     const initialMapOptions = {
       boxZoom: false,
       doubleClickZoom: false,
-      layers: shouldAlwaysShowBaseTileLayer
-        ? Object.values(tileLayers)
-        : [tileLayers.labels],
+      layers: [tileLayer],
       minZoom: defaultMinZoom,
       zoomControl: false,
       zoomSnap: 0.25,

@@ -21,6 +21,7 @@
   import getViewportWidth from "../../utilities/getViewportWidth";
   import type { GameRound, Question } from "./types";
   import delay from "../../utilities/delay";
+  import * as defaults from "../../utilities/defaults";
   import capLng from "../../utilities/capLng";
   import roundNumber from "../../utilities/roundNumber";
   import waitForAnyOngoingZoomsToEnd from "../../utilities/waitForAnyOngoingZoomsToEnd";
@@ -48,11 +49,15 @@
     getViewportWidth() >= 800 ? 0.2 : 0;
   export let areSettingsShown = writable(false);
 
-  let areaBoundsFeatureGroup: leaflet.FeatureGroup<leaflet.Path>;
-  let areaBoundsCenterMarker: leaflet.Circle;
+  let areaBoundsFeatureGroup: leaflet.FeatureGroup<leaflet.Path> | null = null;
+  let areaBoundsCenterMarker: leaflet.Circle | null = null;
   // The options passed to markBounds() when starting a new round, i.e. for area selection
   const areaSelectionMarkBoundsOptions = {
     shouldShowAreaBoundsPopup: true,
+  };
+  const fallbackAreaCenter: leaflet.LatLngLiteral = {
+    lat: 51.89863,
+    lng: -8.47039,
   };
   const defaultMinZoom = 3.5;
   let chosenPointMarker: leaflet.Marker | null;
@@ -60,6 +65,43 @@
   let mapElement: HTMLElement;
   const maxMapZoom = 23; // https://github.com/adam-lynch/back-of-your-hand/issues/38#issuecomment-1079887466
   let resultFeatureGroup: leaflet.FeatureGroup | null;
+
+  const isFiniteNumber = (value: unknown): value is number =>
+    typeof value === "number" && Number.isFinite(value);
+
+  const isLatLngLiteralFinite = (
+    latLng: leaflet.LatLngLiteral | null | undefined,
+  ): latLng is leaflet.LatLngLiteral =>
+    Boolean(latLng) &&
+    isFiniteNumber(latLng?.lat) &&
+    isFiniteNumber(latLng?.lng);
+
+  const getValidBoundsWithCenter = (
+    bounds: leaflet.LatLngBounds | null | undefined,
+  ) => {
+    if (!bounds || !bounds.isValid()) {
+      return null;
+    }
+
+    try {
+      const center = bounds.getCenter();
+      if (!isLatLngLiteralFinite(center)) {
+        return null;
+      }
+      return { bounds, center };
+    } catch (error) {
+      console.warn("Encountered invalid bounds", error);
+      return null;
+    }
+  };
+
+  const getSafeAreaCenter = (): leaflet.LatLngLiteral =>
+    isLatLngLiteralFinite($areaCenter) ? $areaCenter : fallbackAreaCenter;
+
+  const getSafeAreaRadius = (): number =>
+    isFiniteNumber($areaRadius) && $areaRadius > 0
+      ? $areaRadius
+      : defaults.radius;
 
   function createStyle(name: "base" | "labels") {
     return versatilesStyles.colorful({
@@ -101,14 +143,37 @@
   }: {
     shouldShowAreaBoundsPopup?: boolean;
   }) => {
-    const newAreaBoundsFeatureGroup: typeof areaBoundsFeatureGroup =
+    const newAreaBoundsFeatureGroup =
       createLeafletFeatureGroupFromAreaSelection(
         svelteStore.get(areaSelection),
         areaBoundsLayerGroupSelectionStyle,
+      ).addTo(map);
+
+    let newAreaBoundsWithCenter: ReturnType<typeof getValidBoundsWithCenter>;
+    try {
+      newAreaBoundsWithCenter = getValidBoundsWithCenter(
+        newAreaBoundsFeatureGroup.getBounds(),
       );
-    newAreaBoundsFeatureGroup.addTo(map);
-    const newAreaBounds = newAreaBoundsFeatureGroup.getBounds();
-    const newAreaBoundsCenter = newAreaBounds.getCenter();
+    } catch (error) {
+      console.warn(
+        "Skipping markBounds; failed to compute bounds",
+        error,
+        svelteStore.get(areaSelection),
+      );
+      map.removeLayer(newAreaBoundsFeatureGroup);
+      return;
+    }
+
+    if (!newAreaBoundsWithCenter) {
+      console.warn(
+        "Skipping markBounds; computed bounds are invalid",
+        svelteStore.get(areaSelection),
+      );
+      map.removeLayer(newAreaBoundsFeatureGroup);
+      return;
+    }
+    const { bounds: newAreaBounds, center: newAreaBoundsCenter } =
+      newAreaBoundsWithCenter;
 
     const newAreaBoundsCenterMarker = leaflet
       .circle(newAreaBoundsCenter, {
@@ -195,10 +260,25 @@
 
   // I.e. when they've confirmed the area selection
   const onAreaConfirmed = () => {
+    if (!areaBoundsFeatureGroup) {
+      console.warn("Area confirmed but no bounds feature group exists yet");
+      return;
+    }
+
     hideElementLabels();
     locateControl.remove(map);
 
-    const areaBounds = areaBoundsFeatureGroup.getBounds();
+    const areaBoundsInfo = getValidBoundsWithCenter(
+      areaBoundsFeatureGroup.getBounds(),
+    );
+    if (!areaBoundsInfo) {
+      console.warn(
+        "Area bounds invalid during confirmation; skipping map fit",
+        svelteStore.get(areaSelection),
+      );
+      return;
+    }
+    const { bounds: areaBounds } = areaBoundsInfo;
     map
       .fitBounds(areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
@@ -212,9 +292,10 @@
       opacity: 0.4,
     });
 
-    areaBoundsCenterMarker.closePopup().unbindPopup();
-
-    map.removeLayer(areaBoundsCenterMarker);
+    if (areaBoundsCenterMarker) {
+      areaBoundsCenterMarker.closePopup().unbindPopup();
+      map.removeLayer(areaBoundsCenterMarker);
+    }
   };
 
   // When they've confirmed their guess, compute and draw result
@@ -344,6 +425,26 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
 
     const viewportWidth = getViewportWidth();
+    const initialBoundsPadding = getBoundsPaddingWhenMarkingBounds();
+    const initialAreaSelection = svelteStore.get(areaSelection);
+    let selectionBounds: ReturnType<typeof getValidBoundsWithCenter> | null =
+      null;
+    try {
+      selectionBounds = getValidBoundsWithCenter(
+        createLeafletFeatureGroupFromAreaSelection(
+          initialAreaSelection,
+          areaBoundsLayerGroupSelectionStyle,
+        ).getBounds(),
+      );
+    } catch (error) {
+      console.warn("Falling back to default bounds", error);
+    }
+    const initialBoundsToUse =
+      selectionBounds?.bounds ??
+      leaflet
+        .latLng(getSafeAreaCenter())
+        .toBounds(getSafeAreaRadius())
+        .pad(initialBoundsPadding);
     const initialMapOptions = {
       boxZoom: false,
       doubleClickZoom: false,
@@ -375,12 +476,7 @@
       .on("zoomstart", () => {
         ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
       })
-      .fitBounds(
-        leaflet
-          .latLng($areaCenter)
-          .toBounds($areaRadius)
-          .pad(getBoundsPaddingWhenMarkingBounds()),
-      )
+      .fitBounds(initialBoundsToUse.pad(initialBoundsPadding))
       .addControl(zoomControl);
 
     locateControl.add(map);
@@ -416,10 +512,15 @@
       resultFeatureGroup = null;
     }
     if (shouldFitBounds && areaBoundsFeatureGroup) {
-      map.fitBounds(areaBoundsFeatureGroup.getBounds()).once("zoomend", () => {
-        // This prevents the map going (and staying gray) on Firefox for Android sometimes
-        map.panBy([1, 1]);
-      });
+      const boundsInfo = getValidBoundsWithCenter(
+        areaBoundsFeatureGroup.getBounds(),
+      );
+      if (boundsInfo) {
+        map.fitBounds(boundsInfo.bounds).once("zoomend", () => {
+          // This prevents the map going (and staying gray) on Firefox for Android sometimes
+          map.panBy([1, 1]);
+        });
+      }
     }
   };
 
@@ -596,7 +697,7 @@
           resetMap(false, true);
           locateControl.add(map);
           markBounds(areaSelectionMarkBoundsOptions);
-          areaBoundsFeatureGroup.setStyle(areaBoundsLayerGroupSelectionStyle);
+          areaBoundsFeatureGroup?.setStyle(areaBoundsLayerGroupSelectionStyle);
 
           return;
         }

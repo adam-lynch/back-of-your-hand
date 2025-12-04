@@ -93,8 +93,8 @@
     }
     areSettingsShown.set(false);
     chosenPoint.set(null);
-    isChosenPointConfirmed.set(false);
     isAreaConfirmed.set(false);
+    isChosenPointConfirmed.set(false);
     gameRound.set(null);
     didOpenMultiplayerSessionUrl.set(false);
     sidebarState.set("default");

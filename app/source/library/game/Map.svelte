@@ -110,22 +110,16 @@
     });
   }
 
-  const getTileLayer = (name: "base" | "labels") => {
-    const style = createStyle(name);
-
-    return new leaflet.MaplibreGL({
+  const getTileLayer = (name: "base" | "labels") =>
+    new leaflet.MaplibreGL({
       maxZoom: maxMapZoom,
-      style,
+      style: createStyle(name),
     });
-  };
 
   const tileLayer = getTileLayer("labels");
-  const tileLayerStyles = {
-    base: createStyle("base"),
-    labels: createStyle("labels"),
-  };
 
   let areElementLabelsShown = true;
+  let maplibreLabelLayerIds: string[] | null = null;
 
   // Used when intializing, plus when updating its style (when starting a new round)
   const areaBoundsLayerGroupSelectionStyle = {
@@ -240,12 +234,70 @@
     areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
+  const setMaplibreLabelVisibility = (shouldShow: boolean) => {
+    const maplibreMap = tileLayer.getMaplibreMap();
+    // To be safe
+    if (!maplibreMap) {
+      console.warn("Maplibre map unavailable, cannot toggle labels");
+      return;
+    }
+
+    const applyVisibility = () => {
+      if (!maplibreLabelLayerIds || maplibreLabelLayerIds.length === 0) {
+        const style = maplibreMap.getStyle();
+        if (!style?.layers) {
+          return;
+        }
+
+        const hasTextOrIcon = (layout: unknown) =>
+          Boolean(
+            layout &&
+              typeof layout === "object" &&
+              ("text-field" in (layout as Record<string, unknown>) ||
+                "icon-image" in (layout as Record<string, unknown>)),
+          );
+
+        maplibreLabelLayerIds = style.layers
+          .filter(
+            ({ layout, type }) => type === "symbol" || hasTextOrIcon(layout),
+          )
+          .map(({ id }) => id);
+      }
+
+      if (!maplibreLabelLayerIds || maplibreLabelLayerIds.length === 0) {
+        return;
+      }
+
+      maplibreLabelLayerIds.forEach((layerId) => {
+        try {
+          maplibreMap.setLayoutProperty(
+            layerId,
+            "visibility",
+            shouldShow ? "visible" : "none",
+          );
+        } catch (error) {
+          console.warn("Failed toggling label layer visibility", {
+            error,
+            layerId,
+          });
+        }
+      });
+    };
+
+    if (!maplibreMap.isStyleLoaded()) {
+      maplibreMap.once("styledata", applyVisibility);
+      return;
+    }
+
+    applyVisibility();
+  };
+
   const hideElementLabels = async (): Promise<void> => {
     if (!areElementLabelsShown) {
       return;
     }
 
-    tileLayer.getMaplibreMap().setStyle(tileLayerStyles.base);
+    setMaplibreLabelVisibility(false);
     areElementLabelsShown = false;
   };
 
@@ -254,7 +306,7 @@
       return;
     }
 
-    tileLayer.getMaplibreMap().setStyle(tileLayerStyles.labels);
+    setMaplibreLabelVisibility(true);
     areElementLabelsShown = true;
   };
 

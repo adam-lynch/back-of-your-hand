@@ -539,7 +539,10 @@
     if (window.ResizeObserver !== undefined) {
       new ResizeObserver(
         debounce(
-          () => {
+          (entries) => {
+            console.debug("ResizeObserver fired", {
+              entriesCount: entries.length,
+            });
             if (map) {
               map.invalidateSize();
             }

@@ -153,19 +153,49 @@ const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
     }
   }
 
-  const response = await fetch(`https://www.overpass-api.de/api/interpreter`, {
-    body: `data=${overpassQuery}`,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  });
+  const performFetch = () => {
+    return fetch(`https://www.overpass-api.de/api/interpreter`, {
+      body: `data=${overpassQuery}`,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+    });
+  };
+
+  let response = await performFetch();
+
+  if (!response.ok) {
+    if (response.status >= 500 && response.status < 600) {
+      // Retry if it makes sense
+      if (response.status === 504) {
+        response = await performFetch();
+        // Still failed?
+        if (!response.ok) {
+          throw new Error(
+            `Failed to retrieve street data. Third-party OpenStreetMap data provider (Overpass) has timed out (${response.status}). We have tried twice. They could be experiencing a temporary outage, please try again later`,
+          );
+        }
+      } else {
+        throw new Error(
+          `Failed to retrieve street data. Third-party OpenStreetMap data provider (Overpass) has errored (${response.status}). They could be experiencing a temporary outage, please try again later`,
+        );
+      }
+    } else {
+      throw new Error(
+        `Failed to retrieve street data from third-party OpenStreetMap data provider (Overpass) (${response.status})`,
+      );
+    }
+  }
+
   let result;
   try {
     result = await response.json();
   } catch (e) {
-    throw new Error("Cannot parse Overpass API response");
+    throw new Error(
+      "Cannot parse street data from third-party OpenStreetMap data provider (Overpass)",
+    );
   }
 
   if (shouldCacheResponseInBrowser) {

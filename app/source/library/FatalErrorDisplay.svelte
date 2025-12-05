@@ -66,11 +66,19 @@
 
     {#if !isOrganization404 && error}
       <h2>Error details</h2>
-      <pre>
-        <code>{error.message + "\n" + error.stack}</code>
+      <pre class="error-pre">
+        <code class="error-code">{error.message + "\n\n" + error.stack}</code>
       </pre>
     {/if}
   </div>
 </div>
 
-<style></style>
+<style>
+  .error-pre {
+    white-space: pre-line;
+
+    & code {
+      text-wrap: auto;
+    }
+  }
+</style>

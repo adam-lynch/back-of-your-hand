@@ -193,8 +193,9 @@ const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
   try {
     result = await response.json();
   } catch (e) {
+    console.error(e);
     throw new Error(
-      "Cannot parse street data from third-party OpenStreetMap data provider (Overpass)",
+      `Cannot parse street data from third-party OpenStreetMap data provider (Overpass). [${e}]`,
     );
   }
 

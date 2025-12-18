@@ -6,7 +6,7 @@
   Tile images: network
 */
 
-const generalCacheName = "files-v4";
+const generalCacheName = "files-v5";
 const offlinePageUrl = "/offline";
 const tileCacheName = "tiles-v2";
 const tileMaxEntries = 5000; // first in, first out
@@ -75,7 +75,8 @@ addEventListener("fetch", (fetchEvent) => {
       const targetCacheName =
         // TODO: remove
         request.url.includes("cartocdn.com") ||
-        request.url.includes("tile.openstreetmap.org")
+        request.url.includes("tile.openstreetmap.org") ||
+        request.url.includes("tiles.versatiles.org/tiles")
           ? tileCacheName
           : generalCacheName;
 

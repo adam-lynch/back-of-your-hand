@@ -7,8 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import sveltePreprocess from "svelte-preprocess";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import browserslistToEsbuild from "browserslist-to-esbuild";
 import { preprocess as delegateAllEvents } from "svelte-preprocess-delegate-events";
 // @ts-expect-error no types available
@@ -34,7 +33,7 @@ export default defineConfig({
         }
         handler(warning);
       },
-      preprocess: [sveltePreprocess({ typescript: true }), delegateAllEvents()],
+      preprocess: [vitePreprocess(), delegateAllEvents()],
     }),
     Icons({
       compiler: "svelte",

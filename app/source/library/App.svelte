@@ -32,7 +32,6 @@
   import RouteGuard from "./routing/RouteGuard.svelte";
   import { ClientRequestError } from "../api/requestApi";
   import CheckboxPlayground from "./playground/CheckboxPlayground.svelte";
-  import { reportError } from "../utilities/setUpErrorReporting";
 
   export let unhandledError: Error | null = null;
   export let url = "";
@@ -62,44 +61,6 @@
   }
 
   onMount(() => {
-    if (import.meta.env.DEV) {
-      const params = new URLSearchParams(window.location.search);
-      const hasDebuggerFlag =
-        params.has("debugger") ||
-        window.sessionStorage.getItem("boyh-debugger") === "1";
-      const hasStacktraceFlag =
-        params.has("stacktrace") ||
-        window.sessionStorage.getItem("boyh-stacktrace") === "1";
-
-      if (hasDebuggerFlag) {
-        window.sessionStorage.removeItem("boyh-debugger");
-        const stacktraceError = new Error("Stacktrace check");
-        (window as Window & { __BOYH_STACKTRACE?: string }).__BOYH_STACKTRACE =
-          stacktraceError.stack;
-        // eslint-disable-next-line no-debugger
-        debugger;
-        console.error(stacktraceError);
-      } else if (hasStacktraceFlag) {
-        window.sessionStorage.removeItem("boyh-stacktrace");
-        const stacktraceError = new Error("Stacktrace check");
-        (window as Window & { __BOYH_STACKTRACE?: string }).__BOYH_STACKTRACE =
-          stacktraceError.stack;
-        console.error(stacktraceError);
-      }
-    }
-
-    if (import.meta.env.PROD) {
-      const smokeTestKey = "boyh-sentry-stacktrace-test";
-      if (window.sessionStorage.getItem(smokeTestKey) !== "1") {
-        window.sessionStorage.setItem(smokeTestKey, "1");
-        const smokeTestError = new Error(
-          "Sentry stacktrace smoke test from App.svelte",
-        );
-        smokeTestError.name = "SentryStacktraceSmokeTest";
-        reportError(smokeTestError);
-      }
-    }
-
     const unsubscribers: (() => void)[] = [];
 
     if ($isOrganizationUrl) {

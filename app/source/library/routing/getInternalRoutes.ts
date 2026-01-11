@@ -11,6 +11,7 @@ import type SvelteRouting from "svelte-routing";
 
 import AccountDeletedPage from "../accounts/AccountDeletedPage.svelte";
 import ChangePasswordPage from "../ChangePasswordPage.svelte";
+import DiagnosticsPage from "../DiagnosticsPage.svelte";
 import GamePage from "../game/GamePage.svelte";
 import LogInPage from "../accounts/LogInPage.svelte";
 import UserPage from "../UserPage.svelte";
@@ -68,6 +69,13 @@ export default function getInternalRoutes(): Record<string, InternalRoute> {
       path: "/accounts/confirm-password-reset",
       requirementsToExist: ["organization-plan"],
       title: "Reset password",
+    },
+    diagnostics: {
+      component: DiagnosticsPage,
+      doesNotRequireAuth: true,
+      id: "diagnostics",
+      path: "/diagnostics",
+      title: "Diagnostics",
     },
     game: {
       alternativePath: "/",

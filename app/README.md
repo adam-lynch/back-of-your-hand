@@ -14,6 +14,10 @@ Prerequisites: [Node.js](https://nodejs.org).
 
 This recompiles and live-reloads the app as you make changes.
 
+## Tests
+
+See [tests/README.md](./tests/README.md) for details.
+
 ### HTTPS
 
 To set up HTTPS, set these environment variables:

@@ -13,7 +13,9 @@
     "prepare": "husky",
     "preview": "vite preview",
     "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
-    "test": "echo 'No tests yet, but I'm open to it'",
+    "test": "npm run vitest",
+    "vitest": "vitest run",
+    "vitest--watch": "vitest",
     "visualize": "npx vite-bundle-visualizer"
   },
   "dependencies": {
@@ -64,6 +66,7 @@
     "typescript": "^5.2.2",
     "typescript-eslint": "^7.16.1",
     "unplugin-icons": "^0.19.3",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "vitest": "^2.1.9"
   }
 }

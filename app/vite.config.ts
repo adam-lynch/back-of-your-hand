@@ -12,7 +12,7 @@ import browserslistToEsbuild from "browserslist-to-esbuild";
 import { preprocess as delegateAllEvents } from "svelte-preprocess-delegate-events";
 // @ts-expect-error no types available
 import getCommitId from "git-commit-id";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import Icons from "unplugin-icons/vite";
 
 // https://vitejs.dev/config/
@@ -24,6 +24,11 @@ export default defineConfig({
   },
   define: {
     COMMIT_ID: JSON.stringify(getCommitId({ cwd: ".." }) || "unknown"),
+  },
+  test: {
+    include: ["tests/**/*.test.ts"],
+    environment: "node",
+    clearMocks: true,
   },
   plugins: [
     svelte({

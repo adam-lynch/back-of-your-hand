@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import capNumber from "../../source/utilities/capNumber";
+import capNumber from "../../../source/utilities/capNumber";
 
 describe("capNumber", () => {
   it("caps values within the provided range", () => {

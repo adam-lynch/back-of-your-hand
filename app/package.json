@@ -8,15 +8,17 @@
     "build": "vite build",
     "dev": "vite",
     "format": "prettier --write .",
-    "lint-all": "npm run format && eslint --config ./eslint.config.js --fix . && npm run svelte-check && cd .. && node ./build/licenseHeader/lint.js --all --write && cd app",
     "lint-all--no-fix": "npm run svelte-check && cd .. && node ./build/licenseHeader/lint.js --all && cd app && eslint --config ./eslint.config.js . && prettier --check .",
+    "lint-all": "npm run format && eslint --config ./eslint.config.js --fix . && npm run svelte-check && cd .. && node ./build/licenseHeader/lint.js --all --write && cd app",
+    "playwright--watch": "playwright test --ui",
+    "playwright": "playwright test",
     "prepare": "husky",
     "preview": "vite preview",
     "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
-    "test": "npm run vitest",
-    "vitest": "vitest run",
+    "test": "npm run vitest && npm run playwright",
+    "visualize": "npx vite-bundle-visualizer",
     "vitest--watch": "vitest",
-    "visualize": "npx vite-bundle-visualizer"
+    "vitest": "vitest run"
   },
   "dependencies": {
     "@felte/reporter-svelte": "^1.1.11",
@@ -47,6 +49,7 @@
   },
   "devDependencies": {
     "@iconify/json": "^2.2.261",
+    "@playwright/test": "^1.52.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
     "@types/eslint": "^8.56.10",

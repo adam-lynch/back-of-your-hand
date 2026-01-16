@@ -801,6 +801,7 @@
   on:pointerdown={closeSettingsForSmallDevices}
   bind:this={mapElement}
   id="map"
+  data-testid="game-map"
 />
 
 <style

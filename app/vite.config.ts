@@ -26,7 +26,7 @@ export default defineConfig({
     COMMIT_ID: JSON.stringify(getCommitId({ cwd: ".." }) || "unknown"),
   },
   test: {
-    include: ["tests/**/*.test.ts"],
+    include: ["tests/vitest/**/*.test.ts"],
     environment: "node",
     clearMocks: true,
   },

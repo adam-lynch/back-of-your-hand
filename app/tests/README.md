@@ -1,11 +1,10 @@
 # Tests
 
-Unit tests live in this folder and mirror the `app/source` structure so it scales.
-For example, `app/source/utilities/capNumber.ts` is covered by
-`app/tests/utilities/capNumber.test.ts`.
+Tests are split by tool under this directory.
 
-## Running tests
+- [`/tests/playwright`](./playwright)
+- [`/tests/vitest`](./vitest)
 
-- `npm run vitest` (single run)
-- `npm run vitest--watch` (watch mode)
-- `npm test` (alias for `npm run vitest`)
+Refer to the README in each subfolder for commands, naming conventions, and where to place helpers.
+
+You can run all tests with `npm test`

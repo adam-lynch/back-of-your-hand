@@ -25,6 +25,14 @@ import convertPositionToLatLng from "./convertPositionToLatLng";
 import getBboxOfFeature from "./getBboxOfFeature";
 import { reportError } from "./setUpErrorReporting";
 import { usMajorStateRoadRegex } from "./elementRegularExpressions";
+import { OVERPASS_ENDPOINTS } from "./overpassEndpoints";
+
+type OverpassAttempt = {
+  elapsedMs: number;
+  errorName?: string;
+  status?: number;
+  url: string;
+};
 
 const difficultiesToHighwayCategories: {
   [difficulty: string]: string[];
@@ -45,6 +53,121 @@ difficultiesToHighwayCategories[Difficulty.TaxiDriver] = [
   "steps",
   "unclassified",
 ];
+
+const RETRYABLE_OVERPASS_STATUSES = new Set([408, 429]);
+
+function isRetryableOverpassStatus(status: number) {
+  return (
+    RETRYABLE_OVERPASS_STATUSES.has(status) || (status >= 500 && status < 600)
+  );
+}
+
+export async function fetchOverpassWithFallback(
+  overpassQuery: string,
+): Promise<Overpass.Response> {
+  const requestBody = `data=${overpassQuery}`;
+  const requestHeaders = {
+    Accept: "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+  const attempts: OverpassAttempt[] = [];
+  const totalStartMs = Date.now();
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    const attemptStartMs = Date.now();
+    try {
+      const response = await fetch(endpoint.url, {
+        body: requestBody,
+        headers: requestHeaders,
+        method: "POST",
+      });
+      const elapsedMs = Date.now() - attemptStartMs;
+
+      if (response.ok) {
+        console.debug("Overpass request succeeded", {
+          url: endpoint.url,
+          elapsedMs,
+        });
+        try {
+          return (await response.json()) as Overpass.Response;
+        } catch (error) {
+          console.error("Overpass response JSON parse failed", {
+            url: endpoint.url,
+            error,
+          });
+          throw new Error(
+            `Cannot parse street data from third-party OpenStreetMap data provider (Overpass). [${error}]`,
+          );
+        }
+      }
+
+      const attempt = {
+        url: endpoint.url,
+        status: response.status,
+        elapsedMs,
+      };
+      attempts.push(attempt);
+
+      if (isRetryableOverpassStatus(response.status)) {
+        console.warn("Overpass request failed, trying next endpoint", attempt);
+        continue;
+      }
+
+      console.error(
+        "Overpass request failed with non-retryable status",
+        attempt,
+      );
+      throw new Error(
+        `Failed to retrieve street data from third-party OpenStreetMap data provider (Overpass) (${response.status})`,
+      );
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        (error.message.startsWith("Failed to retrieve street data") ||
+          error.message.startsWith("Cannot parse street data"))
+      ) {
+        throw error;
+      }
+
+      const attempt = {
+        url: endpoint.url,
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        elapsedMs: Date.now() - attemptStartMs,
+      };
+      attempts.push(attempt);
+      console.warn("Overpass request errored, trying next endpoint", {
+        ...attempt,
+        error,
+      });
+    }
+  }
+
+  const totalElapsedMs = Date.now() - totalStartMs;
+  const lastAttempt = attempts[attempts.length - 1];
+  const attemptSummary = attempts
+    .map(
+      (attempt) =>
+        `${attempt.url}=${attempt.status ?? attempt.errorName ?? "error"}`,
+    )
+    .join(", ");
+
+  const errorMessage = `Failed to retrieve street data. ${
+    attempts.length
+  } third-party OpenStreetMap data providers have failed (Overpass) (last status: ${
+    lastAttempt?.status ?? "unknown"
+  }). They could be experiencing a temporary outage, please try again later. Attempts: ${attemptSummary}`;
+  const errorWithContext = new Error(errorMessage) as Error & {
+    attempts?: OverpassAttempt[];
+    totalElapsedMs?: number;
+  };
+  errorWithContext.attempts = attempts;
+  errorWithContext.totalElapsedMs = totalElapsedMs;
+
+  console.error("Overpass fallbacks exhausted", {
+    attempts,
+    totalElapsedMs,
+  });
+  throw errorWithContext;
+}
 
 // Convert to our type, join with other streets of the same name, etc.
 const adjustStreetDetails = (
@@ -153,50 +276,12 @@ const load = async ({ areaSelection }: { areaSelection: AreaSelection }) => {
     }
   }
 
-  const performFetch = () => {
-    return fetch(`https://www.overpass-api.de/api/interpreter`, {
-      body: `data=${overpassQuery}`,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      method: "POST",
-    });
-  };
-
-  let response = await performFetch();
-
-  if (!response.ok) {
-    if (response.status >= 500 && response.status < 600) {
-      // Retry if it makes sense
-      if (response.status === 504) {
-        response = await performFetch();
-        // Still failed?
-        if (!response.ok) {
-          throw new Error(
-            `Failed to retrieve street data. Third-party OpenStreetMap data provider (Overpass) has timed out (${response.status}). We have tried twice. They could be experiencing a temporary outage, please try again later`,
-          );
-        }
-      } else {
-        throw new Error(
-          `Failed to retrieve street data. Third-party OpenStreetMap data provider (Overpass) has errored (${response.status}). They could be experiencing a temporary outage, please try again later`,
-        );
-      }
-    } else {
-      throw new Error(
-        `Failed to retrieve street data from third-party OpenStreetMap data provider (Overpass) (${response.status})`,
-      );
-    }
-  }
-
   let result;
   try {
-    result = await response.json();
-  } catch (e) {
-    console.error(e);
-    throw new Error(
-      `Cannot parse street data from third-party OpenStreetMap data provider (Overpass). [${e}]`,
-    );
+    result = await fetchOverpassWithFallback(overpassQuery);
+  } catch (error) {
+    reportError(error);
+    throw error;
   }
 
   if (shouldCacheResponseInBrowser) {

@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import Page from "./Page.svelte";
   import getInternalRoutes from "./routing/getInternalRoutes";
+  import { OVERPASS_ENDPOINTS } from "../utilities/overpassEndpoints";
 
   // @ts-expect-error ...
   declare const COMMIT_ID: string;
@@ -71,59 +72,31 @@
 
   const internalRoute = getInternalRoutes().diagnostics;
 
+  const overpassDisplayNamesById: Record<string, string> = {
+    "overpass-primary": "Overpass primary",
+    "overpass-z": "Overpass Z",
+    "overpass-lz4": "Overpass LZ4",
+    "private-coffee": "Overpass Private Coffee",
+  };
+
+  const overpassTests: DiagnosticTest[] = OVERPASS_ENDPOINTS.map(
+    ({ id, url }) => ({
+      id,
+      name: overpassDisplayNamesById[id] ?? id,
+      request: {
+        body: "[out:json];node(0,0,0,0);out;",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        method: "POST",
+        url,
+      },
+      retriesByStatus: { 504: 3 },
+    }),
+  );
+
   const tests: DiagnosticTest[] = [
-    {
-      id: "overpass-primary",
-      name: "Overpass primary",
-      request: {
-        body: "[out:json];node(0,0,0,0);out;",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        },
-        method: "POST",
-        url: "https://www.overpass-api.de/api/interpreter",
-      },
-      retriesByStatus: { 504: 3 },
-    },
-    {
-      id: "overpass-z",
-      name: "Overpass Z",
-      request: {
-        body: "[out:json];node(0,0,0,0);out;",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        },
-        method: "POST",
-        url: "https://z.overpass-api.de/api/interpreter",
-      },
-      retriesByStatus: { 504: 3 },
-    },
-    {
-      id: "overpass-lz4",
-      name: "Overpass LZ4",
-      request: {
-        body: "[out:json];node(0,0,0,0);out;",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        },
-        method: "POST",
-        url: "https://lz4.overpass-api.de/api/interpreter",
-      },
-      retriesByStatus: { 504: 3 },
-    },
-    {
-      id: "private-coffee",
-      name: "Overpass Private Coffee",
-      request: {
-        body: "[out:json];node(0,0,0,0);out;",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
-        },
-        method: "POST",
-        url: "https://overpass.private.coffee/api/interpreter",
-      },
-      retriesByStatus: { 504: 3 },
-    },
+    ...overpassTests,
     {
       id: "versatiles-sprites",
       name: "Versatiles sprites",

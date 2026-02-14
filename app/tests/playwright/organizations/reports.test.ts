@@ -10,6 +10,7 @@
 import { expect, test } from "../mocking/setup";
 import { example1Users, organizations } from "../fixtures/test-users";
 import { logIn } from "../helpers/auth";
+import getTestDate from "../helpers/dates";
 import { playThroughRound } from "../helpers/map";
 
 const org = organizations.example1;
@@ -154,7 +155,7 @@ test.describe("Reports", () => {
 
   test("completed round appears in reports with correct data", async ({
     page,
-  }) => {
+  }, testInfo) => {
     const user = example1Users.admin;
     await logIn(page, org, user);
 
@@ -194,13 +195,12 @@ test.describe("Reports", () => {
     expect(userCell?.trim()).toContain(user.firstName);
     expect(areaCell?.trim()).toBe(selectedAreaName?.trim());
 
-    const today = new Date();
-    const todayStr = today.toLocaleDateString("en-US", {
+    const testDate = await getTestDate(testInfo);
+    const expectedDateStr = testDate.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-      year: "numeric",
     });
-    expect(dateCell).toContain(todayStr.split(",")[0]);
+    expect(dateCell).toContain(expectedDateStr);
   });
 
   test("standard user cannot access reports page", async ({ page }) => {

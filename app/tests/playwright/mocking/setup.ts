@@ -9,8 +9,8 @@
 
 import { test as base } from "@playwright/test";
 import type { Page, TestInfo } from "@playwright/test";
-import { join, relative } from "path";
 import isRecordableRequest from "./is-recordable-request";
+import getMockFilePath from "./paths";
 import { ApiRecorder } from "./recorder";
 
 const backend = process.env.PLAYWRIGHT_BACKEND || "mock";
@@ -23,11 +23,7 @@ async function setupMocks(page: Page, testInfo: TestInfo): Promise<void> {
   }
 
   try {
-    // Derive mock file path from test file path
-    const playwrightDir = join(process.cwd(), "tests", "playwright");
-    const relativePath = relative(playwrightDir, testInfo.file);
-    const mockFileName = relativePath.replace(/\.test\.ts$/, ".ts");
-    const mockFilePath = join(playwrightDir, "mocking", "mocks", mockFileName);
+    const mockFilePath = getMockFilePath(testInfo.file);
 
     const mocksModule = await import(mockFilePath);
     const allMocks = mocksModule.default || {};

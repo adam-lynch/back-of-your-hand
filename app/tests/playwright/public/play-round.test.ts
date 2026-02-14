@@ -8,58 +8,19 @@
  */
 
 import { expect, test } from "../mocking/setup";
+import { playThroughRound } from "../helpers/map";
 
 test("can play a complete round without authentication", async ({ page }) => {
+  test.setTimeout(60_000);
   await page.goto("/");
 
   await expect(page.getByTestId("game-map")).toBeVisible();
 
   await page.getByRole("button", { name: /play solo/i }).click();
 
-  const mapElement = page.getByTestId("game-map");
-  const confirmButton = page.getByRole("button", { name: /confirm/i });
-  await expect(confirmButton).toBeVisible({ timeout: 10000 });
-
-  const mapBox = await mapElement.boundingBox();
-  if (mapBox) {
-    await page.mouse.click(
-      mapBox.x + mapBox.width / 2,
-      mapBox.y + mapBox.height / 2,
-    );
-  }
-
-  await expect(confirmButton).toBeEnabled();
-  await confirmButton.click();
-
-  const nextButton = page.getByRole("button", { name: /next/i });
-  const startNewRoundButton = page.getByRole("button", {
-    name: /start a new round/i,
-  });
-
-  await expect(nextButton.or(startNewRoundButton)).toBeVisible({
+  await expect(page.getByRole("button", { name: /confirm/i })).toBeVisible({
     timeout: 10000,
   });
 
-  while (await nextButton.isVisible()) {
-    await nextButton.click();
-
-    await expect(confirmButton).toBeVisible({ timeout: 10000 });
-
-    const currentMapBox = await mapElement.boundingBox();
-    if (currentMapBox) {
-      await page.mouse.click(
-        currentMapBox.x + currentMapBox.width / 2,
-        currentMapBox.y + currentMapBox.height / 2,
-      );
-    }
-
-    await expect(confirmButton).toBeEnabled();
-    await confirmButton.click();
-
-    await expect(nextButton.or(startNewRoundButton)).toBeVisible({
-      timeout: 10000,
-    });
-  }
-
-  await expect(startNewRoundButton).toBeVisible();
+  await playThroughRound(page);
 });

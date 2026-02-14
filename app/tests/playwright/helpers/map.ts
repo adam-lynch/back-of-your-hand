@@ -11,6 +11,9 @@ import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 export async function clickMapCenter(mapElement: Locator): Promise<void> {
+  await expect(mapElement).not.toHaveAttribute("data-zooming", {
+    timeout: 10000,
+  });
   const mapBox = await mapElement.boundingBox();
   if (!mapBox) {
     throw new Error("Map element not found or has no bounding box");

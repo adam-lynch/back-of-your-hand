@@ -802,6 +802,7 @@
   bind:this={mapElement}
   id="map"
   data-testid="game-map"
+  data-zooming={$ongoingZoomCount > 0 ? "" : undefined}
 />
 
 <style

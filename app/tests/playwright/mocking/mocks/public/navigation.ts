@@ -88,6 +88,8 @@ const mocks = {
       },
     },
   },
+  "can navigate to game page": {},
+  "root path shows game": {},
 };
 
 export default mocks;

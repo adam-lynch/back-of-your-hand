@@ -1,0 +1,56 @@
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Project: Back Of Your Hand (https://backofyourhand.com)
+# Repository: https://github.com/adam-lynch/back-of-your-hand
+# Copyright © 2026 Adam Lynch (https://adamlynch.com)
+
+version: 2.1
+
+parameters:
+  run-playwright-tests:
+    type: boolean
+    default: false
+
+jobs:
+  playwright-tests:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.57.0-noble
+    environment:
+      BOYH_HTTPS_CERT: /tmp/cert.pem
+      BOYH_HTTPS_KEY: /tmp/key.pem
+    steps:
+      - checkout
+      - run:
+          name: Add /etc/hosts entries
+          command: |
+            echo "127.0.0.1 local-backofyourhand.com" >> /etc/hosts
+            echo "127.0.0.1 example1.local-backofyourhand.com" >> /etc/hosts
+            echo "127.0.0.1 example2.local-backofyourhand.com" >> /etc/hosts
+      - run:
+          name: Generate self-signed HTTPS certificate
+          command: >
+            openssl req -x509 -newkey rsa:2048
+            -keyout /tmp/key.pem -out /tmp/cert.pem
+            -days 1 -nodes -subj '/CN=localhost'
+      - run:
+          name: Install dependencies
+          command: npm ci && cd app && npm ci
+      - run:
+          name: Run Playwright tests
+          environment:
+            PLAYWRIGHT_JUNIT_OUTPUT_NAME: /tmp/playwright-results.xml
+          command: |
+            CPUS=$(awk '$1 != "max" { printf "%d", $1/$2 }' /sys/fs/cgroup/cpu.max 2>/dev/null) || true
+            cd app && npx playwright test --workers=${CPUS:-$(nproc)} --timeout=60000 --reporter=list,junit
+      - store_test_results:
+          path: /tmp/playwright-results.xml
+      - store_artifacts:
+          path: app/tests/playwright/test-results
+          destination: playwright-results
+
+workflows:
+  ci:
+    when: << pipeline.parameters.run-playwright-tests >>
+    jobs:
+      - playwright-tests

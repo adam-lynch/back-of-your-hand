@@ -45,6 +45,8 @@ export default defineConfig({
     }),
   ],
   server: {
+    port: 5173,
+    strictPort: true,
     https: {
       cert: process.env.BOYH_HTTPS_CERT,
       key: process.env.BOYH_HTTPS_KEY,

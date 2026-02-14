@@ -1,5 +1,7 @@
 .DS_Store
 /.vscode
+.env.local
 dist
 marketing-site
 node_modules
+test-results

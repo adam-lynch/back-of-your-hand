@@ -2,7 +2,7 @@
 
 How well do you know your area? Test your knowledge by locating streets.
 
-![Screenshots of the game; one narrow / mobile sized, one desktop sized. In one, the user is asked to find a particular street, but they haven't placed a marker / guess on the map yet. The other is an example where the result of a guess is being shown (i.e. the street is revealed and the distance is shown, etc.)](./public/images/combined-screenshots.png)
+![Screenshots of the game; one narrow / mobile sized, one desktop sized. In one, the user is asked to find a particular street, but they haven't placed a marker / guess on the map yet. The other is an example where the result of a guess is being shown (i.e. the street is revealed and the distance is shown, etc.)](./app/public/images/combined-screenshots.png)
 
 ---
 

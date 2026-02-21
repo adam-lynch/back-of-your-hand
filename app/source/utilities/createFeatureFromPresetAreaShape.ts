@@ -22,7 +22,7 @@ export default function createFeatureFromPresetAreaShape(
 
   if (presetAreaShape === PresetAreaShape.Square) {
     const radiusInDegrees = radius / 111320;
-    const squareBbox = [
+    const squareBbox: [number, number, number, number] = [
       centerPosition[0] - radiusInDegrees, // xmin (longitude - radius)
       centerPosition[1] - radiusInDegrees, // ymin (latitude - radius)
       centerPosition[0] + radiusInDegrees, // xmax (longitude + radius)

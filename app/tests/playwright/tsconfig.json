@@ -4,5 +4,6 @@
     "types": ["node", "@playwright/test"],
     "moduleResolution": "node"
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["mocking/mocks/**"]
 }

@@ -10,6 +10,16 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
+export async function getStreetName(page: Page): Promise<string> {
+  const streetNameElement = page.locator(".street-name");
+  await expect(streetNameElement).toBeVisible({ timeout: 10000 });
+  const text = await streetNameElement.textContent();
+  if (!text) {
+    throw new Error("Street name element is empty");
+  }
+  return text.trim();
+}
+
 export async function clickMapCenter(mapElement: Locator): Promise<void> {
   await expect(mapElement).not.toHaveAttribute("data-is-zooming", {
     timeout: 10000,

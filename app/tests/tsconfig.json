@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "@playwright/test", "vitest", "vite/client"],
+    "moduleResolution": "node"
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["playwright/mocking/mocks/**"]
+}

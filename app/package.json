@@ -21,7 +21,7 @@
     "playwright:record-mocks:organizations": "PLAYWRIGHT_BACKEND=local PLAYWRIGHT_SHOULD_RECORD_MOCKS=true playwright test tests/playwright/organizations",
     "prepare": "husky",
     "preview": "vite preview",
-    "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json",
+    "svelte-check": "svelte-check --compiler-warnings \"css-unused-selector:ignore\" --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json && tsc --noEmit -p tests/tsconfig.json",
     "test": "npm run vitest && npm run playwright",
     "visualize": "npx vite-bundle-visualizer",
     "vitest--watch": "vitest",

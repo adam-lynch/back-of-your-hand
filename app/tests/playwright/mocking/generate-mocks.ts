@@ -27,7 +27,10 @@ export async function generatePlaywrightMocks(
   const mockFileName = relativePath.replace(/\.test\.ts$/, ".mock.ts");
   const mockFilePath = join(playwrightDir, "mocking", "mocks", mockFileName);
 
-  let mocks: Record<string, unknown> = {};
+  interface MockTree {
+    [key: string]: MockTree;
+  }
+  let mocks = {} as MockTree;
 
   if (existsSync(mockFilePath)) {
     try {
@@ -38,7 +41,7 @@ export async function generatePlaywrightMocks(
         /const mocks = ({[\s\S]*?});?\s*export default mocks;/,
       );
       if (match) {
-        mocks = JSON.parse(match[1]);
+        mocks = JSON.parse(match[1]) as MockTree;
       }
     } catch (error) {
       console.warn(`Failed to read existing mocks, starting fresh: ${error}`);
@@ -49,16 +52,16 @@ export async function generatePlaywrightMocks(
     let current = mocks;
     for (const pathSegment of response.testPath) {
       if (!current[pathSegment]) {
-        current[pathSegment] = {};
+        current[pathSegment] = {} as MockTree;
       }
       current = current[pathSegment];
     }
 
     if (!current[response.endpoint]) {
-      current[response.endpoint] = {};
+      current[response.endpoint] = {} as MockTree;
     }
 
-    current[response.endpoint][response.index] = {
+    (current[response.endpoint] as Record<string, unknown>)[response.index] = {
       method: response.method,
       url: response.url,
       status: response.status,

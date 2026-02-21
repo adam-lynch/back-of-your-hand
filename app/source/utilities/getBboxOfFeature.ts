@@ -21,7 +21,7 @@ export default function getBboxOfFeature(
   turfArray: number[];
   west: number;
 } {
-  let turfArray = turf.bbox(feature);
+  let turfArray: number[] = turf.bbox(feature);
   if (numberOfDecimalPointsToConsider !== Infinity) {
     turfArray = turfArray.map((item) =>
       roundNumber(item, numberOfDecimalPointsToConsider),

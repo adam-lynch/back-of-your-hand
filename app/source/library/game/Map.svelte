@@ -788,6 +788,7 @@
     );
 
     return () => {
+      locateControl.remove(map);
       for (const unsubscriber of unsubscribers) {
         unsubscriber();
       }

@@ -33,14 +33,17 @@ export async function clickMapCenter(mapElement: Locator): Promise<void> {
     .mouse.click(mapBox.x + mapBox.width / 2, mapBox.y + mapBox.height / 2);
 }
 
-/**
- * Plays through all questions in a round by clicking the map center and
- * confirming each answer until the "start a new round" button appears.
- */
 export async function playThroughRound(
   page: Page,
-  { maxIterations = 30 }: { maxIterations?: number } = {},
-): Promise<void> {
+  {
+    shouldCollectStreetNames = false,
+    maxIterations = 30,
+  }: {
+    shouldCollectStreetNames?: boolean;
+    maxIterations?: number;
+  } = {},
+): Promise<string[]> {
+  const streetNames: string[] = [];
   const mapElement = page.getByTestId("game-map");
   const confirmButton = page.getByRole("button", { name: /confirm/i });
   const nextButton = page.getByRole("button", { name: /next/i });
@@ -48,16 +51,14 @@ export async function playThroughRound(
     name: /start a new round/i,
   });
 
+  if (shouldCollectStreetNames) {
+    streetNames.push(await getStreetName(page));
+  }
   await clickMapCenter(mapElement);
   await expect(confirmButton).toBeEnabled({ timeout: 5000 });
   await confirmButton.click();
 
-  const MAX_ITERATIONS = maxIterations;
-  let iterationCount = 0;
-
-  while (iterationCount < MAX_ITERATIONS) {
-    iterationCount++;
-
+  for (let i = 0; i < maxIterations; i++) {
     await expect(nextButton.or(startNewRoundButton)).toBeVisible({
       timeout: 10000,
     });
@@ -72,16 +73,22 @@ export async function playThroughRound(
 
     await nextButton.click();
 
+    if (shouldCollectStreetNames) {
+      streetNames.push(await getStreetName(page));
+    }
     await clickMapCenter(mapElement);
     await expect(confirmButton).toBeEnabled({ timeout: 5000 });
     await confirmButton.click();
   }
 
-  if (iterationCount >= MAX_ITERATIONS) {
-    throw new Error(
-      `Round did not complete after ${MAX_ITERATIONS} iterations`,
-    );
-  }
-
   await expect(startNewRoundButton).toBeVisible({ timeout: 10000 });
+
+  return streetNames;
+}
+
+export async function clickStartNewRound(page: Page): Promise<void> {
+  await page.getByRole("button", { name: /start a new round/i }).click();
+  await expect(page.getByRole("button", { name: /confirm/i })).toBeVisible({
+    timeout: 120000,
+  });
 }

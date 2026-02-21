@@ -10,7 +10,7 @@
 import { expect, test } from "../mocking/setup";
 import { example1Users, organizations } from "../fixtures/test-users";
 import { logIn } from "../helpers/auth";
-import { clickMapCenter, playThroughRound } from "../helpers/map";
+import { playThroughRound } from "../helpers/map";
 
 const organization = organizations.example1;
 const user = example1Users.standardUser;
@@ -142,46 +142,14 @@ test.describe("Points of Interest Area Filtering", () => {
       const confirmButton = page.getByRole("button", { name: /confirm/i });
       await expect(confirmButton).toBeVisible({ timeout: 30000 });
 
-      const streetName = page.locator(".street-name");
-      const nextButton = page.getByRole("button", { name: /next/i });
-      const startNewRoundButton = page.getByRole("button", {
-        name: /start a new round/i,
+      const streetNames = await playThroughRound(page, {
+        shouldCollectStreetNames: true,
+        maxIterations: 50,
       });
 
       const expectedFeatureName = "Hutchinson High School";
-      let hasFoundExpectedFeature = false;
-      const MAX_ITERATIONS = 50;
-
-      for (let i = 0; i < MAX_ITERATIONS; i++) {
-        await expect(streetName).toBeVisible({ timeout: 5000 });
-        const questionText = (await streetName.textContent())?.trim();
-
-        if (questionText === expectedFeatureName) {
-          hasFoundExpectedFeature = true;
-          break;
-        }
-
-        await clickMapCenter(mapElement);
-        await expect(confirmButton).toBeEnabled({ timeout: 5000 });
-        await confirmButton.click();
-
-        await expect(nextButton.or(startNewRoundButton)).toBeVisible({
-          timeout: 10000,
-        });
-
-        const isRoundComplete = await startNewRoundButton
-          .isVisible({ timeout: 100 })
-          .catch(() => false);
-
-        if (isRoundComplete) {
-          break;
-        }
-
-        await nextButton.click();
-      }
-
       expect(
-        hasFoundExpectedFeature,
+        streetNames.includes(expectedFeatureName),
         `"${expectedFeatureName}" should appear during gameplay`,
       ).toBe(true);
     });

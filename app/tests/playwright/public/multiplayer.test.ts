@@ -8,10 +8,9 @@
  */
 
 import { expect, test } from "../mocking/setup";
-import { playThroughRound } from "../helpers/map";
+import { clickStartNewRound, playThroughRound } from "../helpers/map";
 import {
   assertSameStreets,
-  clickStartNewRound,
   createFriendPage,
   startMultiplayerAsLeader,
 } from "../helpers/multiplayer";

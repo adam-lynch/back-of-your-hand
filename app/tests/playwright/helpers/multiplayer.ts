@@ -9,43 +9,7 @@
 
 import type { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { clickMapCenter, getStreetName } from "./map";
-
-export async function collectStreetNamesForRound(
-  page: Page,
-): Promise<string[]> {
-  const names: string[] = [];
-  const mapElement = page.getByTestId("game-map");
-  const confirmButton = page.getByRole("button", { name: /confirm/i });
-  const nextButton = page.getByRole("button", { name: /next/i });
-  const startNewRoundButton = page.getByRole("button", {
-    name: /start a new round/i,
-  });
-
-  names.push(await getStreetName(page));
-  await clickMapCenter(mapElement);
-  await expect(confirmButton).toBeEnabled({ timeout: 5000 });
-  await confirmButton.click();
-
-  for (let i = 0; i < 30; i++) {
-    await expect(nextButton.or(startNewRoundButton)).toBeVisible({
-      timeout: 10000,
-    });
-
-    const isRoundComplete = await startNewRoundButton
-      .isVisible({ timeout: 100 })
-      .catch(() => false);
-    if (isRoundComplete) break;
-
-    await nextButton.click();
-    names.push(await getStreetName(page));
-    await clickMapCenter(mapElement);
-    await expect(confirmButton).toBeEnabled({ timeout: 5000 });
-    await confirmButton.click();
-  }
-
-  return names;
-}
+import { playThroughRound } from "./map";
 
 export async function startMultiplayerAsLeader(page: Page): Promise<string> {
   const multiplayerButton = page.getByRole("button", {
@@ -107,19 +71,12 @@ export async function assertSameStreets(
   friendPage: Page,
 ): Promise<string[]> {
   const [leaderStreets, friendStreets] = await Promise.all([
-    collectStreetNamesForRound(leaderPage),
-    collectStreetNamesForRound(friendPage),
+    playThroughRound(leaderPage, { shouldCollectStreetNames: true }),
+    playThroughRound(friendPage, { shouldCollectStreetNames: true }),
   ]);
 
   expect(leaderStreets).toEqual(friendStreets);
   expect(leaderStreets.length).toBeGreaterThanOrEqual(5);
 
   return leaderStreets;
-}
-
-export async function clickStartNewRound(page: Page): Promise<void> {
-  await page.getByRole("button", { name: /start a new round/i }).click();
-  await expect(page.getByRole("button", { name: /confirm/i })).toBeVisible({
-    timeout: 120000,
-  });
 }

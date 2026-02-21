@@ -26,6 +26,7 @@
     settingsLastOpenedAt,
     sidebarState,
   } from "../../utilities/store";
+  import getSeed from "../../utilities/getSeed";
   import { isOrganizationUrl, organization } from "../../userData/store";
   import Summary from "./Summary.svelte";
   import trackEvent from "../../utilities/trackEvent";
@@ -39,6 +40,7 @@
   import makeClickHandlerIgnoreDoubleClicks from "../utilities/makeClickHandlerIgnoreDoubleClicks";
 
   export let areSettingsShown = writable(false);
+  export let clearRound: () => void;
   export let resetGame: () => void;
 
   const onNumberOfQuestionsUpdated = (event: Event) => {
@@ -74,9 +76,9 @@
     isChosenPointConfirmed.set(false);
   };
 
-  const onRestartClicked = () => {
-    trackEvent({ name: "restart", title: "Restart" });
-    resetGame();
+  const onStartNewRoundClicked = () => {
+    trackEvent({ name: "start-new-round", title: "Start new round" });
+    clearRound();
 
     // It's required to set it to false and then true again
     isAreaConfirmed.set(true);
@@ -102,6 +104,7 @@
   };
 
   const onStartMultiplayerClicked = async () => {
+    seed.set(getSeed());
     sidebarState.set("creating-multiplayer-session");
   };
 
@@ -186,7 +189,7 @@
   >
     {#if $sidebarState === "summary"}
       <Summary
-        {onRestartClicked}
+        {onStartNewRoundClicked}
         reset={resetGame}
       />
     {:else if $sidebarState === "creating-multiplayer-session"}
@@ -301,7 +304,7 @@
           {:else}
             <Button
               class="button--primary"
-              on:click={onRestartClicked}
+              on:click={onStartNewRoundClicked}
               variant="primary"
             >
               Start a new round

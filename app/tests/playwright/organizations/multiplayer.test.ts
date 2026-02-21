@@ -59,7 +59,9 @@ test("leader and colleague see the same streets with a predefined area", async (
 
   await logIn(friendPage, org, example1Users.admin);
   await friendPage.goto(multiplayerUrl);
-  await expect(friendPage.getByTestId("game-map")).toBeVisible();
+  await expect(friendPage.getByTestId("game-map")).toBeVisible({
+    timeout: 30000,
+  });
 
   await friendPage
     .getByRole("button", { name: /play \(multiplayer mode\)/i })

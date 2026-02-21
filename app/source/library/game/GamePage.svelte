@@ -17,6 +17,7 @@
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "../FatalErrorDisplay.svelte";
   import computeTotalScore from "../../utilities/computeTotalScore";
+  import getSeed from "../../utilities/getSeed";
   import ignoreError from "../../utilities/ignoreError";
   import {
     areaCenter,
@@ -35,6 +36,7 @@
     numberOfQuestions,
     gameRound,
     gameRoundStatus,
+    seed,
     sidebarState,
     totalScore,
   } from "../../utilities/store";
@@ -64,8 +66,6 @@
 
   let areSettingsShown = svelteStore.writable(false);
 
-  let lastSeenSeed: string | undefined;
-
   const updateUrl = debounce(
     () => {
       if (
@@ -85,6 +85,15 @@
     { trailing: true },
   );
 
+  function clearRound() {
+    chosenPoint.set(null);
+    isAreaConfirmed.set(false);
+    isChosenPointConfirmed.set(false);
+    gameRound.set(null);
+    didOpenMultiplayerSessionUrl.set(false);
+    sidebarState.set("default");
+  }
+
   function resetGame() {
     // eslint-disable-next-line valid-typeof
     if (typeof areSettingsShown === "undefined") {
@@ -92,12 +101,8 @@
       return;
     }
     areSettingsShown.set(false);
-    chosenPoint.set(null);
-    isAreaConfirmed.set(false);
-    isChosenPointConfirmed.set(false);
-    gameRound.set(null);
-    didOpenMultiplayerSessionUrl.set(false);
-    sidebarState.set("default");
+    clearRound();
+    seed.set(getSeed());
   }
 
   onMount(() => {
@@ -210,22 +215,6 @@
       }),
     );
 
-    unsubscribers.push(
-      subscribeIfNotDeepEqual(gameRound, (value) => {
-        if (!value) {
-          return;
-        }
-
-        // TODO: fix and remove ts comments on seed
-        // @ts-expect-error ...
-        if (value.seed && value.seed !== lastSeenSeed) {
-          updateUrl();
-          // @ts-expect-error ...
-          lastSeenSeed = value.seed;
-        }
-      }),
-    );
-
     let lastSeenRoundStatus: GameRound["status"] | null = null;
     unsubscribers.push(
       gameRoundStatus.subscribe((value) => {
@@ -325,6 +314,7 @@
       <!-- This is like a sidebar (but not really), I couldn't think of a better name -->
       <ContextPanel
         bind:areSettingsShown
+        {clearRound}
         {resetGame}
       />
       <MapWrapper {areSettingsShown} />

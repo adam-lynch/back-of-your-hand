@@ -23,6 +23,7 @@ import { Difficulty } from "../library/game/types";
 import api from "../api";
 import type { Round, UserOrganization } from "../api/resourceObjects";
 
+let cachedSeed: string | null = null;
 let getRandomNumber: ReturnType<typeof getRandomNumberGenerator>;
 export default async ({
   areaSelection,
@@ -40,8 +41,10 @@ export default async ({
 }) => {
   isLoading.set(true);
 
-  if (!getRandomNumber) {
-    getRandomNumber = getRandomNumberGenerator(svelteStore.get(seed));
+  const currentSeed = svelteStore.get(seed);
+  if (currentSeed !== cachedSeed) {
+    cachedSeed = currentSeed;
+    getRandomNumber = getRandomNumberGenerator(currentSeed);
   }
   const targets = await getData({
     areaSelection,

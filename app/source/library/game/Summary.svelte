@@ -15,7 +15,7 @@
   } from "../../utilities/store";
   import computeTotalScore from "../../utilities/computeTotalScore";
   import Button from "../forms/Button.svelte";
-  export let onRestartClicked: () => void;
+  export let onStartNewRoundClicked: () => void;
   export let reset: () => void;
 </script>
 
@@ -49,7 +49,7 @@
   <div class="call-to-action">
     <Button
       class="button--primary"
-      on:click={onRestartClicked}
+      on:click={onStartNewRoundClicked}
       variant="primary"
     >
       Start a new round

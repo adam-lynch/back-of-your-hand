@@ -19,18 +19,49 @@ export default ({
   color,
   layer,
   question,
-  shouldDrawCircle, // The summary doesn't have circles around each street
+  shouldDrawSurroundingCircle, // The summary doesn't have circles around each street
 }: {
   color?: string;
   layer: leaflet.Map | leaflet.LayerGroup<unknown>;
   question: Question;
-  shouldDrawCircle?: boolean;
+  shouldDrawSurroundingCircle?: boolean;
 }) => {
   if (!question.distance) {
     throw new Error("question.distance does not exist");
   }
   const colorToUse = color || getColorFromDistance(question.distance.amount);
-  let targetLayer: leaflet.Polygon | ReturnType<typeof leaflet.polyline>;
+  let targetLayer:
+    | leaflet.CircleMarker
+    | leaflet.Polygon
+    | ReturnType<typeof leaflet.polyline>;
+
+  /*
+    Separate single-point entries (point-of-interest map features) from
+    multi-point entries (street segments) so each renders appropriately.
+    A merged target (same-named street + point of interest) contains both.
+  */
+  const singlePoints: leaflet.LatLngExpression[] = [];
+  const polylineSegments: typeof question.target.points = [];
+  for (const pointGroup of question.target.points) {
+    if (pointGroup.length === 1) {
+      singlePoints.push([pointGroup[0].lat, pointGroup[0].lng]);
+    } else {
+      polylineSegments.push(pointGroup);
+    }
+  }
+
+  const circleMarkerStyle: leaflet.CircleMarkerOptions = {
+    color: colorToUse,
+    fillColor: colorToUse,
+    fillOpacity: 1,
+    radius: 5,
+    weight: 3,
+  };
+
+  const isSinglePoint =
+    !question.target.isEnclosedArea &&
+    polylineSegments.length === 0 &&
+    singlePoints.length === 1;
 
   if (question.target.isEnclosedArea) {
     targetLayer = leaflet.polygon(question.target.points, {
@@ -40,8 +71,10 @@ export default ({
       opacity: 1,
       weight: 3,
     });
+  } else if (isSinglePoint) {
+    targetLayer = leaflet.circleMarker(singlePoints[0], circleMarkerStyle);
   } else {
-    targetLayer = leaflet.polyline(question.target.points, {
+    targetLayer = leaflet.polyline(polylineSegments, {
       color: colorToUse,
       fillColor: "white",
       fillOpacity: 1,
@@ -49,9 +82,21 @@ export default ({
     });
   }
 
+  if (!isSinglePoint) {
+    for (const point of singlePoints) {
+      leaflet.circleMarker(point, circleMarkerStyle).addTo(layer);
+    }
+  }
+
   targetLayer.addTo(layer);
 
-  const targetBounds = targetLayer.getBounds();
+  const targetBounds =
+    "getBounds" in targetLayer
+      ? targetLayer.getBounds()
+      : leaflet.latLngBounds([
+          targetLayer.getLatLng(),
+          targetLayer.getLatLng(),
+        ]);
 
   const targetTurfPoints = question.target.points.reduce<
     GeoJSON.Feature<GeoJSON.Point>[]
@@ -65,13 +110,17 @@ export default ({
     [],
   );
 
-  let circle;
-  if (!question.target.isEnclosedArea && shouldDrawCircle) {
+  let scoringCircle;
+  if (
+    !question.target.isEnclosedArea &&
+    !isSinglePoint &&
+    shouldDrawSurroundingCircle
+  ) {
     const targetCenterCoordinates = turf.center(
       turf.featureCollection(targetTurfPoints),
     ).geometry.coordinates as leaflet.LatLngExpression;
 
-    circle = leaflet
+    scoringCircle = leaflet
       .circle(targetCenterCoordinates, {
         color: colorToUse,
         fillOpacity: 0.1,
@@ -86,5 +135,5 @@ export default ({
       .addTo(layer);
   }
 
-  return { circle, targetLayer };
+  return { scoringCircle, targetLayer };
 };

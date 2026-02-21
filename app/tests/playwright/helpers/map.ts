@@ -11,7 +11,7 @@ import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 
 export async function clickMapCenter(mapElement: Locator): Promise<void> {
-  await expect(mapElement).not.toHaveAttribute("data-zooming", {
+  await expect(mapElement).not.toHaveAttribute("data-is-zooming", {
     timeout: 10000,
   });
   const mapBox = await mapElement.boundingBox();
@@ -27,7 +27,10 @@ export async function clickMapCenter(mapElement: Locator): Promise<void> {
  * Plays through all questions in a round by clicking the map center and
  * confirming each answer until the "start a new round" button appears.
  */
-export async function playThroughRound(page: Page): Promise<void> {
+export async function playThroughRound(
+  page: Page,
+  { maxIterations = 30 }: { maxIterations?: number } = {},
+): Promise<void> {
   const mapElement = page.getByTestId("game-map");
   const confirmButton = page.getByRole("button", { name: /confirm/i });
   const nextButton = page.getByRole("button", { name: /next/i });
@@ -39,7 +42,7 @@ export async function playThroughRound(page: Page): Promise<void> {
   await expect(confirmButton).toBeEnabled({ timeout: 5000 });
   await confirmButton.click();
 
-  const MAX_ITERATIONS = 30;
+  const MAX_ITERATIONS = maxIterations;
   let iterationCount = 0;
 
   while (iterationCount < MAX_ITERATIONS) {

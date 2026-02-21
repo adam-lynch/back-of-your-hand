@@ -24,6 +24,7 @@ interface TimestampedResourceAttributes extends JSONAPI.AttributesObject {
 export type AnyResourceObject =
   | Area
   | AreaOverpassData
+  | MapFeature
   | Organization
   | Round
   | User
@@ -47,6 +48,19 @@ export type AreaOverpassData = JSONAPI.ResourceObject<
   },
   {
     area: JSONAPI.ToOneRelationship;
+  }
+>;
+
+export type MapFeature = JSONAPI.ResourceObject<
+  "mapFeature",
+  TimestampedResourceAttributes & {
+    geom: GeoJSON.Geometry;
+    name: string;
+    origin: "osm" | "user";
+    tags: Record<string, unknown>;
+  },
+  {
+    createdBy: JSONAPI.ToOneRelationship<"optional">;
   }
 >;
 

@@ -28,6 +28,17 @@ export default async (
   const point = await convertLatLngToLayerPoint(latLng, map);
   const flattenedPolyLinePoints = polyLinePoints.flat(1);
 
+  // For single-point targets (POIs), there's no polyline to find the nearest point on. Just calculate the direct distance to that point.
+  if (flattenedPolyLinePoints.length === 1) {
+    const singlePoint = flattenedPolyLinePoints[0];
+    const targetLatLng = new leaflet.LatLng(singlePoint.lat, singlePoint.lng);
+    const guessLatLng = new leaflet.LatLng(latLng.lat, latLng.lng);
+    return {
+      distance: guessLatLng.distanceTo(targetLatLng) / 1000,
+      latLng: targetLatLng,
+    };
+  }
+
   let nearestPoint: leaflet.Point | undefined;
   let nearestPointDistance: number | undefined;
 

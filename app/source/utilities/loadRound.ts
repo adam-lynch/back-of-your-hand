@@ -47,6 +47,7 @@ export default async ({
     areaSelection,
     difficulty,
     getRandomNumber,
+    isOrganizationUrl,
     numberOfQuestions,
   });
 

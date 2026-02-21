@@ -428,7 +428,7 @@
     const { targetLayer } = drawTarget({
       layer: resultFeatureGroup,
       question: { ...$currentQuestion, ...currentQuestionUpdates },
-      shouldDrawCircle: true,
+      shouldDrawSurroundingCircle: true,
     });
 
     if (distance > 0 && nearestPointOnStreet) {
@@ -532,6 +532,10 @@
       .addControl(zoomControl);
 
     locateControl.add(map);
+    if (import.meta.env.DEV) {
+      // For playwright tests
+      (mapElement as unknown as { _leafletMap: leaflet.Map })._leafletMap = map;
+    }
 
     map.attributionControl.setPrefix("");
 
@@ -802,7 +806,7 @@
   bind:this={mapElement}
   id="map"
   data-testid="game-map"
-  data-zooming={$ongoingZoomCount > 0 ? "" : undefined}
+  data-is-zooming={$ongoingZoomCount > 0 ? "" : undefined}
 />
 
 <style

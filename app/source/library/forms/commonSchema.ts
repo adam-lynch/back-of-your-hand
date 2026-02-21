@@ -38,8 +38,44 @@ function newPassword() {
     .min(8, "Password must be at least 8 characters");
 }
 
+function latitude() {
+  return yup
+    .string()
+    .label("Latitude")
+    .required()
+    .test(
+      "is-number",
+      "Latitude must be a number",
+      (value) => !value || !isNaN(Number(value)),
+    )
+    .test("in-range", "Latitude must be between -90 and 90", (value) => {
+      if (!value || isNaN(Number(value))) return true;
+      const num = Number(value);
+      return num >= -90 && num <= 90;
+    });
+}
+
+function longitude() {
+  return yup
+    .string()
+    .label("Longitude")
+    .required()
+    .test(
+      "is-number",
+      "Longitude must be a number",
+      (value) => !value || !isNaN(Number(value)),
+    )
+    .test("in-range", "Longitude must be between -180 and 180", (value) => {
+      if (!value || isNaN(Number(value))) return true;
+      const num = Number(value);
+      return num >= -180 && num <= 180;
+    });
+}
+
 export default {
   checkbox,
   email,
+  latitude,
+  longitude,
   newPassword,
 };

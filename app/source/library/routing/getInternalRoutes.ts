@@ -14,6 +14,8 @@ import ChangePasswordPage from "../ChangePasswordPage.svelte";
 import DiagnosticsPage from "../DiagnosticsPage.svelte";
 import GamePage from "../game/GamePage.svelte";
 import LogInPage from "../accounts/LogInPage.svelte";
+import PointOfInterestPage from "../PointOfInterestPage.svelte";
+import PointsOfInterestSettingsPage from "../PointsOfInterestSettingsPage.svelte";
 import UserPage from "../UserPage.svelte";
 import UsersSettingsPage from "../UsersSettingsPage.svelte";
 // import OrganizationSettingsPage from "../OrganizationSettingsPage.svelte";
@@ -115,6 +117,20 @@ export default function getInternalRoutes(): Record<string, InternalRoute> {
     //   requirementsToExist: ["organization-plan", "userorganization-is-admin"],
     //   title: "Organization",
     // },
+    pointOfInterest: {
+      component: PointOfInterestPage,
+      id: "pointOfInterest",
+      path: "/settings/points-of-interest/:mapFeatureId",
+      requirementsToExist: ["organization-plan", "userorganization-is-admin"],
+      title: "Point of interest",
+    },
+    pointsOfInterest: {
+      component: PointsOfInterestSettingsPage,
+      id: "pointsOfInterest",
+      path: "/settings/points-of-interest",
+      requirementsToExist: ["organization-plan", "userorganization-is-admin"],
+      title: "Points of interest",
+    },
     profile: {
       component: ProfileSettingsPage,
       id: "profile",

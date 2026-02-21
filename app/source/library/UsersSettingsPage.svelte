@@ -248,6 +248,7 @@
   }
 
   :global(.users__title-wrapper) {
+    align-items: start;
     display: flex;
     flex-direction: row;
   }

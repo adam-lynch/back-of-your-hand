@@ -11,46 +11,34 @@ import { expect, test } from "../mocking/setup";
 import { example1Users, organizations } from "../fixtures/test-users";
 import { logIn } from "../helpers/auth";
 
-const org = organizations.example1;
+const organization = organizations.example1;
 
 test.describe("User Settings", () => {
   test("can access profile settings page", async ({ page }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
     await expect(page.getByRole("heading", { name: /profile/i })).toBeVisible();
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/first name/i)).toBeVisible();
-    await expect(page.getByLabel(/last name/i)).toBeVisible();
-  });
-
-  test("profile shows user information", async ({ page }) => {
-    const user = example1Users.standardUser;
-    await logIn(page, org, user);
-
-    await page.goto(org.baseUrl + "/settings/profile");
-
     await expect(page.getByLabel(/email/i)).toHaveValue(user.email, {
       timeout: 10000,
     });
-    await expect(page.getByLabel(/first name/i)).not.toHaveValue("");
-    await expect(page.getByLabel(/last name/i)).not.toHaveValue("");
+    await expect(page.getByLabel(/first name/i)).toHaveValue(user.firstName);
+    await expect(page.getByLabel(/last name/i)).toHaveValue(user.lastName);
   });
 
   test("can update first name", async ({ page }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
     const firstNameInput = page.getByLabel(/first name/i);
     await expect(firstNameInput).toBeVisible();
 
     const originalFirstName = await firstNameInput.inputValue();
-    const testPrefix = "TEST_";
-    const newFirstName = testPrefix + Date.now();
+    const newFirstName = "UpdatedTestName";
 
     try {
       await firstNameInput.fill(newFirstName);
@@ -64,11 +52,14 @@ test.describe("User Settings", () => {
 
       await firstNameInput.blur();
       const response = await updatePromise;
-
       expect(response.status()).toBe(200);
+
+      await page.reload();
+      await expect(page.getByLabel(/first name/i)).toHaveValue(newFirstName, {
+        timeout: 10000,
+      });
     } finally {
-      // Revert to original name
-      await firstNameInput.fill(originalFirstName);
+      await page.getByLabel(/first name/i).fill(originalFirstName);
 
       const revertPromise = page.waitForResponse(
         (response) =>
@@ -77,16 +68,16 @@ test.describe("User Settings", () => {
         { timeout: 10000 },
       );
 
-      await firstNameInput.blur();
+      await page.getByLabel(/first name/i).blur();
       await revertPromise;
     }
   });
 
   test("shows error when first name update fails", async ({ page }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
     const firstNameInput = page.getByLabel(/first name/i);
     await expect(firstNameInput).toBeVisible();
@@ -117,9 +108,9 @@ test.describe("User Settings", () => {
 
   test("shows change password link for current user", async ({ page }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
     await expect(
       page.getByRole("link", { name: /change password/i }),
@@ -128,9 +119,9 @@ test.describe("User Settings", () => {
 
   test("can navigate to change password page", async ({ page }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
     await page.getByRole("link", { name: /change password/i }).click();
 
@@ -140,14 +131,29 @@ test.describe("User Settings", () => {
     ).toBeVisible();
   });
 
-  test("shows delete account option", async ({ page }) => {
+  test("delete account button triggers confirmation dialog", async ({
+    page,
+  }) => {
     const user = example1Users.standardUser;
-    await logIn(page, org, user);
+    await logIn(page, organization, user);
 
-    await page.goto(org.baseUrl + "/settings/profile");
+    await page.goto(organization.baseUrl + "/settings/profile");
 
-    await expect(
-      page.getByRole("button", { name: /delete account/i }),
-    ).toBeVisible();
+    const deleteButton = page.getByRole("button", { name: /delete account/i });
+    await expect(deleteButton).toBeVisible();
+    await deleteButton.click();
+
+    await expect(page.getByRole("alertdialog")).toBeVisible();
+  });
+
+  test("standard user cannot access another user's page", async ({ page }) => {
+    const user = example1Users.standardUser;
+    await logIn(page, organization, user);
+
+    await page.goto(
+      organization.baseUrl + "/settings/users/01KHGSYC4DM1SPCS2TW8X3F6VS",
+    );
+
+    await expect(page.getByText(/you do not have permission/i)).toBeVisible();
   });
 });

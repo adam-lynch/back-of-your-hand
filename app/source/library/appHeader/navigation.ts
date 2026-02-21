@@ -19,6 +19,7 @@ import type { ComponentType } from "svelte";
 import ComplianceIcon from "~icons/mdi/file-document-check-outline";
 import GameIcon from "~icons/mdi/map-marker";
 import HelpIcon from "~icons/mdi/help";
+import PointsOfInterestIcon from "~icons/mdi/map-marker-plus";
 import PrivacyIcon from "~icons/iconoir/privacy-policy";
 import ProfileIcon from "~icons/mdi/user";
 import ReportsIcon from "~icons/mdi/report-timeline-variant";
@@ -85,6 +86,10 @@ export default derived(
               // {
               //   internalRoute: internalRoutes.organization,
               // },
+              {
+                Icon: PointsOfInterestIcon,
+                internalRoute: internalRoutes.pointsOfInterest,
+              },
               {
                 Icon: UsersIcon,
                 internalRoute: internalRoutes.users,

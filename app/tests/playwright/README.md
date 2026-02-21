@@ -78,8 +78,8 @@ tests/playwright/
 
 The mock system uses Playwright's `page.route()` to intercept HTTP requests. Mocks are stored as **per-test TypeScript files** in `mocking/mocks/`, mirroring the test file structure:
 
-- `tests/playwright/public/homepage.test.ts` → `mocking/mocks/public/homepage.ts`
-- `tests/playwright/organizations/authentication.test.ts` → `mocking/mocks/organizations/authentication.ts`
+- `tests/playwright/public/homepage.test.ts` → `mocking/mocks/public/homepage.mock.ts`
+- `tests/playwright/organizations/authentication.test.ts` → `mocking/mocks/organizations/authentication.mock.ts`
 
 When recording, the system:
 

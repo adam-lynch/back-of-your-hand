@@ -14,7 +14,7 @@ Mocks are stored per test file and use a nested structure that mirrors describe 
 Example:
 
 - `tests/playwright/organizations/invite-acceptance.test.ts`
-  → `tests/playwright/mocking/mocks/organizations/invite-acceptance.ts`
+  → `tests/playwright/mocking/mocks/organizations/invite-acceptance.mock.ts`
 
 Each test keeps its own request counters per endpoint, so multiple requests to the same endpoint can return different recorded responses in sequence.
 
@@ -42,19 +42,19 @@ mocking/
 ├── generate-mocks.ts     # Generates TypeScript mock files from recordings
 └── mocks/                # Recorded mock responses (per-test files)
     ├── public/           # Mirrors tests/playwright/public/ structure
-    │   ├── homepage.ts
-    │   ├── navigation.ts
+    │   ├── homepage.mock.ts
+    │   ├── navigation.mock.ts
     │   └── ...
     └── organizations/    # Mirrors tests/playwright/organizations/ structure
-        ├── authentication.ts
-        ├── invitation.ts
-        ├── invite-acceptance.ts
+        ├── authentication.mock.ts
+        ├── invitation.mock.ts
+        ├── invite-acceptance.mock.ts
         └── ...
 ```
 
 ## Mock Format
 
-Mocks are stored as TypeScript files with a nested structure mirroring the test hierarchy:
+Mock files use the `.mock.ts` extension (e.g. `invite-acceptance.mock.ts` for `invite-acceptance.test.ts`). They contain a nested structure mirroring the test hierarchy:
 
 ```typescript
 const mocks = {

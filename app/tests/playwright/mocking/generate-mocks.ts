@@ -24,7 +24,7 @@ export async function generatePlaywrightMocks(
   // Derive mock file path from test file path
   const playwrightDir = join(process.cwd(), "tests", "playwright");
   const relativePath = relative(playwrightDir, testInfo.file);
-  const mockFileName = relativePath.replace(/\.test\.ts$/, ".ts");
+  const mockFileName = relativePath.replace(/\.test\.ts$/, ".mock.ts");
   const mockFilePath = join(playwrightDir, "mocking", "mocks", mockFileName);
 
   let mocks: Record<string, unknown> = {};

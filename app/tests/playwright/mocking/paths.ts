@@ -12,6 +12,6 @@ import { join, relative } from "path";
 export default function getMockFilePath(testFile: string): string {
   const playwrightDir = join(process.cwd(), "tests", "playwright");
   const relativePath = relative(playwrightDir, testFile);
-  const mockFileName = relativePath.replace(/\.test\.ts$/, ".ts");
+  const mockFileName = relativePath.replace(/\.test\.ts$/, ".mock.ts");
   return join(playwrightDir, "mocking", "mocks", mockFileName);
 }

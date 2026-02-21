@@ -11,7 +11,7 @@ import convertOverpassLatLngtoLatLng from "./convertOverpassLatLngtoLatLng";
 import getRandomItem from "./getRandomItem";
 import ignoreError from "./ignoreError";
 import exclusions from "./exclusions";
-import isElementAnEnclosedArea from "./isElementAnEnclosedArea";
+import isOverpassElementAnEnclosedArea from "./isOverpassElementAnEnclosedArea";
 import getNamesFromElement from "./getNamesFromElement";
 import type { Overpass, Question } from "../library/game/types";
 import { Difficulty } from "../library/game/types";
@@ -411,7 +411,7 @@ function makeTargetFromOverpassElements(
   return {
     ...getNamesFromElement(overpassElements[0]),
     isEnclosedArea: overpassElements.some((overpassElement) =>
-      isElementAnEnclosedArea(overpassElement, [
+      isOverpassElementAnEnclosedArea(overpassElement, [
         overpassElement.geometry.map(convertOverpassLatLngtoLatLng),
       ]),
     ),

@@ -9,10 +9,10 @@
 
 import getRandomItem from "./getRandomItem";
 
-export default () => {
+export default function makeSeed() {
   let result = "";
   for (let i = 0; i < 6; i++) {
     result += getRandomItem("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""));
   }
   return result;
-};
+}

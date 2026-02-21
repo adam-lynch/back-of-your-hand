@@ -26,7 +26,7 @@
     settingsLastOpenedAt,
     sidebarState,
   } from "../../utilities/store";
-  import getSeed from "../../utilities/getSeed";
+  import makeSeed from "../../utilities/makeSeed";
   import { isOrganizationUrl, organization } from "../../userData/store";
   import Summary from "./Summary.svelte";
   import trackEvent from "../../utilities/trackEvent";
@@ -104,7 +104,7 @@
   };
 
   const onStartMultiplayerClicked = async () => {
-    seed.set(getSeed());
+    seed.set(makeSeed());
     sidebarState.set("creating-multiplayer-session");
   };
 

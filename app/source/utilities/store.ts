@@ -12,7 +12,7 @@ import { derived, get, writable } from "svelte/store";
 
 import getInitialAreaCenter from "./getInitialAreaCenter";
 import getInitialSettingValue from "./getInitialSettingValue";
-import getSeed from "./getSeed";
+import makeSeed from "./makeSeed";
 import ignoreError from "./ignoreError";
 import isTouchDevice from "./isTouchDevice";
 import { Difficulty } from "../library/game/types";
@@ -184,7 +184,7 @@ export const gameRoundStatus = derived(
   ([$gameRound]) => $gameRound?.status ?? null,
 );
 export const seed = writable<string>(
-  (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || getSeed(),
+  (didOpenMultiplayerSessionUrl && sharedSeedFromUrl) || makeSeed(),
 );
 
 export const gameUrl = derived(

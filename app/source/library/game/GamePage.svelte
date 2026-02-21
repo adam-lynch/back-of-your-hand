@@ -17,7 +17,7 @@
   import ContextPanel from "./ContextPanel.svelte";
   import FatalErrorDisplay from "../FatalErrorDisplay.svelte";
   import computeTotalScore from "../../utilities/computeTotalScore";
-  import getSeed from "../../utilities/getSeed";
+  import makeSeed from "../../utilities/makeSeed";
   import ignoreError from "../../utilities/ignoreError";
   import {
     areaCenter,
@@ -102,7 +102,7 @@
     }
     areSettingsShown.set(false);
     clearRound();
-    seed.set(getSeed());
+    seed.set(makeSeed());
   }
 
   onMount(() => {

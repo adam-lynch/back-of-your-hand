@@ -99,7 +99,9 @@ async function setupMocks(page: Page, testInfo: TestInfo): Promise<void> {
       }
     }
 
-    console.log(`✅ Loaded ${totalMocks} mocks for ${testPath.join(" > ")}`);
+    console.log(
+      `✅ Loaded ${totalMocks} ${totalMocks > 1 ? "mocks" : "mock"} for ${testPath.map((piece) => `"${piece}"`).join(" > ")}`,
+    );
   } catch (error) {
     console.log(`⚠️  No mock file found, continuing without mocks: ${error}`);
   }

@@ -156,6 +156,7 @@ test.describe("Reports", () => {
   test("completed round appears in reports with correct data", async ({
     page,
   }, testInfo) => {
+    test.setTimeout(60_000);
     const user = example1Users.admin;
     await logIn(page, org, user);
 

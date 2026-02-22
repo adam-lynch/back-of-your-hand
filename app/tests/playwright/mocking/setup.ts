@@ -17,18 +17,18 @@ const backend = process.env.PLAYWRIGHT_BACKEND || "mock";
 const shouldUseMocks = backend === "mock";
 const shouldRecordMocks = process.env.PLAYWRIGHT_SHOULD_RECORD_MOCKS === "true";
 
-async function setupMocks(page: Page, testInfo: TestInfo): Promise<void> {
-  if (!shouldUseMocks) {
-    return;
-  }
+interface MockState {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  testMocks: Record<string, any>;
+  counters: Map<string, number>;
+}
 
+async function loadTestMocks(testInfo: TestInfo): Promise<MockState | null> {
   try {
     const mockFilePath = getMockFilePath(testInfo.file);
-
     const mocksModule = await import(mockFilePath);
     const allMocks = mocksModule.default || {};
 
-    // Traverse nested structure; skip first element (test file name)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let testMocks: any = allMocks;
     const testPath = testInfo.titlePath.slice(1);
@@ -38,58 +38,9 @@ async function setupMocks(page: Page, testInfo: TestInfo): Promise<void> {
         console.log(
           `⚠️  No mocks found for test path: ${testPath.join(" > ")}`,
         );
-        return;
+        return null;
       }
     }
-
-    const counters = new Map<string, number>();
-
-    await page.route("**/*", async (route) => {
-      const url = route.request().url();
-      const method = route.request().method();
-
-      const urlObj = new URL(url);
-      const urlWithoutProtocol = `${urlObj.host}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
-      const endpoint = `${method} ${urlWithoutProtocol}`;
-
-      const currentCount = counters.get(endpoint) || 0;
-      const endpointMocks = testMocks[endpoint];
-      const mock = endpointMocks?.[currentCount];
-
-      if (mock) {
-        counters.set(endpoint, currentCount + 1);
-
-        const contentType =
-          mock.headers?.["content-type"] || "application/json";
-        let body =
-          typeof mock.body === "string" ? mock.body : JSON.stringify(mock.body);
-
-        // Patch expired accessExpiration to prevent token refresh attempts
-        if (body.includes('"accessExpiration"')) {
-          const futureDate = new Date(Date.now() + 3600000).toISOString();
-          body = body.replace(
-            /"accessExpiration":"[^"]*"/,
-            `"accessExpiration":"${futureDate}"`,
-          );
-        }
-
-        await route.fulfill({
-          status: mock.status || 200,
-          body,
-          headers: {
-            "content-type": contentType,
-            ...mock.headers,
-          },
-        });
-      } else {
-        if (isRecordableRequest(url)) {
-          console.warn(`⚠️  No mock found for: ${endpoint}`);
-          await route.abort("failed");
-        } else {
-          await route.continue();
-        }
-      }
-    });
 
     let totalMocks = 0;
     for (const endpointKey of Object.keys(testMocks)) {
@@ -100,38 +51,114 @@ async function setupMocks(page: Page, testInfo: TestInfo): Promise<void> {
     }
 
     console.log(
-      `✅ Loaded ${totalMocks} ${totalMocks > 1 ? "mocks" : "mock"} for ${testPath.map((piece) => `"${piece}"`).join(" > ")}`,
+      `✅ Loaded ${totalMocks} ${totalMocks === 1 ? "mock" : "mocks"} for ${testPath.map((piece) => `"${piece}"`).join(" > ")}`,
     );
+
+    return { testMocks, counters: new Map() };
   } catch (error) {
     console.log(`⚠️  No mock file found, continuing without mocks: ${error}`);
+    return null;
   }
+}
+
+async function applyMockRoutes(page: Page, state: MockState): Promise<void> {
+  const { testMocks, counters } = state;
+
+  await page.route("**/*", async (route) => {
+    const url = route.request().url();
+    const method = route.request().method();
+
+    const urlObj = new URL(url);
+    const urlWithoutProtocol = `${urlObj.host}${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+    const endpoint = `${method} ${urlWithoutProtocol}`;
+
+    const currentCount = counters.get(endpoint) || 0;
+    const endpointMocks = testMocks[endpoint];
+    const mock = endpointMocks?.[currentCount];
+
+    if (mock) {
+      counters.set(endpoint, currentCount + 1);
+
+      const contentType = mock.headers?.["content-type"] || "application/json";
+      let body =
+        typeof mock.body === "string" ? mock.body : JSON.stringify(mock.body);
+
+      // Patch expired accessExpiration to prevent token refresh attempts
+      if (body.includes('"accessExpiration"')) {
+        const futureDate = new Date(Date.now() + 3600000).toISOString();
+        body = body.replace(
+          /"accessExpiration":"[^"]*"/,
+          `"accessExpiration":"${futureDate}"`,
+        );
+      }
+
+      await route.fulfill({
+        status: mock.status || 200,
+        body,
+        headers: {
+          "content-type": contentType,
+          ...mock.headers,
+        },
+      });
+    } else {
+      if (isRecordableRequest(url)) {
+        console.warn(`⚠️  No mock found for: ${endpoint}`);
+        await route.abort("failed");
+      } else {
+        await route.continue();
+      }
+    }
+  });
 }
 
 interface TestFixtures {
   page: Page;
+  /*
+   * Applies mock routes (and recording, if enabled) to a page. Automatically
+   * applied to the default test `page`. Call manually on additional pages
+   * created in separate browser contexts (e.g. a "friend" page in multiplayer
+   * tests) so their API requests are also intercepted. All pages share the
+   * same per-endpoint counters, so recorded mock indices stay in sync.
+   */
+  applyMocksToPage: (page: Page) => Promise<void>;
 }
 
 export const test = base.extend<TestFixtures>({
-  page: async ({ page }, use, testInfo) => {
-    await setupMocks(page, testInfo);
-
+  // eslint-disable-next-line no-empty-pattern
+  applyMocksToPage: async ({}, use, testInfo) => {
+    let mockState: MockState | null = null;
     let recorder: ApiRecorder | null = null;
-    if (shouldRecordMocks) {
-      recorder = new ApiRecorder(page, testInfo);
-      const isOrgTest = testInfo.file.includes("/organizations/");
-      const subdomain = isOrgTest ? "example1" : undefined;
-      await recorder.start(subdomain);
+
+    if (shouldUseMocks) {
+      mockState = await loadTestMocks(testInfo);
     }
 
-    await use(page);
+    if (shouldRecordMocks) {
+      recorder = new ApiRecorder(testInfo);
+    }
+
+    const isOrgTest = testInfo.file.includes("/organizations/");
+    const subdomain = isOrgTest ? "example1" : undefined;
+
+    const apply = async (page: Page) => {
+      if (mockState) {
+        await applyMockRoutes(page, mockState);
+      }
+      if (recorder) {
+        await recorder.addPage(page, subdomain);
+      }
+    };
+
+    await use(apply);
 
     if (recorder) {
-      await page.waitForTimeout(200);
-      await page.waitForLoadState("networkidle");
-      await recorder.waitForInflight();
-      await page.unrouteAll({ behavior: "ignoreErrors" });
       await recorder.save();
     }
+  },
+
+  page: async ({ page, applyMocksToPage }, use) => {
+    await applyMocksToPage(page);
+    await use(page);
   },
 });
 

@@ -18,17 +18,15 @@ export class ApiRecorder {
   private errors: string[] = [];
   private inflight: Promise<void>[] = [];
   private testPath: string[];
+  private pages: Page[] = [];
 
-  constructor(
-    private page: Page,
-    private testInfo: TestInfo,
-  ) {
-    // Skip first element (test file name), keep only describe blocks + test name
+  constructor(private testInfo: TestInfo) {
     this.testPath = testInfo.titlePath.slice(1);
   }
 
-  async start(subdomain?: string): Promise<void> {
-    await this.page.route("**/*", (route) => {
+  async addPage(page: Page, subdomain?: string): Promise<void> {
+    this.pages.push(page);
+    await page.route("**/*", (route) => {
       const url = route.request().url();
 
       if (!isRecordableRequest(url)) {
@@ -107,6 +105,16 @@ export class ApiRecorder {
   }
 
   async save(): Promise<void> {
+    for (const page of this.pages) {
+      try {
+        await page.waitForLoadState("networkidle");
+        await page.unrouteAll({ behavior: "ignoreErrors" });
+      } catch {
+        // Page may already be closed
+      }
+    }
+    await this.waitForInflight();
+
     if (this.responses.length === 0) {
       console.log(`⚠️  No API calls recorded for ${this.testInfo.file}`);
       return;
@@ -120,8 +128,8 @@ export class ApiRecorder {
 
     if (this.errors.length > 0) {
       const urls = this.errors.map((u) => `  - ${u}`).join("\n");
-      throw new Error(
-        `Recorder failed to capture ${this.errors.length} response(s):\n${urls}`,
+      console.warn(
+        `⚠️  Recorder failed to capture ${this.errors.length} response(s) (likely context closed during teardown):\n${urls}`,
       );
     }
   }

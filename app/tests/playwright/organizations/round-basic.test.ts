@@ -10,7 +10,7 @@
 import { expect, test } from "../mocking/setup";
 import { example1Users, organizations } from "../fixtures/test-users";
 import { logIn } from "../helpers/auth";
-import { playThroughRound } from "../helpers/map";
+import { clickStartNewRound, playThroughRound } from "../helpers/map";
 
 const org = organizations.example1;
 const user = example1Users.standardUser;
@@ -64,9 +64,6 @@ test.describe("Round Basic Flow", () => {
 
     await playThroughRound(page);
 
-    await page.getByRole("button", { name: /start a new round/i }).click();
-
-    await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
-    await expect(confirmButton).toBeVisible({ timeout: 10000 });
+    await clickStartNewRound(page);
   });
 });

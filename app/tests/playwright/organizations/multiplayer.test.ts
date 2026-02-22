@@ -19,6 +19,7 @@ const org = organizations.example1;
 
 test("leader and colleague see the same streets with a predefined area", async ({
   page,
+  applyMocksToPage,
 }) => {
   test.setTimeout(180_000);
   await logIn(page, org, example1Users.standardUser);
@@ -56,6 +57,7 @@ test("leader and colleague see the same streets with a predefined area", async (
     },
   });
   const friendPage = await friendContext.newPage();
+  await applyMocksToPage(friendPage);
 
   await logIn(friendPage, org, example1Users.admin);
   await friendPage.goto(multiplayerUrl);

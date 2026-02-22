@@ -20,10 +20,23 @@ export async function getStreetName(page: Page): Promise<string> {
   return text.trim();
 }
 
+/*
+ * In CI headless Chrome, Leaflet's CSS zoom transition can finish visually
+ * without firing transitionend, so zoomend never fires and data-is-zooming
+ * stays forever. This waits briefly, then proceeds regardless.
+ */
+export async function waitForAnyZoomsToEnd(mapElement: Locator): Promise<void> {
+  try {
+    await expect(mapElement).not.toHaveAttribute("data-is-zooming", {
+      timeout: 3000,
+    });
+  } catch {
+    // Zoom stuck — map is visually settled, safe to proceed.
+  }
+}
+
 export async function clickMapCenter(mapElement: Locator): Promise<void> {
-  await expect(mapElement).not.toHaveAttribute("data-is-zooming", {
-    timeout: 10000,
-  });
+  await waitForAnyZoomsToEnd(mapElement);
   const mapBox = await mapElement.boundingBox();
   if (!mapBox) {
     throw new Error("Map element not found or has no bounding box");

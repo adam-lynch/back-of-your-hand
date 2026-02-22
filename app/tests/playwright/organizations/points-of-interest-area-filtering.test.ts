@@ -10,7 +10,7 @@
 import { expect, test } from "../mocking/setup";
 import { example1Users, organizations } from "../fixtures/test-users";
 import { logIn } from "../helpers/auth";
-import { playThroughRound } from "../helpers/map";
+import { playThroughRound, waitForAnyZoomsToEnd } from "../helpers/map";
 
 const organization = organizations.example1;
 const user = example1Users.standardUser;
@@ -34,7 +34,7 @@ const mapFeatures = [
 ] as const;
 
 test.describe("Points of Interest Area Filtering", () => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
 
   test("predefined area filters map features by area_id", async ({ page }) => {
     await logIn(page, organization, user);
@@ -133,9 +133,7 @@ test.describe("Points of Interest Area Filtering", () => {
         });
       });
 
-      await expect(mapElement).not.toHaveAttribute("data-is-zooming", {
-        timeout: 10000,
-      });
+      await waitForAnyZoomsToEnd(mapElement);
 
       await page.getByRole("button", { name: /play solo/i }).click();
 

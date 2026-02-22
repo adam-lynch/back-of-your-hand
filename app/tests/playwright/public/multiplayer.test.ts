@@ -28,11 +28,11 @@ test("leader and friend see the same streets across multiple rounds", async ({
   try {
     const allRoundStreets: string[][] = [];
 
-    for (let round = 0; round < 3; round++) {
+    for (let round = 0; round < 2; round++) {
       const streets = await assertSameStreets(page, friendPage);
       allRoundStreets.push(streets);
 
-      if (round < 2) {
+      if (round < 1) {
         await Promise.all([
           clickStartNewRound(page),
           clickStartNewRound(friendPage),

@@ -132,6 +132,21 @@ Mock responses contain JWT access tokens with short-lived `accessExpiration` tim
 
 The mock playback in `setup.ts` patches `accessExpiration` in any response body to 1 hour in the future, preventing token refresh attempts entirely. This means mocks work regardless of when they were recorded.
 
+### Multi-page tests (e.g. multiplayer)
+
+The default `page` fixture has mocks applied automatically. Tests that create additional pages in separate browser contexts (e.g. a "friend" joining a multiplayer session) must apply mocks to those pages manually via the `applyMocksToPage` fixture:
+
+```typescript
+test("multiplayer test", async ({ page, applyMocksToPage }) => {
+  // ... create a new browser context and page ...
+  const friendPage = await friendContext.newPage();
+  await applyMocksToPage(friendPage);
+  // friendPage now shares mock state (counters) with the leader page
+});
+```
+
+All pages share the same per-endpoint counters, so mock indices are consumed in request order across all pages. During recording, requests from all pages are captured into the same mock file.
+
 ### Debugging mock issues
 
 If a test can't find its mocks:

@@ -12,23 +12,33 @@ import { isOrganizationUrl } from "../../userData/store";
 import { get } from "svelte/store";
 import roundNumber from "../../utilities/roundNumber";
 
+const FEET_PER_METRE = 3.28084;
+const FEET_PER_MILE = 5280;
+const METRES_PER_KILOMETRE = 1000;
+
 type UnitDescription = {
   name: string;
   maximumAmountToShow?: number;
+  amountPerLargerUnit?: number;
   numberOfDecimalPlacesToRoundTo?: number;
   pluralizedName?: string;
 };
 
 export default function prettifyDistance(distanceInMetres: number): string {
-  let amount = distanceInMetres;
   const unitClass = get(isOrganizationUrl) ? "imperial" : "metric";
+
+  let amount =
+    unitClass === "imperial"
+      ? distanceInMetres * FEET_PER_METRE
+      : distanceInMetres;
 
   const unitDescriptions: UnitDescription[] =
     unitClass === "metric"
       ? [
           {
             name: "metre",
-            maximumAmountToShow: 1000,
+            maximumAmountToShow: METRES_PER_KILOMETRE * 0.75,
+            amountPerLargerUnit: METRES_PER_KILOMETRE,
           },
           {
             name: "kilometre",
@@ -38,7 +48,8 @@ export default function prettifyDistance(distanceInMetres: number): string {
       : [
           {
             name: "foot",
-            maximumAmountToShow: 5280,
+            maximumAmountToShow: FEET_PER_MILE * 0.75,
+            amountPerLargerUnit: FEET_PER_MILE,
             pluralizedName: "feet",
           },
           {
@@ -51,9 +62,10 @@ export default function prettifyDistance(distanceInMetres: number): string {
 
   if (
     unitDescriptionToUse.maximumAmountToShow &&
+    unitDescriptionToUse.amountPerLargerUnit &&
     amount > unitDescriptionToUse.maximumAmountToShow
   ) {
-    amount = amount / unitDescriptionToUse.maximumAmountToShow;
+    amount = amount / unitDescriptionToUse.amountPerLargerUnit;
     unitDescriptionToUse = unitDescriptions[1];
   }
 

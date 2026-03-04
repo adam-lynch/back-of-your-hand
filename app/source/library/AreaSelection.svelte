@@ -100,16 +100,17 @@
 {/if}
 
 <style>
-  .settings__area {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
+  .settings__area,
   .settings__area-shape {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 0;
+
+    & :global(.select-input) {
+      width: 100%;
+      min-width: 0;
+    }
   }
 
   .settings__area-shape:has(.settings__area-shape-custom-button-wrapper) {

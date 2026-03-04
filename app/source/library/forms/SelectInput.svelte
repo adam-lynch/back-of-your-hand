@@ -86,6 +86,8 @@
     border: var(--_border-size) solid var(--_border-color);
     border-radius: 5px;
     transition: var(--_transition);
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     &:where(.select-input--theme-dark) {
       --_background-color: var(--_background-color-dark);

@@ -792,5 +792,7 @@
 
   .context-panel :global(.select-input) {
     background-color: rgba(255, 255, 255, 0.15);
+    width: 100%;
+    min-width: 0;
   }
 </style>

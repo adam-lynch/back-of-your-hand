@@ -27,4 +27,4 @@ Tests use credentials from `../fixtures/test-users.ts` which match the backend s
 For running against local backend:
 
 1. Backend must be running with seeded data
-2. Use subdomain: `example1.local-backofyourhand.com:5173`
+2. Use subdomain: `example1.local-backofyourhand.com:7210`

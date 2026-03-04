@@ -21,7 +21,7 @@ const subdomain = isOrganizationUrl
   ? `${window.location.host.split(".")[0]}--backend`
   : "backend";
 const rest = import.meta.env.DEV
-  ? "local-backofyourhand--backend.com:8000"
+  ? "local-backofyourhand--backend.com:7200"
   : "backofyourhand.com";
 const baseUrl = `https://${subdomain}.${rest}`;
 

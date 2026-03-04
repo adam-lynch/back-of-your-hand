@@ -29,5 +29,5 @@ test.skip("example: record API calls", async ({ page }) => {
 });
 
 test.skip("example: record organization API calls", async ({ page }) => {
-  await page.goto("https://example1.local-backofyourhand.com:5173");
+  await page.goto("https://example1.local-backofyourhand.com:7210");
 });

@@ -20,13 +20,13 @@ interface InviteData {
 
 /**
  * Get backend URL from org base URL.
- * Transforms https://example1.local-backofyourhand.com:5173
- * to https://example1--backend.local-backofyourhand--backend.com:8000
+ * Transforms https://example1.local-backofyourhand.com:7210
+ * to https://example1--backend.local-backofyourhand--backend.com:7200
  */
 function getBackendUrl(orgBaseUrl: string): string {
   return orgBaseUrl
     .replace(/https:\/\/([^.]+)\./, "https://$1--backend.")
-    .replace(/\.com:5173/, "--backend.com:8000");
+    .replace(/\.com:7210/, "--backend.com:7200");
 }
 
 /**

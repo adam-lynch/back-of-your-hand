@@ -60,10 +60,10 @@ Mock files use the `.mock.ts` extension (e.g. `invite-acceptance.mock.ts` for `i
 const mocks = {
   "Authentication": {  // describe block
     "can log in as admin": {  // test name
-      "GET example1--backend.local-backofyourhand--backend.com:8000/api/users/me": {
+      "GET example1--backend.local-backofyourhand--backend.com:7200/api/users/me": {
         0: {  // First request to this endpoint
           method: "GET",
-          url: "https://example1--backend.local-backofyourhand--backend.com:8000/api/users/me",
+          url: "https://example1--backend.local-backofyourhand--backend.com:7200/api/users/me",
           status: 200,
           headers: { "content-type": "application/vnd.api+json" },
           body: { data: { type: "user", id: "123", attributes: {...} } }

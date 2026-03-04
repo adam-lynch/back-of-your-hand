@@ -46,11 +46,11 @@ export const organizations = {
   example1: {
     subdomain: "example1",
     name: "Example 1",
-    baseUrl: "https://example1.local-backofyourhand.com:5173",
+    baseUrl: "https://example1.local-backofyourhand.com:7210",
   },
   example2: {
     subdomain: "example2",
     name: "Example 2",
-    baseUrl: "https://example2.local-backofyourhand.com:5173",
+    baseUrl: "https://example2.local-backofyourhand.com:7210",
   },
 };

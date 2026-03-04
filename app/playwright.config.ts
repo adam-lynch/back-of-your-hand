@@ -30,7 +30,7 @@ export default defineConfig({
   use: {
     baseURL: isProduction
       ? "https://backofyourhand.com"
-      : "https://local-backofyourhand.com:5173",
+      : "https://local-backofyourhand.com:7210",
     ignoreHTTPSErrors: true,
     trace: "on-first-retry",
     video: "retain-on-failure",
@@ -41,7 +41,7 @@ export default defineConfig({
     ? undefined
     : {
         command: "npm run dev -- --host",
-        url: "https://local-backofyourhand.com:5173",
+        url: "https://local-backofyourhand.com:7210",
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
         ignoreHTTPSErrors: true,

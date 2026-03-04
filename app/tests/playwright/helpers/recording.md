@@ -89,11 +89,11 @@ Review changes with `git diff tests/playwright/mocking/mocks/` before committing
 const mocks = {
   "Authentication": {  // describe block
     "can log in as admin": {  // test name
-      "GET example1--backend.local-backofyourhand--backend.com:8000/api/users/me": {
+      "GET example1--backend.local-backofyourhand--backend.com:7200/api/users/me": {
         0: { method: "GET", url: "...", status: 200, headers: {...}, body: {...} },
         1: { method: "GET", url: "...", status: 200, headers: {...}, body: {...} }
       },
-      "POST example1--backend.local-backofyourhand--backend.com:8000/auth/login": {
+      "POST example1--backend.local-backofyourhand--backend.com:7200/auth/login": {
         0: { method: "POST", url: "...", status: 200, headers: {...}, body: {...} }
       }
     }

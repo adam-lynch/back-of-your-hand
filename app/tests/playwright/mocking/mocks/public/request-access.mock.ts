@@ -9,11 +9,11 @@
 
 const mocks = {
   "can request organization access": {
-    "POST backend.local-backofyourhand--backend.com:8000/open/request_organization_access":
+    "POST backend.local-backofyourhand--backend.com:7200/open/request_organization_access":
       {
         "0": {
           method: "POST",
-          url: "https://backend.local-backofyourhand--backend.com:8000/open/request_organization_access",
+          url: "https://backend.local-backofyourhand--backend.com:7200/open/request_organization_access",
           status: 200,
           headers: {
             server: "Werkzeug/3.0.3 Python/3.11.14",
@@ -26,7 +26,7 @@ const mocks = {
             "referrer-policy": "same-origin",
             "cross-origin-opener-policy": "same-origin",
             "access-control-allow-origin":
-              "https://local-backofyourhand.com:5173",
+              "https://local-backofyourhand.com:7210",
             "access-control-allow-credentials": "true",
             "djdt-store-id": "9543cebf276940bdb80f19da38900666",
             "server-timing":

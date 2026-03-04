@@ -18,6 +18,7 @@ import validateInternalRouteRequirementsToExist from "../routing/validateInterna
 import type { ComponentType } from "svelte";
 import ComplianceIcon from "~icons/mdi/file-document-check-outline";
 import GameIcon from "~icons/mdi/map-marker";
+import OrganizationIcon from "~icons/mdi/office-building-outline";
 import HelpIcon from "~icons/mdi/help";
 import PointsOfInterestIcon from "~icons/mdi/map-marker-plus";
 import PrivacyIcon from "~icons/iconoir/privacy-policy";
@@ -83,9 +84,10 @@ export default derived(
                 Icon: ProfileIcon,
                 internalRoute: internalRoutes.profile,
               },
-              // {
-              //   internalRoute: internalRoutes.organization,
-              // },
+              {
+                Icon: OrganizationIcon,
+                internalRoute: internalRoutes.organization,
+              },
               {
                 Icon: PointsOfInterestIcon,
                 internalRoute: internalRoutes.pointsOfInterest,

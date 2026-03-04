@@ -17,9 +17,9 @@ const FEET_PER_MILE = 5280;
 const METRES_PER_KILOMETRE = 1000;
 
 type UnitDescription = {
-  name: string;
-  maximumAmountToShow?: number;
   amountPerLargerUnit?: number;
+  maximumAmountToShow?: number;
+  name: string;
   numberOfDecimalPlacesToRoundTo?: number;
   pluralizedName?: string;
 };

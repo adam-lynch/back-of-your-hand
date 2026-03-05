@@ -8,7 +8,7 @@
  */
 
 import pluralize from "../../utilities/pluralize";
-import { isOrganizationUrl } from "../../userData/store";
+import { isOrganizationUrl, organization } from "../../userData/store";
 import { get } from "svelte/store";
 import roundNumber from "../../utilities/roundNumber";
 
@@ -25,7 +25,10 @@ type UnitDescription = {
 };
 
 export default function prettifyDistance(distanceInMetres: number): string {
-  const unitClass = get(isOrganizationUrl) ? "imperial" : "metric";
+  const org = get(organization);
+  const unitClass =
+    org?.attributes.distanceUnit ??
+    (get(isOrganizationUrl) ? "imperial" : "metric");
 
   let amount =
     unitClass === "imperial"

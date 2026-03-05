@@ -75,6 +75,7 @@ export type Organization = JSONAPI.ResourceObject<
     difficulties: {
       id: string;
     }[];
+    distanceUnit: "imperial" | "metric";
     location: OptionalAttributeValue<string>;
     logo: OptionalAttributeValue<string>;
     name: string;

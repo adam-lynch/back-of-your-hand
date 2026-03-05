@@ -9,11 +9,12 @@
 
 <script lang="ts">
   import SettingsPage from "./SettingsPage.svelte";
+  import AutoSavingSelectField from "./forms/autoSavingFields/AutoSavingSelectField.svelte";
   import AutoSavingTextField from "./forms/autoSavingFields/AutoSavingTextField.svelte";
   import { organization } from "../userData/store";
   import yup from "./forms/yup";
 
-  const schema = yup
+  const questionsPerRoundLimitSchema = yup
     .string()
     .label("Maximum questions per round")
     .required("Maximum questions per round is required")
@@ -32,11 +33,27 @@
 <SettingsPage internalRouteId="organization">
   {#if $organization}
     <div class="organization-settings-page__inner">
+      <AutoSavingSelectField
+        fieldProps={{
+          labelText: "Distance unit",
+        }}
+        schema={yup.string().required()}
+        selectProps={{
+          options: [
+            { label: "Imperial (feet & miles)", value: "imperial" },
+            { label: "Metric (metres & kilometres)", value: "metric" },
+          ],
+          required: true,
+        }}
+        shouldPatchResourceOnWritableUpdated={true}
+        writable={organization}
+        writableSelector="attributes.distanceUnit"
+      />
       <AutoSavingTextField
         fieldProps={{
           labelText: "Maximum questions per round",
         }}
-        {schema}
+        schema={questionsPerRoundLimitSchema}
         shouldPatchResourceOnWritableUpdated={true}
         textProps={{
           autocomplete: "off",

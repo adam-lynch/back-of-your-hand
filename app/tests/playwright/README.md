@@ -9,10 +9,14 @@ End-to-end tests for Back Of Your Hand using Playwright.
 
 ## Running Tests
 
-Tests run **headlessly** by default. To use interactive UI mode, append `-- --ui` to any command:
+Tests run **headlessly** by default. Useful flags you can append to any command:
+
+- `-- --ui` opens Playwright's interactive UI mode
+- `-- --headed` shows the browser window during test execution (useful for debugging)
 
 ```bash
 npm run playwright:local -- --ui
+npm run playwright -- --headed
 ```
 
 ### All Tests

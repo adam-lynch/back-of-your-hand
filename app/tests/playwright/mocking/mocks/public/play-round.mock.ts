@@ -15,7 +15,7 @@ const mocks = {
         url: "https://www.overpass-api.de/api/interpreter",
         status: 200,
         headers: {
-          date: "Wed, 11 Feb 2026 00:36:12 GMT",
+          date: "Tue, 17 Mar 2026 23:35:45 GMT",
           server: "Apache/2.4.66 (Debian)",
           "access-control-allow-origin": "*",
           "access-control-max-age": "600",
@@ -28,9 +28,9 @@ const mocks = {
         },
         body: {
           version: 0.6,
-          generator: "Overpass API 0.7.62.10 2d4cfc48",
+          generator: "Overpass API 0.7.62.11 87bfad18",
           osm3s: {
-            timestamp_osm_base: "2026-02-11T00:34:38Z",
+            timestamp_osm_base: "2026-03-17T23:33:43Z",
             copyright:
               "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
           },
@@ -569,52 +569,56 @@ const mocks = {
               },
               geometry: [
                 {
-                  lat: 51.9042311,
-                  lon: -8.4697271,
-                },
-                {
-                  lat: 51.9039535,
-                  lon: -8.4697017,
-                },
-                {
-                  lat: 51.9038274,
-                  lon: -8.4696975,
-                },
-                {
-                  lat: 51.9037554,
-                  lon: -8.4697004,
-                },
-                {
-                  lat: 51.9037366,
-                  lon: -8.4697012,
-                },
-                {
-                  lat: 51.9037078,
-                  lon: -8.4697023,
-                },
-                {
-                  lat: 51.9032721,
-                  lon: -8.4698107,
-                },
-                {
-                  lat: 51.9030297,
-                  lon: -8.4698495,
-                },
-                {
-                  lat: 51.9029019,
-                  lon: -8.4698699,
-                },
-                {
-                  lat: 51.9028202,
-                  lon: -8.469883,
+                  lat: 51.9021589,
+                  lon: -8.4699889,
                 },
                 {
                   lat: 51.9022064,
                   lon: -8.4699813,
                 },
                 {
-                  lat: 51.9021589,
-                  lon: -8.4699889,
+                  lat: 51.90268,
+                  lon: -8.4699055,
+                },
+                {
+                  lat: 51.9028202,
+                  lon: -8.469883,
+                },
+                {
+                  lat: 51.9029019,
+                  lon: -8.4698699,
+                },
+                {
+                  lat: 51.9030297,
+                  lon: -8.4698495,
+                },
+                {
+                  lat: 51.9032721,
+                  lon: -8.4698107,
+                },
+                {
+                  lat: 51.9037078,
+                  lon: -8.4697023,
+                },
+                {
+                  lat: 51.9037366,
+                  lon: -8.4697012,
+                },
+                {
+                  lat: 51.9037554,
+                  lon: -8.4697004,
+                },
+                {
+                  lat: 51.9038274,
+                  lon: -8.4696975,
+                },
+                {
+                  lat: 51.9039535,
+                  lon: -8.4697017,
+                },
+                {
+                  lat: 51.9042311,
+                  lon: -8.4697271,
                 },
               ],
               tags: {
@@ -623,6 +627,7 @@ const mocks = {
                 "alt_name:ga": "Cnoc Phádraig",
                 "cycleway:both": "no",
                 highway: "tertiary",
+                incline: "14%",
                 lanes: "2",
                 lit: "yes",
                 local_class: "secondary",
@@ -678,8 +683,8 @@ const mocks = {
               id: 727503,
               bounds: {
                 minlat: 51.9016294,
-                minlon: -8.4712603,
-                maxlat: 51.9018934,
+                minlon: -8.4712692,
+                maxlat: 51.9018763,
                 maxlon: -8.4703181,
               },
               geometry: [
@@ -704,12 +709,16 @@ const mocks = {
                   lon: -8.4711215,
                 },
                 {
-                  lat: 51.9018831,
-                  lon: -8.4712018,
+                  lat: 51.901871,
+                  lon: -8.4712009,
                 },
                 {
-                  lat: 51.9018934,
-                  lon: -8.4712603,
+                  lat: 51.9018737,
+                  lon: -8.4712363,
+                },
+                {
+                  lat: 51.9018763,
+                  lon: -8.4712692,
                 },
               ],
               tags: {
@@ -743,19 +752,19 @@ const mocks = {
               type: "way",
               id: 727504,
               bounds: {
-                minlat: 51.9018934,
+                minlat: 51.9018763,
                 minlon: -8.4718946,
                 maxlat: 51.9019947,
-                maxlon: -8.4712603,
+                maxlon: -8.4712692,
               },
               geometry: [
                 {
-                  lat: 51.9018934,
-                  lon: -8.4712603,
+                  lat: 51.9018763,
+                  lon: -8.4712692,
                 },
                 {
-                  lat: 51.9018952,
-                  lon: -8.4713465,
+                  lat: 51.9018814,
+                  lon: -8.4713331,
                 },
                 {
                   lat: 51.9018947,
@@ -817,24 +826,24 @@ const mocks = {
                   lon: -8.4718946,
                 },
                 {
-                  lat: 51.9024221,
-                  lon: -8.4718466,
+                  lat: 51.9024094,
+                  lon: -8.4718546,
                 },
                 {
-                  lat: 51.9024375,
-                  lon: -8.4718444,
+                  lat: 51.9024446,
+                  lon: -8.471847,
                 },
                 {
                   lat: 51.9024765,
                   lon: -8.4718269,
                 },
                 {
-                  lat: 51.9024852,
-                  lon: -8.4718122,
+                  lat: 51.9024979,
+                  lon: -8.4717881,
                 },
                 {
-                  lat: 51.9025013,
-                  lon: -8.4717673,
+                  lat: 51.9025112,
+                  lon: -8.4717369,
                 },
                 {
                   lat: 51.9025285,
@@ -880,8 +889,8 @@ const mocks = {
                   lon: -8.4713431,
                 },
                 {
-                  lat: 51.902361,
-                  lon: -8.4712244,
+                  lat: 51.902351,
+                  lon: -8.4711796,
                 },
                 {
                   lat: 51.9022578,
@@ -894,6 +903,10 @@ const mocks = {
                 {
                   lat: 51.9022324,
                   lon: -8.4706182,
+                },
+                {
+                  lat: 51.9022212,
+                  lon: -8.4705373,
                 },
                 {
                   lat: 51.9022041,
@@ -914,6 +927,7 @@ const mocks = {
               ],
               tags: {
                 highway: "unclassified",
+                incline: "up",
                 lanes: "2",
                 lit: "yes",
                 local_class: "secondary",
@@ -1002,6 +1016,7 @@ const mocks = {
               tags: {
                 "cycleway:both": "no",
                 highway: "unclassified",
+                incline: "up",
                 lanes: "2",
                 lit: "yes",
                 local_class: "secondary",
@@ -1025,36 +1040,37 @@ const mocks = {
               },
               geometry: [
                 {
-                  lat: 51.9046104,
-                  lon: -8.4576039,
-                },
-                {
-                  lat: 51.9045154,
-                  lon: -8.4575339,
-                },
-                {
-                  lat: 51.9044522,
-                  lon: -8.4574884,
-                },
-                {
-                  lat: 51.9043882,
-                  lon: -8.4574509,
-                },
-                {
-                  lat: 51.9042908,
-                  lon: -8.4574057,
+                  lat: 51.9041958,
+                  lon: -8.4573766,
                 },
                 {
                   lat: 51.9042437,
                   lon: -8.4573871,
                 },
                 {
-                  lat: 51.9041958,
-                  lon: -8.4573766,
+                  lat: 51.9042908,
+                  lon: -8.4574057,
+                },
+                {
+                  lat: 51.9043882,
+                  lon: -8.4574509,
+                },
+                {
+                  lat: 51.9044522,
+                  lon: -8.4574884,
+                },
+                {
+                  lat: 51.9045154,
+                  lon: -8.4575339,
+                },
+                {
+                  lat: 51.9046104,
+                  lon: -8.4576039,
                 },
               ],
               tags: {
                 highway: "secondary",
+                incline: "up",
                 lanes: "2",
                 "logainm:ref": "1389065",
                 "logainm:url": "https://www.logainm.ie/1389065.aspx",
@@ -1425,86 +1441,90 @@ const mocks = {
               type: "way",
               id: 748207,
               bounds: {
-                minlat: 51.902361,
+                minlat: 51.902351,
                 minlon: -8.4715598,
                 maxlat: 51.9052396,
                 maxlon: -8.4710639,
               },
               geometry: [
                 {
-                  lat: 51.9052396,
-                  lon: -8.4715598,
+                  lat: 51.902351,
+                  lon: -8.4711796,
                 },
                 {
-                  lat: 51.9049496,
-                  lon: -8.4714965,
+                  lat: 51.9023738,
+                  lon: -8.471163,
                 },
                 {
-                  lat: 51.904545,
-                  lon: -8.4713824,
+                  lat: 51.9023844,
+                  lon: -8.471161,
                 },
                 {
-                  lat: 51.9038691,
-                  lon: -8.471192,
+                  lat: 51.9025689,
+                  lon: -8.4711258,
                 },
                 {
-                  lat: 51.9036241,
-                  lon: -8.4711188,
+                  lat: 51.9026792,
+                  lon: -8.4711123,
                 },
                 {
-                  lat: 51.9034633,
-                  lon: -8.4710707,
-                },
-                {
-                  lat: 51.9031685,
-                  lon: -8.4710639,
-                },
-                {
-                  lat: 51.9028934,
-                  lon: -8.4710756,
+                  lat: 51.902716,
+                  lon: -8.4711069,
                 },
                 {
                   lat: 51.9027678,
                   lon: -8.4710989,
                 },
                 {
-                  lat: 51.902755,
-                  lon: -8.4711013,
+                  lat: 51.9028934,
+                  lon: -8.4710756,
                 },
                 {
-                  lat: 51.902717,
-                  lon: -8.4711097,
+                  lat: 51.9031685,
+                  lon: -8.4710639,
                 },
                 {
-                  lat: 51.9026806,
-                  lon: -8.4711178,
+                  lat: 51.9034633,
+                  lon: -8.4710707,
                 },
                 {
-                  lat: 51.9026164,
-                  lon: -8.471127,
+                  lat: 51.9036241,
+                  lon: -8.4711188,
                 },
                 {
-                  lat: 51.9024085,
-                  lon: -8.4711825,
+                  lat: 51.9038691,
+                  lon: -8.471192,
                 },
                 {
-                  lat: 51.9023789,
-                  lon: -8.4711967,
+                  lat: 51.904545,
+                  lon: -8.4713824,
                 },
                 {
-                  lat: 51.902361,
-                  lon: -8.4712244,
+                  lat: 51.9049496,
+                  lon: -8.4714965,
+                },
+                {
+                  lat: 51.9052396,
+                  lon: -8.4715598,
                 },
               ],
               tags: {
+                "cycleway:both": "no",
+                hgv: "no",
                 highway: "residential",
+                incline: "16%",
                 lane_markings: "no",
+                lanes: "1",
                 lit: "yes",
                 local_class: "secondary",
+                "logainm:ref": "1389097",
+                "logainm:url": "https://www.logainm.ie/1389097.aspx",
                 maxspeed: "50",
                 name: "Richmond Hill",
+                "name:en": "Richmond Hill",
+                "name:ga": "Cnoc Richmond",
                 ref: "L5239",
-                sidewalk: "right",
+                sidewalk: "left",
                 surface: "asphalt",
               },
             },
@@ -6492,8 +6512,8 @@ const mocks = {
               id: 5364532,
               bounds: {
                 minlat: 51.8971622,
-                minlon: -8.4802918,
-                maxlat: 51.8973867,
+                minlon: -8.4802863,
+                maxlat: 51.8973755,
                 maxlon: -8.4801803,
               },
               geometry: [
@@ -6510,8 +6530,8 @@ const mocks = {
                   lon: -8.4801988,
                 },
                 {
-                  lat: 51.8973867,
-                  lon: -8.4802918,
+                  lat: 51.8973755,
+                  lon: -8.4802863,
                 },
               ],
               tags: {
@@ -8238,23 +8258,23 @@ const mocks = {
               type: "way",
               id: 13989189,
               bounds: {
-                minlat: 51.8946198,
-                minlon: -8.4813035,
+                minlat: 51.8946643,
+                minlon: -8.4812605,
                 maxlat: 51.8964649,
                 maxlon: -8.480676,
               },
               geometry: [
                 {
-                  lat: 51.8946198,
-                  lon: -8.4813035,
+                  lat: 51.8946643,
+                  lon: -8.4812605,
                 },
                 {
-                  lat: 51.8946803,
-                  lon: -8.4812638,
+                  lat: 51.8946812,
+                  lon: -8.4812584,
                 },
                 {
-                  lat: 51.8947181,
-                  lon: -8.4812487,
+                  lat: 51.8947374,
+                  lon: -8.4812519,
                 },
                 {
                   lat: 51.8948962,
@@ -8806,6 +8826,14 @@ const mocks = {
                 {
                   lat: 51.8971516,
                   lon: -8.4800191,
+                },
+                {
+                  lat: 51.8971512,
+                  lon: -8.4797623,
+                },
+                {
+                  lat: 51.8971507,
+                  lon: -8.4794313,
                 },
                 {
                   lat: 51.8971504,
@@ -10701,16 +10729,18 @@ const mocks = {
                 },
               ],
               tags: {
-                alt_name: "O'Donovan Road",
+                alt_name: "O'Donovan Bridge",
                 bridge: "yes",
+                "bridge:ref": "CB-L1015-B-000",
                 highway: "tertiary",
                 lanes: "2",
                 layer: "1",
                 maxspeed: "50",
-                name: "Donovans Road",
-                "name:en": "Donovans Road",
-                "name:ga": "Bóthar Uí Dhonnabháin",
+                name: "Donovan Bridge",
+                "name:en": "Donovans Bridge",
+                "name:ga": "Droichead Donnabháin",
                 ref: "L1015",
+                start_date: "1902",
                 surface: "asphalt",
               },
             },
@@ -11401,8 +11431,8 @@ const mocks = {
               bounds: {
                 minlat: 51.9014603,
                 minlon: -8.4639396,
-                maxlat: 51.9023163,
-                maxlon: -8.4599314,
+                maxlat: 51.9022301,
+                maxlon: -8.4603961,
               },
               geometry: [
                 {
@@ -11430,32 +11460,24 @@ const mocks = {
                   lon: -8.4622287,
                 },
                 {
-                  lat: 51.9021085,
-                  lon: -8.4608626,
+                  lat: 51.9020907,
+                  lon: -8.4609465,
                 },
                 {
-                  lat: 51.902129,
-                  lon: -8.4607852,
+                  lat: 51.902132,
+                  lon: -8.4607892,
                 },
                 {
-                  lat: 51.9021474,
-                  lon: -8.4607159,
+                  lat: 51.9021505,
+                  lon: -8.460718,
                 },
                 {
-                  lat: 51.9022262,
-                  lon: -8.4603697,
+                  lat: 51.9022049,
+                  lon: -8.4605068,
                 },
                 {
-                  lat: 51.9022856,
-                  lon: -8.4601244,
-                },
-                {
-                  lat: 51.9023061,
-                  lon: -8.4600121,
-                },
-                {
-                  lat: 51.9023163,
-                  lon: -8.4599314,
+                  lat: 51.9022301,
+                  lon: -8.4603961,
                 },
               ],
               tags: {
@@ -11534,39 +11556,43 @@ const mocks = {
               type: "way",
               id: 22634594,
               bounds: {
-                minlat: 51.8946172,
-                minlon: -8.4811256,
-                maxlat: 51.8948275,
-                maxlon: -8.4791788,
+                minlat: 51.8946173,
+                minlon: -8.4811319,
+                maxlat: 51.8948233,
+                maxlon: -8.4791743,
               },
               geometry: [
                 {
-                  lat: 51.8948275,
-                  lon: -8.4791788,
+                  lat: 51.8948233,
+                  lon: -8.4791743,
                 },
                 {
-                  lat: 51.8947586,
-                  lon: -8.4794816,
+                  lat: 51.894799,
+                  lon: -8.4792686,
                 },
                 {
-                  lat: 51.8947085,
-                  lon: -8.4797041,
+                  lat: 51.8947002,
+                  lon: -8.4796947,
                 },
                 {
-                  lat: 51.8946624,
-                  lon: -8.4799738,
+                  lat: 51.8946646,
+                  lon: -8.4798773,
                 },
                 {
-                  lat: 51.8946404,
-                  lon: -8.4801373,
+                  lat: 51.8946349,
+                  lon: -8.4800638,
                 },
                 {
-                  lat: 51.8946308,
-                  lon: -8.4803082,
+                  lat: 51.8946237,
+                  lon: -8.4802178,
                 },
                 {
-                  lat: 51.894623,
-                  lon: -8.4805558,
+                  lat: 51.8946215,
+                  lon: -8.4803105,
+                },
+                {
+                  lat: 51.8946244,
+                  lon: -8.4806205,
                 },
                 {
                   lat: 51.8946215,
@@ -11581,8 +11607,8 @@ const mocks = {
                   lon: -8.4810742,
                 },
                 {
-                  lat: 51.8946172,
-                  lon: -8.4811256,
+                  lat: 51.8946173,
+                  lon: -8.4811319,
                 },
               ],
               tags: {
@@ -11830,8 +11856,8 @@ const mocks = {
                   lon: -8.4888281,
                 },
                 {
-                  lat: 51.8964897,
-                  lon: -8.4887233,
+                  lat: 51.8964993,
+                  lon: -8.488728,
                 },
                 {
                   lat: 51.896605,
@@ -13494,10 +13520,10 @@ const mocks = {
               type: "way",
               id: 29425839,
               bounds: {
-                minlat: 51.8959432,
+                minlat: 51.8959945,
                 minlon: -8.4766629,
                 maxlat: 51.8965319,
-                maxlon: -8.4763391,
+                maxlon: -8.4763683,
               },
               geometry: [
                 {
@@ -13519,10 +13545,6 @@ const mocks = {
                 {
                   lat: 51.8959945,
                   lon: -8.4763683,
-                },
-                {
-                  lat: 51.8959432,
-                  lon: -8.4763391,
                 },
               ],
               tags: {
@@ -17910,6 +17932,7 @@ const mocks = {
               ],
               tags: {
                 highway: "unclassified",
+                incline: "up",
                 lanes: "2",
                 local_class: "secondary",
                 maxspeed: "50",
@@ -17994,6 +18017,7 @@ const mocks = {
               ],
               tags: {
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "secondary",
                 "logainm:ref": "1390216",
@@ -18023,6 +18047,10 @@ const mocks = {
                 {
                   lat: 51.9092469,
                   lon: -8.4549056,
+                },
+                {
+                  lat: 51.9092874,
+                  lon: -8.4548672,
                 },
                 {
                   lat: 51.9093733,
@@ -20610,6 +20638,10 @@ const mocks = {
                 {
                   lat: 51.8863076,
                   lon: -8.4817873,
+                },
+                {
+                  lat: 51.8865427,
+                  lon: -8.4817256,
                 },
                 {
                   lat: 51.8865983,
@@ -28257,6 +28289,10 @@ const mocks = {
                   lon: -8.4529268,
                 },
                 {
+                  lat: 51.8926719,
+                  lon: -8.4529874,
+                },
+                {
                   lat: 51.8926753,
                   lon: -8.4531356,
                 },
@@ -28281,8 +28317,8 @@ const mocks = {
                   lon: -8.4530274,
                 },
                 {
-                  lat: 51.8935222,
-                  lon: -8.4530093,
+                  lat: 51.893495,
+                  lon: -8.4530136,
                 },
                 {
                   lat: 51.8939879,
@@ -28302,23 +28338,19 @@ const mocks = {
               type: "way",
               id: 32347923,
               bounds: {
-                minlat: 51.8935222,
-                minlon: -8.4537629,
-                maxlat: 51.8935508,
-                maxlon: -8.4530093,
+                minlat: 51.893495,
+                minlon: -8.4534116,
+                maxlat: 51.8935269,
+                maxlon: -8.4530136,
               },
               geometry: [
                 {
-                  lat: 51.8935222,
-                  lon: -8.4530093,
+                  lat: 51.893495,
+                  lon: -8.4530136,
                 },
                 {
-                  lat: 51.8935385,
-                  lon: -8.4534363,
-                },
-                {
-                  lat: 51.8935508,
-                  lon: -8.4537629,
+                  lat: 51.8935269,
+                  lon: -8.4534116,
                 },
               ],
               tags: {
@@ -30526,8 +30558,8 @@ const mocks = {
               bounds: {
                 minlat: 51.9006505,
                 minlon: -8.4852263,
-                maxlat: 51.9010205,
-                maxlon: -8.4842691,
+                maxlat: 51.9010265,
+                maxlon: -8.484251,
               },
               geometry: [
                 {
@@ -30563,12 +30595,12 @@ const mocks = {
                   lon: -8.4846461,
                 },
                 {
-                  lat: 51.9010122,
-                  lon: -8.4842932,
+                  lat: 51.901015,
+                  lon: -8.4842812,
                 },
                 {
-                  lat: 51.9010205,
-                  lon: -8.4842691,
+                  lat: 51.9010265,
+                  lon: -8.484251,
                 },
               ],
               tags: {
@@ -30584,19 +30616,19 @@ const mocks = {
               type: "way",
               id: 41742536,
               bounds: {
-                minlat: 51.9010122,
-                minlon: -8.4844391,
-                maxlat: 51.9012538,
-                maxlon: -8.4842932,
+                minlat: 51.901015,
+                minlon: -8.4844198,
+                maxlat: 51.901258,
+                maxlon: -8.4842812,
               },
               geometry: [
                 {
-                  lat: 51.9010122,
-                  lon: -8.4842932,
+                  lat: 51.901015,
+                  lon: -8.4842812,
                 },
                 {
-                  lat: 51.9012538,
-                  lon: -8.4844391,
+                  lat: 51.901258,
+                  lon: -8.4844198,
                 },
               ],
               tags: {
@@ -31874,8 +31906,8 @@ const mocks = {
                   lon: -8.4530333,
                 },
                 {
-                  lat: 51.909507,
-                  lon: -8.4529579,
+                  lat: 51.9095111,
+                  lon: -8.4529587,
                 },
                 {
                   lat: 51.9096056,
@@ -31937,6 +31969,7 @@ const mocks = {
               tags: {
                 abutters: "residential",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "primary",
                 "logainm:ref": "1390216",
@@ -33769,6 +33802,7 @@ const mocks = {
                 "alt_name:ga": "Cnoc Phádraig",
                 cycleway: "no",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "1",
                 lit: "yes",
                 local_class: "secondary",
@@ -44482,8 +44516,8 @@ const mocks = {
               id: 92985863,
               bounds: {
                 minlat: 51.9081874,
-                minlon: -8.4529579,
-                maxlat: 51.909507,
+                minlon: -8.4529587,
+                maxlat: 51.9095111,
                 maxlon: -8.4520067,
               },
               geometry: [
@@ -44516,8 +44550,8 @@ const mocks = {
                   lon: -8.4529311,
                 },
                 {
-                  lat: 51.909507,
-                  lon: -8.4529579,
+                  lat: 51.9095111,
+                  lon: -8.4529587,
                 },
               ],
               tags: {
@@ -45363,8 +45397,8 @@ const mocks = {
               id: 98387829,
               bounds: {
                 minlat: 51.8969579,
-                minlon: -8.4629028,
-                maxlat: 51.8972713,
+                minlon: -8.4629316,
+                maxlat: 51.897329,
                 maxlon: -8.4588908,
               },
               geometry: [
@@ -45405,12 +45439,12 @@ const mocks = {
                   lon: -8.4626147,
                 },
                 {
-                  lat: 51.8972628,
-                  lon: -8.4627774,
+                  lat: 51.8973034,
+                  lon: -8.4627673,
                 },
                 {
-                  lat: 51.8972487,
-                  lon: -8.4629028,
+                  lat: 51.897329,
+                  lon: -8.4629316,
                 },
               ],
               tags: {
@@ -52869,47 +52903,63 @@ const mocks = {
               type: "way",
               id: 107105814,
               bounds: {
-                minlat: 51.8962894,
-                minlon: -8.4629805,
-                maxlat: 51.8976047,
-                maxlon: -8.4624135,
+                minlat: 51.8962577,
+                minlon: -8.4630398,
+                maxlat: 51.8977123,
+                maxlon: -8.462436,
               },
               geometry: [
                 {
-                  lat: 51.8962894,
-                  lon: -8.4624135,
+                  lat: 51.8962577,
+                  lon: -8.462436,
                 },
                 {
-                  lat: 51.896403,
-                  lon: -8.4624747,
+                  lat: 51.8963111,
+                  lon: -8.4624513,
                 },
                 {
-                  lat: 51.896555,
-                  lon: -8.462572,
+                  lat: 51.8963904,
+                  lon: -8.4625042,
                 },
                 {
-                  lat: 51.8967354,
-                  lon: -8.4626941,
+                  lat: 51.8965637,
+                  lon: -8.4626132,
+                },
+                {
+                  lat: 51.8967271,
+                  lon: -8.4627105,
+                },
+                {
+                  lat: 51.8968235,
+                  lon: -8.4627589,
                 },
                 {
                   lat: 51.8969347,
-                  lon: -8.4627858,
+                  lon: -8.4628079,
                 },
                 {
-                  lat: 51.8972236,
-                  lon: -8.4628913,
+                  lat: 51.8970802,
+                  lon: -8.4628597,
                 },
                 {
-                  lat: 51.8972487,
-                  lon: -8.4629028,
+                  lat: 51.8971463,
+                  lon: -8.462882,
                 },
                 {
-                  lat: 51.8974298,
+                  lat: 51.8972128,
+                  lon: -8.4628977,
+                },
+                {
+                  lat: 51.897329,
+                  lon: -8.4629316,
+                },
+                {
+                  lat: 51.8974234,
                   lon: -8.4629601,
                 },
                 {
-                  lat: 51.8976047,
-                  lon: -8.4629805,
+                  lat: 51.8977123,
+                  lon: -8.4630398,
                 },
               ],
               tags: {
@@ -53003,8 +53053,8 @@ const mocks = {
               bounds: {
                 minlat: 51.895806,
                 minlon: -8.4634597,
-                maxlat: 51.8962894,
-                maxlon: -8.4624135,
+                maxlat: 51.8962577,
+                maxlon: -8.462436,
               },
               geometry: [
                 {
@@ -53016,24 +53066,32 @@ const mocks = {
                   lon: -8.4632647,
                 },
                 {
-                  lat: 51.8960734,
-                  lon: -8.4626355,
+                  lat: 51.8960713,
+                  lon: -8.4626315,
+                },
+                {
+                  lat: 51.8960936,
+                  lon: -8.4625711,
                 },
                 {
                   lat: 51.8961176,
-                  lon: -8.4625128,
+                  lon: -8.4625208,
                 },
                 {
-                  lat: 51.8961583,
-                  lon: -8.4624565,
+                  lat: 51.8961504,
+                  lon: -8.462482,
                 },
                 {
-                  lat: 51.8962073,
-                  lon: -8.4624263,
+                  lat: 51.8961806,
+                  lon: -8.4624598,
                 },
                 {
-                  lat: 51.8962894,
-                  lon: -8.4624135,
+                  lat: 51.8962274,
+                  lon: -8.4624407,
+                },
+                {
+                  lat: 51.8962577,
+                  lon: -8.462436,
                 },
               ],
               tags: {
@@ -54910,6 +54968,10 @@ const mocks = {
                   lon: -8.4436606,
                 },
                 {
+                  lat: 51.8937313,
+                  lon: -8.4436306,
+                },
+                {
                   lat: 51.8937439,
                   lon: -8.4435692,
                 },
@@ -54946,6 +55008,10 @@ const mocks = {
                   lon: -8.4423727,
                 },
                 {
+                  lat: 51.8940752,
+                  lon: -8.442289,
+                },
+                {
                   lat: 51.8940865,
                   lon: -8.4422255,
                 },
@@ -54962,8 +55028,8 @@ const mocks = {
                   lon: -8.4416821,
                 },
                 {
-                  lat: 51.8941897,
-                  lon: -8.4414947,
+                  lat: 51.8941801,
+                  lon: -8.4415634,
                 },
                 {
                   lat: 51.8942003,
@@ -55004,6 +55070,14 @@ const mocks = {
                 {
                   lat: 51.8943709,
                   lon: -8.4399259,
+                },
+                {
+                  lat: 51.8943749,
+                  lon: -8.4398909,
+                },
+                {
+                  lat: 51.8943985,
+                  lon: -8.4396859,
                 },
                 {
                   lat: 51.894402,
@@ -55965,17 +56039,17 @@ const mocks = {
               bounds: {
                 minlat: 51.8960806,
                 minlon: -8.4623253,
-                maxlat: 51.8961983,
-                maxlon: -8.4622228,
+                maxlat: 51.8961911,
+                maxlon: -8.4622463,
               },
               geometry: [
                 {
-                  lat: 51.8961983,
-                  lon: -8.4622228,
+                  lat: 51.8961911,
+                  lon: -8.4622463,
                 },
                 {
-                  lat: 51.8961417,
-                  lon: -8.4622474,
+                  lat: 51.8961458,
+                  lon: -8.4622638,
                 },
                 {
                   lat: 51.8960806,
@@ -56015,12 +56089,12 @@ const mocks = {
                   lon: -8.4624801,
                 },
                 {
-                  lat: 51.8960019,
-                  lon: -8.4626125,
+                  lat: 51.8959976,
+                  lon: -8.4626081,
                 },
                 {
-                  lat: 51.8958347,
-                  lon: -8.4632284,
+                  lat: 51.8958297,
+                  lon: -8.4632304,
                 },
                 {
                   lat: 51.895806,
@@ -57198,12 +57272,12 @@ const mocks = {
                   lon: -8.4812505,
                 },
                 {
-                  lat: 51.8899316,
-                  lon: -8.4814339,
+                  lat: 51.8899288,
+                  lon: -8.4814317,
                 },
                 {
-                  lat: 51.8899316,
-                  lon: -8.4814341,
+                  lat: 51.8899319,
+                  lon: -8.4814413,
                 },
                 {
                   lat: 51.8899456,
@@ -60667,8 +60741,8 @@ const mocks = {
               bounds: {
                 minlat: 51.8939809,
                 minlon: -8.4817833,
-                maxlat: 51.8946198,
-                maxlon: -8.4813035,
+                maxlat: 51.8943911,
+                maxlon: -8.4815276,
               },
               geometry: [
                 {
@@ -60699,26 +60773,6 @@ const mocks = {
                   lat: 51.8943911,
                   lon: -8.4815276,
                 },
-                {
-                  lat: 51.8944526,
-                  lon: -8.4814762,
-                },
-                {
-                  lat: 51.8944844,
-                  lon: -8.4814496,
-                },
-                {
-                  lat: 51.8945607,
-                  lon: -8.4813777,
-                },
-                {
-                  lat: 51.8945925,
-                  lon: -8.4813414,
-                },
-                {
-                  lat: 51.8946198,
-                  lon: -8.4813035,
-                },
               ],
               tags: {
                 highway: "tertiary",
@@ -60740,15 +60794,11 @@ const mocks = {
               id: 129518739,
               bounds: {
                 minlat: 51.8978865,
-                minlon: -8.4794338,
-                maxlat: 51.8981828,
+                minlon: -8.4794166,
+                maxlat: 51.8981463,
                 maxlon: -8.4793102,
               },
               geometry: [
-                {
-                  lat: 51.8981828,
-                  lon: -8.4794338,
-                },
                 {
                   lat: 51.8981463,
                   lon: -8.4794166,
@@ -61303,6 +61353,18 @@ const mocks = {
                   lon: -8.4557926,
                 },
                 {
+                  lat: 51.9088682,
+                  lon: -8.4552538,
+                },
+                {
+                  lat: 51.9088811,
+                  lon: -8.4552431,
+                },
+                {
+                  lat: 51.908914,
+                  lon: -8.4552156,
+                },
+                {
                   lat: 51.9090119,
                   lon: -8.4551337,
                 },
@@ -61315,6 +61377,7 @@ const mocks = {
                 alt_name: "Ballyhooley Road",
                 "alt_name:ga": "Bóthar Atha Hulla",
                 highway: "secondary",
+                incline: "up",
                 lanes: "2",
                 "logainm:ref": "1388710",
                 "logainm:url": "https://www.logainm.ie/1388710.aspx",
@@ -61666,6 +61729,7 @@ const mocks = {
               tags: {
                 "alt_name:ga": "Sráid Eabhrac",
                 highway: "unclassified",
+                incline: "up",
                 lanes: "1",
                 local_class: "tertiary",
                 maxspeed: "50",
@@ -64092,10 +64156,10 @@ const mocks = {
               type: "way",
               id: 138120046,
               bounds: {
-                minlat: 51.8976047,
+                minlat: 51.8977123,
                 minlon: -8.4632733,
                 maxlat: 51.8980815,
-                maxlon: -8.4629805,
+                maxlon: -8.4630398,
               },
               geometry: [
                 {
@@ -64107,16 +64171,16 @@ const mocks = {
                   lon: -8.463224,
                 },
                 {
-                  lat: 51.897956,
-                  lon: -8.4631969,
+                  lat: 51.8979634,
+                  lon: -8.4631982,
                 },
                 {
-                  lat: 51.8977314,
-                  lon: -8.4630583,
+                  lat: 51.8977331,
+                  lon: -8.4630516,
                 },
                 {
-                  lat: 51.8976047,
-                  lon: -8.4629805,
+                  lat: 51.8977123,
+                  lon: -8.4630398,
                 },
               ],
               tags: {
@@ -66135,16 +66199,20 @@ const mocks = {
                   lon: -8.4542232,
                 },
                 {
-                  lat: 51.8939188,
-                  lon: -8.4541891,
+                  lat: 51.8939252,
+                  lon: -8.4541755,
                 },
                 {
-                  lat: 51.8939517,
-                  lon: -8.454089,
+                  lat: 51.893948,
+                  lon: -8.4541137,
                 },
                 {
-                  lat: 51.8939805,
-                  lon: -8.453991,
+                  lat: 51.8939843,
+                  lon: -8.4540104,
+                },
+                {
+                  lat: 51.8940156,
+                  lon: -8.4539158,
                 },
                 {
                   lat: 51.8940204,
@@ -66198,6 +66266,14 @@ const mocks = {
                   lon: -8.4545051,
                 },
                 {
+                  lat: 51.8934028,
+                  lon: -8.4546853,
+                },
+                {
+                  lat: 51.8933245,
+                  lon: -8.4547538,
+                },
+                {
                   lat: 51.8932614,
                   lon: -8.454809,
                 },
@@ -66214,12 +66290,20 @@ const mocks = {
                   lon: -8.4549577,
                 },
                 {
+                  lat: 51.8929414,
+                  lon: -8.4549684,
+                },
+                {
                   lat: 51.8929205,
                   lon: -8.4549714,
                 },
                 {
                   lat: 51.8928708,
                   lon: -8.4549624,
+                },
+                {
+                  lat: 51.8928554,
+                  lon: -8.4549574,
                 },
                 {
                   lat: 51.8928229,
@@ -66280,6 +66364,10 @@ const mocks = {
                 {
                   lat: 51.8922184,
                   lon: -8.4545268,
+                },
+                {
+                  lat: 51.8921073,
+                  lon: -8.454474,
                 },
                 {
                   lat: 51.8920999,
@@ -67976,15 +68064,55 @@ const mocks = {
               type: "way",
               id: 146022447,
               bounds: {
-                minlat: 51.9012853,
-                minlon: -8.4449712,
-                maxlat: 51.9013517,
+                minlat: 51.9012533,
+                minlon: -8.4451679,
+                maxlat: 51.9014567,
                 maxlon: -8.444039,
               },
               geometry: [
                 {
-                  lat: 51.9012853,
-                  lon: -8.4449712,
+                  lat: 51.9014567,
+                  lon: -8.4451003,
+                },
+                {
+                  lat: 51.9014197,
+                  lon: -8.4450927,
+                },
+                {
+                  lat: 51.9013971,
+                  lon: -8.4450957,
+                },
+                {
+                  lat: 51.9013768,
+                  lon: -8.4451099,
+                },
+                {
+                  lat: 51.9012796,
+                  lon: -8.4451679,
+                },
+                {
+                  lat: 51.9012672,
+                  lon: -8.4451649,
+                },
+                {
+                  lat: 51.9012587,
+                  lon: -8.445157,
+                },
+                {
+                  lat: 51.9012533,
+                  lon: -8.445114,
+                },
+                {
+                  lat: 51.9012664,
+                  lon: -8.4450153,
+                },
+                {
+                  lat: 51.9012683,
+                  lon: -8.4450007,
+                },
+                {
+                  lat: 51.901305,
+                  lon: -8.444643,
                 },
                 {
                   lat: 51.9013401,
@@ -68758,7 +68886,7 @@ const mocks = {
               ],
               tags: {
                 highway: "residential",
-                name: "Leeview Place",
+                name: "Lee View Place",
               },
             },
             {
@@ -69950,6 +70078,10 @@ const mocks = {
                 {
                   lat: 51.9064814,
                   lon: -8.4904396,
+                },
+                {
+                  lat: 51.9064325,
+                  lon: -8.4904162,
                 },
                 {
                   lat: 51.906154,
@@ -73854,15 +73986,19 @@ const mocks = {
                 minlat: 51.8911707,
                 minlon: -8.4542299,
                 maxlat: 51.8914359,
-                maxlon: -8.4427601,
+                maxlon: -8.4427615,
               },
               geometry: [
                 {
-                  lat: 51.891322,
-                  lon: -8.4427601,
+                  lat: 51.8913203,
+                  lon: -8.4427615,
                 },
                 {
-                  lat: 51.8913138,
+                  lat: 51.8913151,
+                  lon: -8.4429304,
+                },
+                {
+                  lat: 51.8913118,
                   lon: -8.4430387,
                 },
                 {
@@ -78284,27 +78420,47 @@ const mocks = {
               type: "way",
               id: 412077090,
               bounds: {
-                minlat: 51.8969815,
-                minlon: -8.4644767,
-                maxlat: 51.8971576,
-                maxlon: -8.4637965,
+                minlat: 51.8969712,
+                minlon: -8.464472,
+                maxlat: 51.8970877,
+                maxlon: -8.4638661,
               },
               geometry: [
                 {
-                  lat: 51.8969815,
-                  lon: -8.4644767,
+                  lat: 51.8969712,
+                  lon: -8.464472,
                 },
                 {
-                  lat: 51.8970045,
-                  lon: -8.464389,
+                  lat: 51.8970026,
+                  lon: -8.4643347,
                 },
                 {
-                  lat: 51.8970823,
-                  lon: -8.4640785,
+                  lat: 51.8970738,
+                  lon: -8.4640604,
                 },
                 {
-                  lat: 51.8971576,
-                  lon: -8.4637965,
+                  lat: 51.897085,
+                  lon: -8.4640128,
+                },
+                {
+                  lat: 51.8970877,
+                  lon: -8.4639788,
+                },
+                {
+                  lat: 51.8970848,
+                  lon: -8.463954,
+                },
+                {
+                  lat: 51.8970747,
+                  lon: -8.4639178,
+                },
+                {
+                  lat: 51.8970641,
+                  lon: -8.463903,
+                },
+                {
+                  lat: 51.8970149,
+                  lon: -8.4638661,
                 },
               ],
               tags: {
@@ -81262,6 +81418,7 @@ const mocks = {
               ],
               tags: {
                 highway: "unclassified",
+                incline: "up",
                 lane_markings: "no",
                 local_class: "secondary",
                 maxspeed: "50",
@@ -81291,16 +81448,8 @@ const mocks = {
                   lon: -8.4616085,
                 },
                 {
-                  lat: 51.9070046,
-                  lon: -8.4612654,
-                },
-                {
                   lat: 51.9070372,
                   lon: -8.4610888,
-                },
-                {
-                  lat: 51.9070961,
-                  lon: -8.4607701,
                 },
                 {
                   lat: 51.9071539,
@@ -81309,6 +81458,7 @@ const mocks = {
               ],
               tags: {
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "secondary",
                 "logainm:ref": "1390216",
@@ -81471,6 +81621,7 @@ const mocks = {
                 abutters: "residential",
                 "cycleway:both": "no",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "secondary",
                 "logainm:ref": "1390216",
@@ -82041,8 +82192,8 @@ const mocks = {
               type: "way",
               id: 477791910,
               bounds: {
-                minlat: 51.8948555,
-                minlon: -8.4790838,
+                minlat: 51.8948509,
+                minlon: -8.4790823,
                 maxlat: 51.8950463,
                 maxlon: -8.4783103,
               },
@@ -82060,8 +82211,8 @@ const mocks = {
                   lon: -8.4790333,
                 },
                 {
-                  lat: 51.8948555,
-                  lon: -8.4790838,
+                  lat: 51.8948509,
+                  lon: -8.4790823,
                 },
               ],
               tags: {
@@ -84813,19 +84964,11 @@ const mocks = {
               id: 551477597,
               bounds: {
                 minlat: 51.9028202,
-                minlon: -8.4708447,
-                maxlat: 51.9029065,
+                minlon: -8.4703083,
+                maxlat: 51.9028718,
                 maxlon: -8.469883,
               },
               geometry: [
-                {
-                  lat: 51.9029065,
-                  lon: -8.4708447,
-                },
-                {
-                  lat: 51.9028635,
-                  lon: -8.470378,
-                },
                 {
                   lat: 51.9028718,
                   lon: -8.4703083,
@@ -86039,6 +86182,7 @@ const mocks = {
               ],
               tags: {
                 highway: "unclassified",
+                incline: "up",
                 lanes: "2",
                 local_class: "secondary",
                 maxspeed: "50",
@@ -86118,6 +86262,7 @@ const mocks = {
               ],
               tags: {
                 highway: "unclassified",
+                incline: "up",
                 lanes: "2",
                 lit: "yes",
                 local_class: "secondary",
@@ -86289,104 +86434,105 @@ const mocks = {
               },
               geometry: [
                 {
-                  lat: 51.9041958,
-                  lon: -8.4573766,
-                },
-                {
-                  lat: 51.9041107,
-                  lon: -8.4573758,
-                },
-                {
-                  lat: 51.9040468,
-                  lon: -8.4573844,
-                },
-                {
-                  lat: 51.9039846,
-                  lon: -8.4574037,
-                },
-                {
-                  lat: 51.9039301,
-                  lon: -8.4574313,
-                },
-                {
-                  lat: 51.9038756,
-                  lon: -8.4574655,
-                },
-                {
-                  lat: 51.9036815,
-                  lon: -8.4576331,
-                },
-                {
-                  lat: 51.9036046,
-                  lon: -8.4577411,
-                },
-                {
-                  lat: 51.9035396,
-                  lon: -8.4578323,
-                },
-                {
-                  lat: 51.9034321,
-                  lon: -8.4580644,
-                },
-                {
-                  lat: 51.9033424,
-                  lon: -8.4583841,
-                },
-                {
-                  lat: 51.9033288,
-                  lon: -8.4584561,
-                },
-                {
-                  lat: 51.9032596,
-                  lon: -8.458822,
-                },
-                {
-                  lat: 51.9031682,
-                  lon: -8.4594959,
-                },
-                {
-                  lat: 51.9030616,
-                  lon: -8.4600087,
-                },
-                {
-                  lat: 51.9029967,
-                  lon: -8.4602286,
-                },
-                {
-                  lat: 51.902749,
-                  lon: -8.4610677,
-                },
-                {
-                  lat: 51.9024491,
-                  lon: -8.4621035,
-                },
-                {
-                  lat: 51.9021743,
-                  lon: -8.4632897,
-                },
-                {
-                  lat: 51.9021483,
-                  lon: -8.463402,
-                },
-                {
-                  lat: 51.9020698,
-                  lon: -8.4636513,
-                },
-                {
-                  lat: 51.9015201,
-                  lon: -8.4651263,
+                  lat: 51.9014719,
+                  lon: -8.4652358,
                 },
                 {
                   lat: 51.9015009,
                   lon: -8.4651785,
                 },
                 {
-                  lat: 51.9014719,
-                  lon: -8.4652358,
+                  lat: 51.9015201,
+                  lon: -8.4651263,
+                },
+                {
+                  lat: 51.9020698,
+                  lon: -8.4636513,
+                },
+                {
+                  lat: 51.9021483,
+                  lon: -8.463402,
+                },
+                {
+                  lat: 51.9021743,
+                  lon: -8.4632897,
+                },
+                {
+                  lat: 51.9024491,
+                  lon: -8.4621035,
+                },
+                {
+                  lat: 51.902749,
+                  lon: -8.4610677,
+                },
+                {
+                  lat: 51.9029967,
+                  lon: -8.4602286,
+                },
+                {
+                  lat: 51.9030616,
+                  lon: -8.4600087,
+                },
+                {
+                  lat: 51.9031682,
+                  lon: -8.4594959,
+                },
+                {
+                  lat: 51.9032596,
+                  lon: -8.458822,
+                },
+                {
+                  lat: 51.9033288,
+                  lon: -8.4584561,
+                },
+                {
+                  lat: 51.9033424,
+                  lon: -8.4583841,
+                },
+                {
+                  lat: 51.9034321,
+                  lon: -8.4580644,
+                },
+                {
+                  lat: 51.9035396,
+                  lon: -8.4578323,
+                },
+                {
+                  lat: 51.9036046,
+                  lon: -8.4577411,
+                },
+                {
+                  lat: 51.9036815,
+                  lon: -8.4576331,
+                },
+                {
+                  lat: 51.9038756,
+                  lon: -8.4574655,
+                },
+                {
+                  lat: 51.9039301,
+                  lon: -8.4574313,
+                },
+                {
+                  lat: 51.9039846,
+                  lon: -8.4574037,
+                },
+                {
+                  lat: 51.9040468,
+                  lon: -8.4573844,
+                },
+                {
+                  lat: 51.9041107,
+                  lon: -8.4573758,
+                },
+                {
+                  lat: 51.9041958,
+                  lon: -8.4573766,
                 },
               ],
               tags: {
                 highway: "secondary",
+                incline: "up",
                 lanes: "2",
                 "logainm:ref": "1389065",
                 "logainm:url": "https://www.logainm.ie/1389065.aspx",
@@ -86575,8 +86721,12 @@ const mocks = {
                   lon: -8.4535439,
                 },
                 {
-                  lat: 51.8940532,
-                  lon: -8.4532506,
+                  lat: 51.8940848,
+                  lon: -8.4534731,
+                },
+                {
+                  lat: 51.8940496,
+                  lon: -8.4532525,
                 },
                 {
                   lat: 51.8940169,
@@ -88123,7 +88273,7 @@ const mocks = {
               bounds: {
                 minlat: 51.9090662,
                 minlon: -8.4553264,
-                maxlat: 51.9090762,
+                maxlat: 51.9090757,
                 maxlon: -8.4550868,
               },
               geometry: [
@@ -88132,8 +88282,12 @@ const mocks = {
                   lon: -8.4553264,
                 },
                 {
-                  lat: 51.9090762,
-                  lon: -8.4552295,
+                  lat: 51.9090717,
+                  lon: -8.4552727,
+                },
+                {
+                  lat: 51.9090751,
+                  lon: -8.4551955,
                 },
                 {
                   lat: 51.9090757,
@@ -88170,6 +88324,10 @@ const mocks = {
                   lon: -8.4548921,
                 },
                 {
+                  lat: 51.9091597,
+                  lon: -8.4548501,
+                },
+                {
                   lat: 51.9091746,
                   lon: -8.4547881,
                 },
@@ -88177,6 +88335,7 @@ const mocks = {
               tags: {
                 abutters: "residential",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "primary",
                 "logainm:ref": "1390216",
@@ -88234,6 +88393,7 @@ const mocks = {
               ],
               tags: {
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 lit: "yes",
                 local_class: "secondary",
@@ -88269,6 +88429,7 @@ const mocks = {
               ],
               tags: {
                 highway: "secondary",
+                incline: "up",
                 lanes: "2",
                 "logainm:ref": "1388710",
                 "logainm:url": "https://www.logainm.ie/1388710.aspx",
@@ -88321,6 +88482,7 @@ const mocks = {
               ],
               tags: {
                 highway: "secondary",
+                incline: "up",
                 lanes: "2",
                 "logainm:ref": "1388710",
                 "logainm:url": "https://www.logainm.ie/1388710.aspx",
@@ -88358,6 +88520,7 @@ const mocks = {
               tags: {
                 abutters: "residential",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "primary",
                 "logainm:ref": "1390216",
@@ -88385,6 +88548,10 @@ const mocks = {
                   lon: -8.4550868,
                 },
                 {
+                  lat: 51.9091439,
+                  lon: -8.4549071,
+                },
+                {
                   lat: 51.9091496,
                   lon: -8.4548921,
                 },
@@ -88392,6 +88559,7 @@ const mocks = {
               tags: {
                 abutters: "residential",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "2",
                 local_class: "primary",
                 "logainm:ref": "1390216",
@@ -92208,15 +92376,19 @@ const mocks = {
               type: "way",
               id: 779999863,
               bounds: {
-                minlat: 51.8971576,
-                minlon: -8.4637965,
-                maxlat: 51.8974298,
+                minlat: 51.897085,
+                minlon: -8.4640128,
+                maxlat: 51.8974234,
                 maxlon: -8.4629601,
               },
               geometry: [
                 {
-                  lat: 51.8971576,
-                  lon: -8.4637965,
+                  lat: 51.897085,
+                  lon: -8.4640128,
+                },
+                {
+                  lat: 51.8971332,
+                  lon: -8.46383,
                 },
                 {
                   lat: 51.8973849,
@@ -92227,7 +92399,7 @@ const mocks = {
                   lon: -8.4630339,
                 },
                 {
-                  lat: 51.8974298,
+                  lat: 51.8974234,
                   lon: -8.4629601,
                 },
               ],
@@ -93692,6 +93864,7 @@ const mocks = {
                 "alt_name:ga": "Cnoc Phádraig",
                 "cycleway:both": "no",
                 highway: "tertiary",
+                incline: "up",
                 lanes: "1",
                 lit: "yes",
                 local_class: "secondary",
@@ -94471,7 +94644,7 @@ const mocks = {
               bounds: {
                 minlat: 51.9013263,
                 minlon: -8.444039,
-                maxlat: 51.9014744,
+                maxlat: 51.9014852,
                 maxlon: -8.4381362,
               },
               geometry: [
@@ -94488,16 +94661,20 @@ const mocks = {
                   lon: -8.438917,
                 },
                 {
-                  lat: 51.9014136,
-                  lon: -8.4391841,
+                  lat: 51.90142,
+                  lon: -8.4391849,
                 },
                 {
-                  lat: 51.9014354,
-                  lon: -8.4397932,
+                  lat: 51.9014521,
+                  lon: -8.4397907,
                 },
                 {
-                  lat: 51.9014679,
-                  lon: -8.440663,
+                  lat: 51.9014684,
+                  lon: -8.4402244,
+                },
+                {
+                  lat: 51.9014852,
+                  lon: -8.4406605,
                 },
                 {
                   lat: 51.9014744,
@@ -94709,6 +94886,34 @@ const mocks = {
               tags: {
                 highway: "residential",
                 name: "Alma Villias",
+              },
+            },
+            {
+              type: "way",
+              id: 872775844,
+              bounds: {
+                minlat: 51.9023398,
+                minlon: -8.4766045,
+                maxlat: 51.9024757,
+                maxlon: -8.4765653,
+              },
+              geometry: [
+                {
+                  lat: 51.9023398,
+                  lon: -8.4766045,
+                },
+                {
+                  lat: 51.9024246,
+                  lon: -8.4765889,
+                },
+                {
+                  lat: 51.9024757,
+                  lon: -8.4765653,
+                },
+              ],
+              tags: {
+                highway: "residential",
+                name: "Mahony's Place",
               },
             },
             {
@@ -98289,27 +98494,27 @@ const mocks = {
               type: "way",
               id: 987430215,
               bounds: {
-                minlat: 51.8972628,
-                minlon: -8.4629805,
-                maxlat: 51.8976047,
-                maxlon: -8.4627774,
+                minlat: 51.8973034,
+                minlon: -8.4630398,
+                maxlat: 51.8977123,
+                maxlon: -8.4627673,
               },
               geometry: [
                 {
-                  lat: 51.8976047,
-                  lon: -8.4629805,
+                  lat: 51.8977123,
+                  lon: -8.4630398,
                 },
                 {
-                  lat: 51.8974823,
-                  lon: -8.4628674,
+                  lat: 51.8974885,
+                  lon: -8.4628423,
                 },
                 {
-                  lat: 51.8974486,
-                  lon: -8.4628363,
+                  lat: 51.8974469,
+                  lon: -8.4628175,
                 },
                 {
-                  lat: 51.8972628,
-                  lon: -8.4627774,
+                  lat: 51.8973034,
+                  lon: -8.4627673,
                 },
               ],
               tags: {
@@ -98335,35 +98540,35 @@ const mocks = {
               type: "way",
               id: 987430217,
               bounds: {
-                minlat: 51.8961983,
-                minlon: -8.4627774,
-                maxlat: 51.8972628,
-                maxlon: -8.4622151,
+                minlat: 51.8961911,
+                minlon: -8.4627673,
+                maxlat: 51.8973034,
+                maxlon: -8.4622413,
               },
               geometry: [
                 {
-                  lat: 51.8972628,
-                  lon: -8.4627774,
+                  lat: 51.8973034,
+                  lon: -8.4627673,
                 },
                 {
-                  lat: 51.897002,
-                  lon: -8.46264,
+                  lat: 51.8970006,
+                  lon: -8.4626504,
                 },
                 {
-                  lat: 51.8964225,
-                  lon: -8.4622822,
+                  lat: 51.8964138,
+                  lon: -8.4623104,
                 },
                 {
-                  lat: 51.8963196,
-                  lon: -8.4622294,
+                  lat: 51.8963088,
+                  lon: -8.4622586,
                 },
                 {
-                  lat: 51.8962481,
-                  lon: -8.4622151,
+                  lat: 51.896246,
+                  lon: -8.4622413,
                 },
                 {
-                  lat: 51.8961983,
-                  lon: -8.4622228,
+                  lat: 51.8961911,
+                  lon: -8.4622463,
                 },
               ],
               tags: {
@@ -99229,6 +99434,10 @@ const mocks = {
                   lon: -8.4907254,
                 },
                 {
+                  lat: 51.9036777,
+                  lon: -8.4907339,
+                },
+                {
                   lat: 51.9036562,
                   lon: -8.4907666,
                 },
@@ -99440,28 +99649,29 @@ const mocks = {
               },
               geometry: [
                 {
-                  lat: 51.9014346,
-                  lon: -8.4653124,
-                },
-                {
-                  lat: 51.9014037,
-                  lon: -8.4653718,
+                  lat: 51.9013339,
+                  lon: -8.4654572,
                 },
                 {
                   lat: 51.9013685,
                   lon: -8.4654262,
                 },
                 {
-                  lat: 51.9013339,
-                  lon: -8.4654572,
+                  lat: 51.9014037,
+                  lon: -8.4653718,
+                },
+                {
+                  lat: 51.9014346,
+                  lon: -8.4653124,
                 },
               ],
               tags: {
                 cycleway: "lane",
                 highway: "secondary",
+                incline: "up",
                 lanes: "3",
-                "lanes:backward": "1",
-                "lanes:forward": "2",
+                "lanes:backward": "2",
+                "lanes:forward": "1",
                 lit: "yes",
                 "logainm:ref": "1389065",
                 "logainm:url": "https://www.logainm.ie/1389065.aspx",
@@ -100533,8 +100743,16 @@ const mocks = {
                   lon: -8.4536705,
                 },
                 {
+                  lat: 51.894049,
+                  lon: -8.4537202,
+                },
+                {
                   lat: 51.8940423,
                   lon: -8.4537647,
+                },
+                {
+                  lat: 51.8940368,
+                  lon: -8.4538441,
                 },
                 {
                   lat: 51.8940351,
@@ -103468,10 +103686,10 @@ const mocks = {
               type: "way",
               id: 1201750354,
               bounds: {
-                minlat: 51.896137,
+                minlat: 51.8963427,
                 minlon: -8.4748836,
                 maxlat: 51.897096,
-                maxlon: -8.4743189,
+                maxlon: -8.4744949,
               },
               geometry: [
                 {
@@ -103493,22 +103711,6 @@ const mocks = {
                 {
                   lat: 51.8963427,
                   lon: -8.4744949,
-                },
-                {
-                  lat: 51.8962147,
-                  lon: -8.4744207,
-                },
-                {
-                  lat: 51.8961777,
-                  lon: -8.4743932,
-                },
-                {
-                  lat: 51.8961537,
-                  lon: -8.4743556,
-                },
-                {
-                  lat: 51.896137,
-                  lon: -8.4743189,
                 },
               ],
               tags: {
@@ -103701,19 +103903,19 @@ const mocks = {
               type: "way",
               id: 1201765283,
               bounds: {
-                minlat: 51.8948275,
-                minlon: -8.4791788,
-                maxlat: 51.8948555,
-                maxlon: -8.4790838,
+                minlat: 51.8948233,
+                minlon: -8.4791743,
+                maxlat: 51.8948509,
+                maxlon: -8.4790823,
               },
               geometry: [
                 {
-                  lat: 51.8948555,
-                  lon: -8.4790838,
+                  lat: 51.8948509,
+                  lon: -8.4790823,
                 },
                 {
-                  lat: 51.8948275,
-                  lon: -8.4791788,
+                  lat: 51.8948233,
+                  lon: -8.4791743,
                 },
               ],
               tags: {
@@ -103735,31 +103937,32 @@ const mocks = {
               type: "way",
               id: 1201765284,
               bounds: {
-                minlat: 51.8946172,
-                minlon: -8.4813035,
-                maxlat: 51.8946198,
-                maxlon: -8.4811256,
+                minlat: 51.8945171,
+                minlon: -8.4814159,
+                maxlat: 51.8946173,
+                maxlon: -8.4811319,
               },
               geometry: [
                 {
-                  lat: 51.8946172,
-                  lon: -8.4811256,
+                  lat: 51.8946173,
+                  lon: -8.4811319,
                 },
                 {
-                  lat: 51.8946182,
-                  lon: -8.4811908,
+                  lat: 51.8946029,
+                  lon: -8.4811923,
                 },
                 {
-                  lat: 51.8946198,
-                  lon: -8.4813035,
+                  lat: 51.8945171,
+                  lon: -8.4814159,
                 },
               ],
               tags: {
                 bicycle: "yes",
                 "cycleway:both": "no",
-                highway: "secondary",
-                lanes: "2",
+                highway: "tertiary",
+                lanes: "1",
                 lit: "yes",
+                loc_ref: "L-1098-1",
                 "logainm:ref": "1390258",
                 "logainm:url": "https://www.logainm.ie/1390258.aspx",
                 maxspeed: "50",
@@ -103767,8 +103970,7 @@ const mocks = {
                 "name:en": "Bishop Street",
                 "name:ga": "Sráid an Easpaig",
                 oneway: "yes",
-                "oneway:bicycle": "no",
-                ref: "R608",
+                ref: "L1098",
                 surface: "asphalt",
               },
             },
@@ -109166,8 +109368,8 @@ const mocks = {
                   lon: -8.4721725,
                 },
                 {
-                  lat: 51.9030817,
-                  lon: -8.4720975,
+                  lat: 51.9030849,
+                  lon: -8.4720867,
                 },
                 {
                   lat: 51.9026442,
@@ -109239,8 +109441,8 @@ const mocks = {
               type: "way",
               id: 1202861009,
               bounds: {
-                minlat: 51.9018934,
-                minlon: -8.4712603,
+                minlat: 51.9018763,
+                minlon: -8.4712692,
                 maxlat: 51.9019614,
                 maxlon: -8.4712515,
               },
@@ -109262,8 +109464,12 @@ const mocks = {
                   lon: -8.4712515,
                 },
                 {
-                  lat: 51.9018934,
-                  lon: -8.4712603,
+                  lat: 51.9019016,
+                  lon: -8.4712604,
+                },
+                {
+                  lat: 51.9018763,
+                  lon: -8.4712692,
                 },
               ],
               tags: {
@@ -111477,23 +111683,24 @@ const mocks = {
               },
               geometry: [
                 {
-                  lat: 51.9014719,
-                  lon: -8.4652358,
+                  lat: 51.9014346,
+                  lon: -8.4653124,
                 },
                 {
                   lat: 51.9014498,
                   lon: -8.4652832,
                 },
                 {
-                  lat: 51.9014346,
-                  lon: -8.4653124,
+                  lat: 51.9014719,
+                  lon: -8.4652358,
                 },
               ],
               tags: {
                 highway: "secondary",
+                incline: "up",
                 lanes: "3",
-                "lanes:backward": "1",
-                "lanes:forward": "2",
+                "lanes:backward": "2",
+                "lanes:forward": "1",
                 lit: "yes",
                 "logainm:ref": "1389065",
                 "logainm:url": "https://www.logainm.ie/1389065.aspx",
@@ -111503,7 +111710,7 @@ const mocks = {
                 "name:ga": "Cnoc an tSamhraidh Thuaidh",
                 ref: "R614",
                 surface: "asphalt",
-                "turn:lanes:forward": "through;left|through",
+                "turn:lanes:backward": "through;left|through",
               },
             },
             {
@@ -111578,8 +111785,8 @@ const mocks = {
               type: "way",
               id: 1235151306,
               bounds: {
-                minlat: 51.9030817,
-                minlon: -8.4720975,
+                minlat: 51.9030849,
+                minlon: -8.4720867,
                 maxlat: 51.9030967,
                 maxlon: -8.4720321,
               },
@@ -111589,8 +111796,8 @@ const mocks = {
                   lon: -8.4720321,
                 },
                 {
-                  lat: 51.9030817,
-                  lon: -8.4720975,
+                  lat: 51.9030849,
+                  lon: -8.4720867,
                 },
               ],
               tags: {
@@ -114476,12 +114683,12 @@ const mocks = {
                   lon: -8.4641502,
                 },
                 {
-                  lat: 51.8966068,
-                  lon: -8.4642047,
+                  lat: 51.8966157,
+                  lon: -8.4642114,
                 },
                 {
-                  lat: 51.8966456,
-                  lon: -8.4642335,
+                  lat: 51.8966533,
+                  lon: -8.4642379,
                 },
                 {
                   lat: 51.8967877,
@@ -114492,8 +114699,8 @@ const mocks = {
                   lon: -8.464385,
                 },
                 {
-                  lat: 51.8969815,
-                  lon: -8.4644767,
+                  lat: 51.8969712,
+                  lon: -8.464472,
                 },
                 {
                   lat: 51.8970606,
@@ -117151,6 +117358,10 @@ const mocks = {
                   lon: -8.4728494,
                 },
                 {
+                  lat: 51.896424,
+                  lon: -8.4727841,
+                },
+                {
                   lat: 51.8964402,
                   lon: -8.4727362,
                 },
@@ -119734,6 +119945,338 @@ const mocks = {
                 "name:en": "South Douglas Road",
                 "name:ga": "Bóthar Dhúglais Theas",
                 ref: "R851",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1482886744,
+              bounds: {
+                minlat: 51.8945171,
+                minlon: -8.4814159,
+                maxlat: 51.8946643,
+                maxlon: -8.4812605,
+              },
+              geometry: [
+                {
+                  lat: 51.8945171,
+                  lon: -8.4814159,
+                },
+                {
+                  lat: 51.8945712,
+                  lon: -8.4813992,
+                },
+                {
+                  lat: 51.8946218,
+                  lon: -8.4813492,
+                },
+                {
+                  lat: 51.894646,
+                  lon: -8.4813035,
+                },
+                {
+                  lat: 51.8946643,
+                  lon: -8.4812605,
+                },
+              ],
+              tags: {
+                highway: "tertiary",
+                lanes: "1",
+                loc_ref: "L-1098-1",
+                "logainm:ref": "1390258",
+                "logainm:url": "https://www.logainm.ie/1390258.aspx",
+                maxspeed: "50",
+                name: "Bishop Street",
+                "name:en": "Bishop Street",
+                "name:ga": "Sráid an Easpaig",
+                oneway: "yes",
+                ref: "L1098",
+                surface: "asphalt",
+                wheelchair: "no",
+              },
+            },
+            {
+              type: "way",
+              id: 1482886746,
+              bounds: {
+                minlat: 51.8943911,
+                minlon: -8.4815276,
+                maxlat: 51.8945171,
+                maxlon: -8.4814159,
+              },
+              geometry: [
+                {
+                  lat: 51.8943911,
+                  lon: -8.4815276,
+                },
+                {
+                  lat: 51.8944526,
+                  lon: -8.4814762,
+                },
+                {
+                  lat: 51.8944844,
+                  lon: -8.4814496,
+                },
+                {
+                  lat: 51.8945171,
+                  lon: -8.4814159,
+                },
+              ],
+              tags: {
+                highway: "tertiary",
+                lanes: "2",
+                loc_ref: "L-1098-1",
+                "logainm:ref": "1390258",
+                "logainm:url": "https://www.logainm.ie/1390258.aspx",
+                maxspeed: "50",
+                name: "Bishop Street",
+                "name:en": "Bishop Street",
+                "name:ga": "Sráid an Easpaig",
+                ref: "L1098",
+                surface: "asphalt",
+                wheelchair: "no",
+              },
+            },
+            {
+              type: "way",
+              id: 1483885762,
+              bounds: {
+                minlat: 51.8981463,
+                minlon: -8.4794338,
+                maxlat: 51.8981828,
+                maxlon: -8.4794166,
+              },
+              geometry: [
+                {
+                  lat: 51.8981828,
+                  lon: -8.4794338,
+                },
+                {
+                  lat: 51.8981463,
+                  lon: -8.4794166,
+                },
+              ],
+              tags: {
+                access: "yes",
+                bicycle: "yes",
+                foot: "yes",
+                highway: "trunk",
+                lanes: "2",
+                lit: "yes",
+                "logainm:ref": "1390361",
+                "logainm:url": "https://www.logainm.ie/1390361.aspx",
+                maxspeed: "50",
+                name: "Courthouse Street",
+                "name:en": "Courthouse Street",
+                "name:ga": "Sráid Theach na Cúirte",
+                oneway: "yes",
+                ref: "N22",
+                sidewalk: "both",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1483885763,
+              bounds: {
+                minlat: 51.8959432,
+                minlon: -8.4763683,
+                maxlat: 51.8959945,
+                maxlon: -8.4763391,
+              },
+              geometry: [
+                {
+                  lat: 51.8959945,
+                  lon: -8.4763683,
+                },
+                {
+                  lat: 51.8959432,
+                  lon: -8.4763391,
+                },
+              ],
+              tags: {
+                "cycleway:right": "separate",
+                highway: "secondary",
+                lanes: "1",
+                lit: "yes",
+                "logainm:ref": "1388101",
+                "logainm:url": "https://www.logainm.ie/1388101.aspx",
+                maxspeed: "50",
+                name: "South Main Street",
+                "name:en": "South Main Street",
+                "name:ga": "An Phríomhshráid Theas",
+                oneway: "yes",
+                ref: "R608",
+                sidewalk: "left",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1483885766,
+              bounds: {
+                minlat: 51.896137,
+                minlon: -8.4744949,
+                maxlat: 51.8963427,
+                maxlon: -8.4743189,
+              },
+              geometry: [
+                {
+                  lat: 51.8963427,
+                  lon: -8.4744949,
+                },
+                {
+                  lat: 51.8962147,
+                  lon: -8.4744207,
+                },
+                {
+                  lat: 51.8961777,
+                  lon: -8.4743932,
+                },
+                {
+                  lat: 51.8961537,
+                  lon: -8.4743556,
+                },
+                {
+                  lat: 51.896137,
+                  lon: -8.4743189,
+                },
+              ],
+              tags: {
+                "alt_name:ga": "Sráid Capall Buí",
+                highway: "secondary",
+                lanes: "2",
+                lit: "yes",
+                maxspeed: "30",
+                name: "Grand Parade",
+                "name:ga": "Sráid an Chapaill Bhuí",
+                ref: "R848",
+                sidewalk: "separate",
+                smoothness: "excellent",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1488646972,
+              bounds: {
+                minlat: 51.9022859,
+                minlon: -8.4601243,
+                maxlat: 51.9023163,
+                maxlon: -8.4599314,
+              },
+              geometry: [
+                {
+                  lat: 51.9022859,
+                  lon: -8.4601243,
+                },
+                {
+                  lat: 51.9023061,
+                  lon: -8.4600121,
+                },
+                {
+                  lat: 51.9023163,
+                  lon: -8.4599314,
+                },
+              ],
+              tags: {
+                access: "yes",
+                bicycle: "yes",
+                highway: "trunk",
+                lanes: "2",
+                lit: "yes",
+                "logainm:ref": "1388747",
+                "logainm:url": "https://www.logainm.ie/1388747.aspx",
+                maxspeed: "50",
+                name: "Lower Glanmire Road",
+                "name:en": "Lower Glanmire Road",
+                "name:ga": "Bóthar Ghleann Maghair Íochtarach",
+                oneway: "yes",
+                ref: "N8",
+                sidewalk: "separate",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1488646973,
+              bounds: {
+                minlat: 51.9022301,
+                minlon: -8.4603961,
+                maxlat: 51.9022859,
+                maxlon: -8.4601243,
+              },
+              geometry: [
+                {
+                  lat: 51.9022301,
+                  lon: -8.4603961,
+                },
+                {
+                  lat: 51.9022859,
+                  lon: -8.4601243,
+                },
+              ],
+              tags: {
+                access: "yes",
+                bicycle: "yes",
+                bridge: "yes",
+                "bridge:ref": "OBC 405",
+                highway: "trunk",
+                lanes: "2",
+                lit: "yes",
+                "logainm:ref": "1388747",
+                "logainm:url": "https://www.logainm.ie/1388747.aspx",
+                maxspeed: "50",
+                name: "Lower Glanmire Road",
+                "name:en": "Lower Glanmire Road",
+                "name:ga": "Bóthar Ghleann Maghair Íochtarach",
+                oneway: "yes",
+                ref: "N8",
+                sidewalk: "separate",
+                surface: "asphalt",
+              },
+            },
+            {
+              type: "way",
+              id: 1489451527,
+              bounds: {
+                minlat: 51.8946173,
+                minlon: -8.4812605,
+                maxlat: 51.8946643,
+                maxlon: -8.4811319,
+              },
+              geometry: [
+                {
+                  lat: 51.8946173,
+                  lon: -8.4811319,
+                },
+                {
+                  lat: 51.8946294,
+                  lon: -8.4811887,
+                },
+                {
+                  lat: 51.894644,
+                  lon: -8.4812307,
+                },
+                {
+                  lat: 51.8946643,
+                  lon: -8.4812605,
+                },
+              ],
+              tags: {
+                bicycle: "yes",
+                "cycleway:both": "no",
+                highway: "secondary",
+                lanes: "1",
+                lit: "yes",
+                "logainm:ref": "1390258",
+                "logainm:url": "https://www.logainm.ie/1390258.aspx",
+                maxspeed: "50",
+                name: "Bishop Street",
+                "name:en": "Bishop Street",
+                "name:ga": "Sráid an Easpaig",
+                oneway: "yes",
+                ref: "R608",
                 surface: "asphalt",
               },
             },

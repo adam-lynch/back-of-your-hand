@@ -11,12 +11,13 @@
   import type { Theme } from "../themes";
   import combineClasses from "../utilities/combineClasses";
 
-  export let options: {
-    label: string;
-    value: string;
-  }[];
+  type Option = { label: string; value: string } | "separator";
+
+  export let options: Option[];
   export let theme: Theme = "dark";
-  export let value = options.find(Boolean)?.value;
+  export let value = options.find(
+    (o): o is { label: string; value: string } => typeof o !== "string",
+  )?.value;
 </script>
 
 <select
@@ -30,7 +31,11 @@
   on:*
 >
   {#each options as option}
-    <option value={option.value}>{option.label}</option>
+    {#if option === "separator"}
+      <hr />
+    {:else}
+      <option value={option.value}>{option.label}</option>
+    {/if}
   {/each}
 </select>
 

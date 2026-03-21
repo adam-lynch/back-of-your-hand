@@ -10,6 +10,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { derived, get as getFromStore, writable } from "svelte/store";
+  import type { ComponentProps } from "svelte";
   import type { Area } from "../../api/resourceObjects";
   import fetchAreas from "../../userData/fetchAreas";
   import SelectInput from "../forms/SelectInput.svelte";
@@ -25,10 +26,13 @@
     if ($areas === null) {
       return [{ label: "Loading...", value: "" }];
     }
-    const results = $areas.map((area) => ({
-      label: area.attributes.name,
-      value: area.id,
-    }));
+    const results: ComponentProps<SelectInput>["options"] = $areas.map(
+      (area) => ({
+        label: area.attributes.name,
+        value: area.id,
+      }),
+    );
+    results.push("separator");
     results.push({
       label: "Custom",
       value: "custom",

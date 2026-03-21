@@ -19,6 +19,7 @@
   import drawTarget from "../../utilities/drawTarget";
   import getNearestPointOnPolyLine from "../../utilities/getNearestPointOnPolyLine";
   import getViewportWidth from "../../utilities/getViewportWidth";
+  import isLeafletAnimationBug from "../../utilities/isLeafletAnimationBug";
   import type { GameRound, Question } from "./types";
   import delay from "../../utilities/delay";
   import * as defaults from "../../utilities/defaults";
@@ -516,6 +517,32 @@
       })
       .fitBounds(initialBoundsToUse, { padding: selectionBoundsPaddingPx })
       .addControl(zoomControl);
+
+    // Suppress known Leaflet animation NaN bugs instead of crashing the app
+    const originalAddLayer = map.addLayer.bind(map);
+    const originalFire = map.fire.bind(map);
+    map.addLayer = (...args: Parameters<typeof map.addLayer>) => {
+      try {
+        return originalAddLayer(...args);
+      } catch (error) {
+        if (isLeafletAnimationBug(error)) {
+          console.warn("Suppressed Leaflet animation bug (addLayer)");
+          return map;
+        }
+        throw error;
+      }
+    };
+    map.fire = (...args: Parameters<typeof map.fire>) => {
+      try {
+        return originalFire(...args);
+      } catch (error) {
+        if (isLeafletAnimationBug(error)) {
+          console.warn("Suppressed Leaflet animation bug (fire)");
+          return map;
+        }
+        throw error;
+      }
+    };
 
     locateControl.add(map);
     if (import.meta.env.DEV) {

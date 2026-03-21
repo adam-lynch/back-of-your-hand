@@ -16,18 +16,25 @@ initializeErrorReporting();
 
 import App from "./library/App.svelte";
 import FatalErrorDisplay from "./library/FatalErrorDisplay.svelte";
+import isLeafletAnimationBug from "./utilities/isLeafletAnimationBug";
 
 let app: App | FatalErrorDisplay;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const onUnhandledError = (e: any) => {
+  const error = e && (e.error || e.reason);
+  if (error instanceof Error && isLeafletAnimationBug(error)) {
+    console.warn("Suppressed known Leaflet animation bug", error.message);
+    return;
+  }
+
   if (import.meta.env.DEV) {
     console.error("Unhandled error");
     console.error(e);
   }
 
   if (app) {
-    app.$set({ unhandledError: (e && (e.error || e.reason)) || e });
+    app.$set({ unhandledError: error || e });
     return;
   }
 

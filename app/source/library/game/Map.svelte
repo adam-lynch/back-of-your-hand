@@ -207,9 +207,21 @@
         error instanceof Error &&
         error.message.includes("Invalid LatLng object: (NaN, NaN)")
       ) {
-        error.message += ". Trying again...";
+        error.message += ". (Trying again...)";
         console.warn(error);
-        map.fitBounds(newAreaBounds, { ...fitBoundsOptions, animate: false });
+        try {
+          map.fitBounds(newAreaBounds, { ...fitBoundsOptions, animate: false });
+        } catch (retryError) {
+          if (
+            retryError instanceof Error &&
+            retryError.message.includes("Invalid LatLng object: (NaN, NaN)")
+          ) {
+            retryError.message += ". (Retry also failed)";
+            console.warn(retryError);
+          } else {
+            throw retryError;
+          }
+        }
       } else {
         throw error;
       }

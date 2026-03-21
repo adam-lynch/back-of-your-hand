@@ -48,7 +48,7 @@ test.describe("Authentication", () => {
     await page.getByLabel(/password/i).fill("wrongpassword");
     await page.getByRole("button", { name: /log in/i }).click();
 
-    await expect(page.getByText(/credentials/i)).toBeVisible();
+    await expect(page.getByText(/Incorrect email or password/i)).toBeVisible();
     await expect(page).toHaveURL(/\/log-in/);
   });
 

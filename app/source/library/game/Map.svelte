@@ -323,7 +323,7 @@
     }
     const { bounds: areaBounds } = areaBoundsInfo;
     map
-      .fitBounds(areaBounds)
+      .fitBounds(areaBounds, { padding: [2, 2] })
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds(areaBounds.pad(0.12))
       .setMinZoom(map.getBoundsZoom(areaBounds) - zoomSnap * 2);

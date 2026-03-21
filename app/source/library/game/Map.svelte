@@ -60,6 +60,7 @@
     lng: -8.47039,
   };
   const defaultMinZoom = 3.5;
+  const zoomSnap = 0.25;
   let chosenPointMarker: leaflet.Marker | null;
   let map: leaflet.Map;
   let mapElement: HTMLElement;
@@ -335,7 +336,7 @@
       .fitBounds(areaBounds)
       // Allow some over-scrolling so it's not too awkward for streets near the edge
       .setMaxBounds(areaBounds.pad(0.12))
-      .setMinZoom(11);
+      .setMinZoom(map.getBoundsZoom(areaBounds) - zoomSnap * 2);
 
     areaBoundsFeatureGroup.setStyle({
       color: "#37003c",
@@ -503,7 +504,7 @@
       layers: [tileLayer],
       minZoom: defaultMinZoom,
       zoomControl: false,
-      zoomSnap: 0.25,
+      zoomSnap,
     };
 
     const zoomControl = leaflet.control.zoom({

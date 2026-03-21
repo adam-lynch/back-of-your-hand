@@ -16,6 +16,7 @@ jobs:
   playwright-tests:
     docker:
       - image: mcr.microsoft.com/playwright:v1.57.0-noble
+    parallelism: 2
     environment:
       BOYH_HTTPS_CERT: /tmp/cert.pem
       BOYH_HTTPS_KEY: /tmp/key.pem
@@ -41,8 +42,8 @@ jobs:
           environment:
             PLAYWRIGHT_JUNIT_OUTPUT_NAME: /tmp/playwright-results.xml
           command: |
-            CPUS=$(awk '$1 != "max" { printf "%d", $1/$2 }' /sys/fs/cgroup/cpu.max 2>/dev/null) || true
-            cd app && npx playwright test --workers=${CPUS:-$(nproc)} --timeout=60000 --reporter=list,junit
+            SHARD="$((${CIRCLE_NODE_INDEX} + 1))"
+            cd app && npx playwright test --shard=${SHARD}/2 --workers=1 --timeout=60000 --reporter=list,junit
       - store_test_results:
           path: /tmp/playwright-results.xml
       - store_artifacts:

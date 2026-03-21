@@ -54,6 +54,11 @@ export default function onFormApiRequestError<TSchema extends Schema>({
   ) {
     for (const responseError of error.responseBody.errors) {
       if (responseError.detail) {
+        let detail = responseError.detail;
+        if (detail === "Unable to log in with provided credentials.") {
+          detail = "Incorrect email or password";
+        }
+
         let fieldNameFromError: string | undefined;
         const responseErrorSourceAsString =
           responseError.source &&
@@ -63,15 +68,11 @@ export default function onFormApiRequestError<TSchema extends Schema>({
         }
 
         if (fieldNameFromError && fieldNames.includes(fieldNameFromError)) {
-          addErrorToFormField<TSchema>(
-            form,
-            fieldNameFromError,
-            responseError.detail,
-          );
+          addErrorToFormField<TSchema>(form, fieldNameFromError, detail);
           continue;
         }
 
-        errorMessages.push(responseError.detail);
+        errorMessages.push(detail);
       } else if (error.response.status === 409 && responseError.code) {
         errorMessages.push(
           `Server errored due to conflict (code: ${responseError.code})`,

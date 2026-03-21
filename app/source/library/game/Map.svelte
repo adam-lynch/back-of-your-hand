@@ -195,16 +195,12 @@
       Rarely, there's a weird unfixable issue deep in Leaflet with animations (I think it's https://github.com/Leaflet/Leaflet/issues/3249 but I'm not sure).
       If the error occurs, we rerun it without animating.
     */
-    const flyToBoundsArgs: Parameters<typeof map.flyToBounds> = [
-      newAreaBounds,
-      {
-        animate: true,
-        duration: 0.75,
-        padding: selectionBoundsPaddingPx,
-      },
-    ];
+    const fitBoundsOptions: leaflet.FitBoundsOptions = {
+      duration: 0.25,
+      padding: selectionBoundsPaddingPx,
+    };
     try {
-      map.flyToBounds(...flyToBoundsArgs);
+      map.fitBounds(newAreaBounds, fitBoundsOptions);
     } catch (error) {
       if (
         error instanceof Error &&
@@ -212,10 +208,7 @@
       ) {
         error.message += ". Trying again...";
         console.warn(error);
-        map.flyToBounds(flyToBoundsArgs[0], {
-          ...flyToBoundsArgs[1],
-          animate: false,
-        });
+        map.fitBounds(newAreaBounds, { ...fitBoundsOptions, animate: false });
       } else {
         throw error;
       }

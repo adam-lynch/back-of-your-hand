@@ -24,14 +24,35 @@
 
   const options = derived([areas], ([$areas]) => {
     if ($areas === null) {
-      return [{ label: "Loading...", value: "" }];
+      return [{ label: "Loading…", value: "" }];
     }
-    const results: ComponentProps<SelectInput>["options"] = $areas.map(
-      (area) => ({
+
+    const parentAreaIds = new Set(
+      $areas
+        .map((area) => area.relationships?.parentArea?.data?.id)
+        .filter((id): id is string => typeof id === "string"),
+    );
+
+    const results: ComponentProps<SelectInput>["options"] = [];
+    let didAddParentSeparator = false;
+
+    for (const area of $areas) {
+      if (
+        import.meta.env.DEV &&
+        !didAddParentSeparator &&
+        !parentAreaIds.has(area.id)
+      ) {
+        if (results.length > 0) {
+          results.push("separator");
+        }
+        didAddParentSeparator = true;
+      }
+      results.push({
         label: area.attributes.name,
         value: area.id,
-      }),
-    );
+      });
+    }
+
     results.push("separator");
     results.push({
       label: "Custom",

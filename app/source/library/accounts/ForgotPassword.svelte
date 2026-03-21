@@ -44,12 +44,16 @@
 >
   <svelte:fragment slot="top">
     {#if $wasResetRequested}
-      <p
-        >If the email you entered (<span class="forgot-password__email"
+      <p class="forgot-password__post_submission_explainer">
+        If the email you entered (<span class="forgot-password__email"
           >{email}</span
         >) corresponds to an account, we've sent password reset instructions to
-        that address. Check your inbox.</p
-      >
+        that address. Check your inbox.
+      </p>
+      <p class="forgot-password__post_submission_explainer">
+        The email entered must match the account email <em>exactly</em>. You can
+        find your account email in the original invite email you received.
+      </p>
     {/if}
   </svelte:fragment>
 
@@ -104,5 +108,13 @@
 <style>
   :global(.forgot-password__email) {
     opacity: 0.8;
+  }
+
+  :global(
+      .forgot-password__post_submission_explainer
+        + .forgot-password__post_submission_explainer
+    ) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 </style>

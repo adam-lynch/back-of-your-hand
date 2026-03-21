@@ -45,8 +45,7 @@
   } from "../../utilities/store";
   import { isOrganizationUrl } from "../../userData/store";
 
-  const getBoundsPaddingWhenMarkingBounds = () =>
-    getViewportWidth() >= 800 ? 0.2 : 0;
+  const selectionBoundsPaddingPx: [number, number] = [10, 10];
   export let areSettingsShown = writable(false);
 
   let areaBoundsFeatureGroup: leaflet.FeatureGroup<leaflet.Path> | null = null;
@@ -192,19 +191,16 @@
       newAreaBoundsCenterMarker.openPopup();
     }
 
-    const boundsToFitInView = newAreaBounds.pad(
-      getBoundsPaddingWhenMarkingBounds(),
-    );
-
     /*
       Rarely, there's a weird unfixable issue deep in Leaflet with animations (I think it's https://github.com/Leaflet/Leaflet/issues/3249 but I'm not sure).
       If the error occurs, we rerun it without animating.
     */
     const flyToBoundsArgs: Parameters<typeof map.flyToBounds> = [
-      boundsToFitInView,
+      newAreaBounds,
       {
         animate: true,
         duration: 0.75,
+        padding: selectionBoundsPaddingPx,
       },
     ];
     try {
@@ -478,7 +474,6 @@
     leaflet.Icon.Default.prototype.options.imagePath = "/images/leaflet/";
 
     const viewportWidth = getViewportWidth();
-    const initialBoundsPadding = getBoundsPaddingWhenMarkingBounds();
     const initialAreaSelection = svelteStore.get(areaSelection);
     let selectionBounds: ReturnType<typeof getValidBoundsWithCenter> | null =
       null;
@@ -494,10 +489,7 @@
     }
     const initialBoundsToUse =
       selectionBounds?.bounds ??
-      leaflet
-        .latLng(getSafeAreaCenter())
-        .toBounds(getSafeAreaRadius())
-        .pad(initialBoundsPadding);
+      leaflet.latLng(getSafeAreaCenter()).toBounds(getSafeAreaRadius());
     const initialMapOptions = {
       boxZoom: false,
       doubleClickZoom: false,
@@ -529,7 +521,7 @@
       .on("zoomstart", () => {
         ongoingZoomCount.update((currentZoomCount) => currentZoomCount + 1);
       })
-      .fitBounds(initialBoundsToUse.pad(initialBoundsPadding))
+      .fitBounds(initialBoundsToUse, { padding: selectionBoundsPaddingPx })
       .addControl(zoomControl);
 
     locateControl.add(map);

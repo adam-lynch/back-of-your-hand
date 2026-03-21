@@ -16,7 +16,8 @@
   export let options: Option[];
   export let theme: Theme = "dark";
   export let value = options.find(
-    (o): o is { label: string; value: string } => typeof o !== "string",
+    (option): option is { label: string; value: string } =>
+      typeof option !== "string",
   )?.value;
 </script>
 

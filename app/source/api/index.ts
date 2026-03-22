@@ -19,11 +19,14 @@ import requestAuthEndpoint from "./requestAuthEndpoint";
 import requestApi from "./requestApi";
 
 type FetchResourceOptions = {
+  fetchOptions?: Omit<
+    RequestInit,
+    "body" | "credentials" | "headers" | "method" | "mode"
+  >;
   include?: string[];
 };
 
 export type FetchResourceListOptions = FetchResourceOptions & {
-  fetchOptions?: Pick<RequestInit, "priority" | "signal">;
   filter?: Record<string, boolean | null | number | string>;
   include?: string[];
   page?:
@@ -101,8 +104,13 @@ function makeResourceBaseUrl(resourceType: AnyResourceObject["type"]): string {
 
 async function deleteResource<
   TResourceObject extends AnyResourceObject = never,
->(resourceType: TResourceObject["type"], id: TResourceObject["id"]) {
+>(
+  resourceType: TResourceObject["type"],
+  id: TResourceObject["id"],
+  options?: FetchResourceOptions,
+) {
   return requestApi<undefined>(urlJoin(makeResourceBaseUrl(resourceType), id), {
+    ...options?.fetchOptions,
     method: "DELETE",
   });
 }
@@ -129,6 +137,7 @@ async function fetchResource<TResourceObject extends AnyResourceObject = never>(
   return requestApi<JSONAPI.DocWithData<TResourceObject>>(
     urlJoin(makeResourceBaseUrl(resourceType), id),
     {
+      ...options?.fetchOptions,
       method: "GET",
       urlSearchParams,
     },
@@ -186,6 +195,7 @@ async function patchResource<TResourceObject extends AnyResourceObject = never>(
   return requestApi<JSONAPI.DocWithData<TResourceObject>>(
     urlJoin(makeResourceBaseUrl(partialResource.type), partialResource.id),
     {
+      ...options?.fetchOptions,
       body: {
         data: partialResource,
       },
@@ -217,6 +227,7 @@ async function postResource<
   return requestApi<JSONAPI.DocWithData<TResourceObject>>(
     makeResourceBaseUrl(resource.type),
     {
+      ...options?.fetchOptions,
       body: {
         data: resource,
       },

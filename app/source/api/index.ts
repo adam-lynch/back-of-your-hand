@@ -23,6 +23,7 @@ type FetchResourceOptions = {
 };
 
 export type FetchResourceListOptions = FetchResourceOptions & {
+  fetchOptions?: Pick<RequestInit, "priority" | "signal">;
   filter?: Record<string, boolean | null | number | string>;
   include?: string[];
   page?:
@@ -154,6 +155,7 @@ async function fetchResourceList<TResourceObject extends AnyResourceObject>(
   return requestApi<JSONAPI.DocWithData<TResourceObject[]>>(
     makeResourceBaseUrl(resourceType),
     {
+      ...options?.fetchOptions,
       method: "GET",
       urlSearchParams,
     },

@@ -42,7 +42,7 @@
         !didAddParentSeparator &&
         !parentAreaIds.has(area.id)
       ) {
-        if (results.length > 0) {
+        if (results.length > 1) {
           results.push("separator");
         }
         didAddParentSeparator = true;

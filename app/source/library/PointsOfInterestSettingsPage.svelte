@@ -213,6 +213,10 @@
     @media (min-width: 800px) {
       overflow: hidden;
     }
+
+    & .empty-state {
+      margin-top: 50px;
+    }
   }
 
   :global(.points-of-interest__table-wrapper.table .points-of-interest__thead) {

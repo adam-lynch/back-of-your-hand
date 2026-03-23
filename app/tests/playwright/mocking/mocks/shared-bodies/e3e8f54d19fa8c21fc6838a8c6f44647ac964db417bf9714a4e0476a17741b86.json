@@ -1,0 +1,1890 @@
+{
+  "links": {
+    "first": "https://example1--backend.local-backofyourhand--backend.com:7200/api/userorganizations?filter%5Binvite_status%5D=accepted&include=user&page%5Bnumber%5D=1&page%5Bsize%5D=500",
+    "last": "https://example1--backend.local-backofyourhand--backend.com:7200/api/userorganizations?filter%5Binvite_status%5D=accepted&include=user&page%5Bnumber%5D=1&page%5Bsize%5D=500",
+    "next": null,
+    "prev": null
+  },
+  "data": [
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NJNF8MAS2RHZX0ZKYW",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.642730Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.212829Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:17.049449Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:17.046456Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:17.046456Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "ashley.robinson@example.com",
+        "inviteUserFirstName": "Ashley",
+        "inviteUserLastName": "Robinson",
+        "jobTitle": "EMT",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ47XT21TBV75VASN5VTG6" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41N3EH930GMGXF2MBFZA",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.627448Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.923830Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:15.760659Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:15.757235Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:15.757235Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "betty.martin@example.com",
+        "inviteUserFirstName": "Betty",
+        "inviteUserLastName": "Martin",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ46NH7754PZHFCNYFBWYJ" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PREQDAZBP3G96PYMR7",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.680818Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.502005Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:20.339399Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:20.336760Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:20.336760Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "brian.wright@example.com",
+        "inviteUserFirstName": "Brian",
+        "inviteUserLastName": "Wright",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4B4M4P895F4VFBVCAY7Y" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NNBGA4KHG0X73AZ7CN",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.645680Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.513947Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:17.346729Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:17.343584Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:17.343584Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "charles.clark@example.com",
+        "inviteUserFirstName": "Charles",
+        "inviteUserLastName": "Clark",
+        "jobTitle": "Fire Engineer",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4874ENH4VJA7Z1JYQPYJ" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MG9AC6GC7X3170J02D",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.608832Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.293516Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:14.100187Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:14.097604Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:14.097604Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "christopher.thomas@example.com",
+        "inviteUserFirstName": "Christopher",
+        "inviteUserLastName": "Thomas",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ451NE6X92BFZAZ07RHJJ" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MRZDCAGKPTFX6BBN2G",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.616844Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.929694Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:14.765130Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:14.761733Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:14.761733Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "daniel.jackson@example.com",
+        "inviteUserFirstName": "Daniel",
+        "inviteUserLastName": "Jackson",
+        "jobTitle": "Fire Engineer",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ45PE4W9RDADA09M5MRZC" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41KT78HH3B6B6VFT6Y1K",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.586212Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.419544Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:12.258308Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:12.255484Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:12.255484Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "david.kim@example.com",
+        "inviteUserFirstName": "David",
+        "inviteUserLastName": "Kim",
+        "jobTitle": "Deputy Chief",
+        "role": "admin"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4383PXNSBT1W25MDHP5X" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NRTBZ8QPC113YGMMHW",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.648635Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.811743Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:17.649799Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:17.647156Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:17.647156Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "donna.rodriguez@example.com",
+        "inviteUserFirstName": "Donna",
+        "inviteUserLastName": "Rodriguez",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ48GJ3ZJMHMMK7PJNAH3P" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PVYQSE1TVJWGFESY75",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.683842Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.777191Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:20.613540Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:20.611627Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:20.611627Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "dorothy.lopez@example.com",
+        "inviteUserFirstName": "Dorothy",
+        "inviteUserLastName": "Lopez",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4BD6BQ4AQVP1AE6E9G2K" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PHHN8XS0WNDXDH8E89",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.673691Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.882380Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:19.711118Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:19.703719Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:19.703719Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "edward.hernandez@example.com",
+        "inviteUserFirstName": "Edward",
+        "inviteUserLastName": "Hernandez",
+        "jobTitle": "Fire Captain",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4AH0JJWF1BVM0FB3446A" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41Q3KD8Q0QNQG7FSD656",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.691746Z",
+        "lastUpdatedAt": "2026-03-22T23:47:21.372020Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:21.189897Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:21.187626Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:21.187626Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "helen.scott@example.com",
+        "inviteUserFirstName": "Helen",
+        "inviteUserLastName": "Scott",
+        "jobTitle": "Lieutenant",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4BZ78R8301TCGAF8VC4C" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41KHZ39050K32G5J9RKE",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.577604Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.826793Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:11.642881Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:11.640220Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:11.640220Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "james.wilson@example.com",
+        "inviteUserFirstName": "James",
+        "inviteUserLastName": "Wilson",
+        "jobTitle": "Fire Chief",
+        "role": "admin"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ42MWEW92GKRZAXGG8QT2" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41KYCFFWBCJWP0GZD0KR",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.590365Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.773715Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:12.594002Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:12.590627Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:12.590627Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "jennifer.brown@example.com",
+        "inviteUserFirstName": "Jennifer",
+        "inviteUserLastName": "Brown",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ43JK8YQEBE6PCH9VGEH1" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PNE7F218H9MDYZH5VV",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.677415Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.209627Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:20.046301Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:20.042475Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:20.042475Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "jessica.king@example.com",
+        "inviteUserFirstName": "Jessica",
+        "inviteUserLastName": "King",
+        "jobTitle": "",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4AVF9M8T573R033MMD35" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41N7ERHE4NJE1SNZ6RPA",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.631371Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.227976Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:16.063807Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:16.060722Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:16.060722Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "joseph.thompson@example.com",
+        "inviteUserFirstName": "Joseph",
+        "inviteUserLastName": "Thompson",
+        "jobTitle": "Fire Captain",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ46Z1YXV5KER3TQZC1756" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MWV8FH6T0A5PV9E29E",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.620332Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.260503Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:15.096001Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:15.093189Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:15.093189Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "karen.white@example.com",
+        "inviteUserFirstName": "Karen",
+        "inviteUserLastName": "White",
+        "jobTitle": "EMT",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ460RTNSYXPXSBBRNMPTB" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMC4NY1Z7C742BRY0FYNBRC8",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-23T01:24:19.647693Z",
+        "lastUpdatedAt": "2026-03-23T01:24:21.255774Z",
+        "inviteAcceptedAt": "2026-03-23T01:24:21.242269Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-23T01:24:19.732429Z",
+            "issued_by": "01KMBZ41K20XYGA6CK8KKR52SW",
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-23T01:24:19.732429Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "kevin.davis@example2.com",
+        "inviteUserFirstName": "Kevin",
+        "inviteUserLastName": "Davis",
+        "jobTitle": "",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": {
+          "data": {
+            "type": "userOrganization",
+            "id": "01KMBZ41K20XYGA6CK8KKR52SW"
+          }
+        },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4NGCKS90QVRFC9QH7NBT" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41P6E02A8NRHTXAMC5JM",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.662661Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.988204Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:18.824588Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:18.821606Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:18.821606Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "laura.hall@example.com",
+        "inviteUserFirstName": "Laura",
+        "inviteUserLastName": "Hall",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ49N9JQKSJKWMSJ1W9QN2" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41M5RREWZ767TTASQMTM",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.597966Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.401891Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:13.238810Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:13.236077Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:13.236077Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "lisa.martinez@example.com",
+        "inviteUserFirstName": "Lisa",
+        "inviteUserLastName": "Martinez",
+        "jobTitle": "EMT",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ446QXXQGCAKYA1BN8H6S" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41KNVG4HV530S6GQEGYB",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.581771Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.119635Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:11.952203Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:11.949200Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:11.949200Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "maria.garcia@example.com",
+        "inviteUserFirstName": "Maria",
+        "inviteUserLastName": "Garcia",
+        "jobTitle": "Battalion Chief",
+        "role": "admin"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ42YKNMCBAG102P8MP9XY" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41P3PW4Q7H17TAVRGYMS",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.659370Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.699284Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:18.533562Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:18.531137Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:18.531137Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "mark.walker@example.com",
+        "inviteUserFirstName": "Mark",
+        "inviteUserLastName": "Walker",
+        "jobTitle": "Lieutenant",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ49C63ZYDVA871BSR4X79" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MZ7Y1J0C0J0W7T02RE",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.623923Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.592770Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:15.427015Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:15.424049Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:15.424049Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "matthew.harris@example.com",
+        "inviteUserFirstName": "Matthew",
+        "inviteUserLastName": "Harris",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ46B4P5B3BZAEEM3H7A4D" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41K8RX9W06EMZQEA61SY",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.569137Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.182382Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:11.020999Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:11.018606Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:11.018606Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "testuser1@example.com",
+        "inviteUserFirstName": "Michael",
+        "inviteUserLastName": "Rodriguez",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ421E5B6MVMEWE72X5Y2D" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NZ6N42FSKG3FRZPC71",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.655656Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.405986Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:18.242339Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:18.240004Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:18.240004Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "michelle.lee@example.com",
+        "inviteUserFirstName": "Michelle",
+        "inviteUserLastName": "Lee",
+        "jobTitle": "",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4933F0XPQ10JQFDWB7VJ" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MMMYQW59ZB31EKNHCW",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.613168Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.592051Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:14.427807Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:14.424643Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:14.424643Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "nancy.moore@example.com",
+        "inviteUserFirstName": "Nancy",
+        "inviteUserLastName": "Moore",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ45BXJXY00BXAFTGEHVQN" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMC4NQPE3CGBBEW45J09S66A",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-23T01:24:13.134807Z",
+        "lastUpdatedAt": "2026-03-23T01:24:15.027889Z",
+        "inviteAcceptedAt": "2026-03-23T01:24:14.849030Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-23T01:24:13.188159Z",
+            "issued_by": "01KMBZ41K20XYGA6CK8KKR52SW",
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-23T01:24:13.188159Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "invite-new-user@example.com",
+        "inviteUserFirstName": "NewUser",
+        "inviteUserLastName": "Test",
+        "jobTitle": "",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": {
+          "data": {
+            "type": "userOrganization",
+            "id": "01KMBZ41K20XYGA6CK8KKR52SW"
+          }
+        },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMC4NSC4RG1Z301F1H1PGRH0" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41K20XYGA6CK8KKR52SW",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.562530Z",
+        "lastUpdatedAt": "2026-03-22T23:47:10.891313Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:10.721748Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:10.716253Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:10.716253Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "paigecollins@example.com",
+        "inviteUserFirstName": "Paige",
+        "inviteUserLastName": "Collins",
+        "jobTitle": "",
+        "role": "admin"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ41R35KSX50KC2N61N136" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41MCM8CT17B3RZFE6YMG",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.604732Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.989134Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:13.825456Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:13.823448Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:13.823448Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "patricia.taylor@example.com",
+        "inviteUserFirstName": "Patricia",
+        "inviteUserLastName": "Taylor",
+        "jobTitle": "Lieutenant",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ44S21RNEBGQR1W7EVB39" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NVPF2WZCR8VR08E64G",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.651949Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.098289Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:17.936045Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:17.933735Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:17.933735Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "paul.lewis@example.com",
+        "inviteUserFirstName": "Paul",
+        "inviteUserLastName": "Lewis",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ48SHDZ3P52XF9X472WHD" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41M2PV3GSWBF63TTJ23R",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.594468Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.075606Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:12.912468Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:12.909457Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:12.909457Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "robert.johnson@example.com",
+        "inviteUserFirstName": "Robert",
+        "inviteUserLastName": "Johnson",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ43WHK9SD6YXPBW3S7A0F" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PZSPFYDYJKBS9X6R7R",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.687977Z",
+        "lastUpdatedAt": "2026-03-22T23:47:21.066133Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:20.900687Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:20.898048Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:20.898048Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "ronald.hill@example.com",
+        "inviteUserFirstName": "Ronald",
+        "inviteUserLastName": "Hill",
+        "jobTitle": "Fire Engineer",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4BP64R6FSAZJJVXPJ9EA" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NBX5Y16YKTKNS8XBET",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.635484Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.546258Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:16.380341Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:16.377938Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:16.377938Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "sandra.garcia@example.com",
+        "inviteUserFirstName": "Sandra",
+        "inviteUserLastName": "Garcia",
+        "jobTitle": "Lieutenant",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ478XQZAKSDQ9EW9HFZYC" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41KD7PRPK0HSR1FEAYBZ",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.573303Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.501115Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:11.334486Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:11.331324Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:11.331324Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "testuser2@example.com",
+        "inviteUserFirstName": "Sarah",
+        "inviteUserLastName": "Chen",
+        "jobTitle": "Paramedic",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ42B79WKN74JPKBK89BN4" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PADKGQ75RBCGP45K9E",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.666509Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.318458Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:19.152654Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:19.149544Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:19.149544Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "steven.allen@example.com",
+        "inviteUserFirstName": "Steven",
+        "inviteUserLastName": "Allen",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ49ZHS811C66NYDHYTDVJ" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41PESH3BJG4FJF9EDVA4",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.670601Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.601330Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:19.439621Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:19.436344Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:19.436344Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "susan.young@example.com",
+        "inviteUserFirstName": "Susan",
+        "inviteUserLastName": "Young",
+        "jobTitle": "EMT",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ4A8GEYRT8CN9KYT4VYCF" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMC4P6HG7ECAEY9A0AWY5VAN",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-23T01:24:28.336375Z",
+        "lastUpdatedAt": "2026-03-23T01:24:30.167673Z",
+        "inviteAcceptedAt": "2026-03-23T01:24:29.993749Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-23T01:24:28.364066Z",
+            "issued_by": "01KMBZ41K20XYGA6CK8KKR52SW",
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-23T01:24:28.364066Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "invite-already-accepted@example.com",
+        "inviteUserFirstName": "Test",
+        "inviteUserLastName": "Invitee",
+        "jobTitle": "",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": {
+          "data": {
+            "type": "userOrganization",
+            "id": "01KMBZ41K20XYGA6CK8KKR52SW"
+          }
+        },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMC4P85CFV2F5DT8E5WSKGF0" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41NE185A7W3MGA4F9SAA",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.639064Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.914201Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:16.735280Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:16.732163Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:16.732163Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "thomas.martinez@example.com",
+        "inviteUserFirstName": "Thomas",
+        "inviteUserLastName": "Martinez",
+        "jobTitle": "Firefighter",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ47M0GD9S7YD0HAHZQHCT" }
+        }
+      }
+    },
+    {
+      "type": "userOrganization",
+      "id": "01KMBZ41M9X69B7Q8VGGJK6NZV",
+      "attributes": {
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.601686Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.709044Z",
+        "inviteAcceptedAt": "2026-03-22T23:47:13.544453Z",
+        "inviteIssuanceHistory": [
+          {
+            "issued_at": "2026-03-22T23:47:13.541565Z",
+            "issued_by": null,
+            "token_max_age": 14
+          }
+        ],
+        "inviteIssuedAt": "2026-03-22T23:47:13.541565Z",
+        "inviteStatus": "accepted",
+        "inviteTokenMaxAge": 14,
+        "inviteUserEmail": "william.anderson@example.com",
+        "inviteUserFirstName": "William",
+        "inviteUserLastName": "Anderson",
+        "jobTitle": "Fire Captain",
+        "role": "standard"
+      },
+      "relationships": {
+        "inviteIssuedBy": { "data": null },
+        "organization": {
+          "data": { "type": "organization", "id": "01KMBZ3RPFPQMV6JYXVW3MRF47" }
+        },
+        "user": {
+          "data": { "type": "user", "id": "01KMBZ44G9AQDSMSKN7544WQEV" }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "user",
+      "id": "01KMBZ41R35KSX50KC2N61N136",
+      "attributes": {
+        "lastLogin": "2026-03-23T01:27:38.582716Z",
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:10.724121Z",
+        "lastUpdatedAt": "2026-03-22T23:47:10.885799Z",
+        "email": "paigecollins@example.com",
+        "firstName": "Paige",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Collins"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ421E5B6MVMEWE72X5Y2D",
+      "attributes": {
+        "lastLogin": "2026-03-23T01:27:25.845577Z",
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:11.023198Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.181352Z",
+        "email": "testuser1@example.com",
+        "firstName": "Michael",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Rodriguez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ42B79WKN74JPKBK89BN4",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:11.335739Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.499874Z",
+        "email": "testuser2@example.com",
+        "firstName": "Sarah",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Chen"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ42MWEW92GKRZAXGG8QT2",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:11.644325Z",
+        "lastUpdatedAt": "2026-03-22T23:47:11.825543Z",
+        "email": "james.wilson@example.com",
+        "firstName": "James",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Wilson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ42YKNMCBAG102P8MP9XY",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:11.955550Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.118480Z",
+        "email": "maria.garcia@example.com",
+        "firstName": "Maria",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Garcia"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4383PXNSBT1W25MDHP5X",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:12.259410Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.418390Z",
+        "email": "david.kim@example.com",
+        "firstName": "David",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Kim"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ43JK8YQEBE6PCH9VGEH1",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:12.595404Z",
+        "lastUpdatedAt": "2026-03-22T23:47:12.772272Z",
+        "email": "jennifer.brown@example.com",
+        "firstName": "Jennifer",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Brown"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ43WHK9SD6YXPBW3S7A0F",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:12.913566Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.074449Z",
+        "email": "robert.johnson@example.com",
+        "firstName": "Robert",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Johnson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ446QXXQGCAKYA1BN8H6S",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:13.239871Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.400653Z",
+        "email": "lisa.martinez@example.com",
+        "firstName": "Lisa",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Martinez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ44G9AQDSMSKN7544WQEV",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:13.545740Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.707611Z",
+        "email": "william.anderson@example.com",
+        "firstName": "William",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Anderson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ44S21RNEBGQR1W7EVB39",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:13.826587Z",
+        "lastUpdatedAt": "2026-03-22T23:47:13.987735Z",
+        "email": "patricia.taylor@example.com",
+        "firstName": "Patricia",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Taylor"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ451NE6X92BFZAZ07RHJJ",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:14.101281Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.292112Z",
+        "email": "christopher.thomas@example.com",
+        "firstName": "Christopher",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Thomas"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ45BXJXY00BXAFTGEHVQN",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:14.429241Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.591296Z",
+        "email": "nancy.moore@example.com",
+        "firstName": "Nancy",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Moore"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ45PE4W9RDADA09M5MRZC",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:14.766304Z",
+        "lastUpdatedAt": "2026-03-22T23:47:14.928251Z",
+        "email": "daniel.jackson@example.com",
+        "firstName": "Daniel",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Jackson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ460RTNSYXPXSBBRNMPTB",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:15.097082Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.259160Z",
+        "email": "karen.white@example.com",
+        "firstName": "Karen",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "White"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ46B4P5B3BZAEEM3H7A4D",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:15.428668Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.591084Z",
+        "email": "matthew.harris@example.com",
+        "firstName": "Matthew",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Harris"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ46NH7754PZHFCNYFBWYJ",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:15.761853Z",
+        "lastUpdatedAt": "2026-03-22T23:47:15.922646Z",
+        "email": "betty.martin@example.com",
+        "firstName": "Betty",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Martin"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ46Z1YXV5KER3TQZC1756",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:16.065144Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.226451Z",
+        "email": "joseph.thompson@example.com",
+        "firstName": "Joseph",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Thompson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ478XQZAKSDQ9EW9HFZYC",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:16.381609Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.545047Z",
+        "email": "sandra.garcia@example.com",
+        "firstName": "Sandra",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Garcia"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ47M0GD9S7YD0HAHZQHCT",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:16.736426Z",
+        "lastUpdatedAt": "2026-03-22T23:47:16.912904Z",
+        "email": "thomas.martinez@example.com",
+        "firstName": "Thomas",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Martinez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ47XT21TBV75VASN5VTG6",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:17.050603Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.211628Z",
+        "email": "ashley.robinson@example.com",
+        "firstName": "Ashley",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Robinson"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4874ENH4VJA7Z1JYQPYJ",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:17.348304Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.512809Z",
+        "email": "charles.clark@example.com",
+        "firstName": "Charles",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Clark"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ48GJ3ZJMHMMK7PJNAH3P",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:17.651551Z",
+        "lastUpdatedAt": "2026-03-22T23:47:17.810430Z",
+        "email": "donna.rodriguez@example.com",
+        "firstName": "Donna",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Rodriguez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ48SHDZ3P52XF9X472WHD",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:17.937131Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.096909Z",
+        "email": "paul.lewis@example.com",
+        "firstName": "Paul",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Lewis"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4933F0XPQ10JQFDWB7VJ",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:18.243428Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.404491Z",
+        "email": "michelle.lee@example.com",
+        "firstName": "Michelle",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Lee"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ49C63ZYDVA871BSR4X79",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:18.534808Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.698076Z",
+        "email": "mark.walker@example.com",
+        "firstName": "Mark",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Walker"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ49N9JQKSJKWMSJ1W9QN2",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:18.826076Z",
+        "lastUpdatedAt": "2026-03-22T23:47:18.987000Z",
+        "email": "laura.hall@example.com",
+        "firstName": "Laura",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Hall"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ49ZHS811C66NYDHYTDVJ",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:19.154085Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.317351Z",
+        "email": "steven.allen@example.com",
+        "firstName": "Steven",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Allen"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4A8GEYRT8CN9KYT4VYCF",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:19.441106Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.599207Z",
+        "email": "susan.young@example.com",
+        "firstName": "Susan",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Young"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4AH0JJWF1BVM0FB3446A",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:19.712777Z",
+        "lastUpdatedAt": "2026-03-22T23:47:19.880373Z",
+        "email": "edward.hernandez@example.com",
+        "firstName": "Edward",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Hernandez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4AVF9M8T573R033MMD35",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:20.047456Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.208150Z",
+        "email": "jessica.king@example.com",
+        "firstName": "Jessica",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "King"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4B4M4P895F4VFBVCAY7Y",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:20.340731Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.500794Z",
+        "email": "brian.wright@example.com",
+        "firstName": "Brian",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Wright"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4BD6BQ4AQVP1AE6E9G2K",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:20.614624Z",
+        "lastUpdatedAt": "2026-03-22T23:47:20.775814Z",
+        "email": "dorothy.lopez@example.com",
+        "firstName": "Dorothy",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Lopez"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4BP64R6FSAZJJVXPJ9EA",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:20.902340Z",
+        "lastUpdatedAt": "2026-03-22T23:47:21.065034Z",
+        "email": "ronald.hill@example.com",
+        "firstName": "Ronald",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Hill"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4BZ78R8301TCGAF8VC4C",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:21.191193Z",
+        "lastUpdatedAt": "2026-03-22T23:47:21.370034Z",
+        "email": "helen.scott@example.com",
+        "firstName": "Helen",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Scott"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMBZ4NGCKS90QVRFC9QH7NBT",
+      "attributes": {
+        "lastLogin": "2026-03-23T01:24:23.707723Z",
+        "deletedAt": null,
+        "createdAt": "2026-03-22T23:47:30.956476Z",
+        "lastUpdatedAt": "2026-03-23T01:24:21.247403Z",
+        "email": "kevin.davis@example2.com",
+        "firstName": "Kevin",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Davis"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMC4NSC4RG1Z301F1H1PGRH0",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-23T01:24:14.852601Z",
+        "lastUpdatedAt": "2026-03-23T01:24:15.018685Z",
+        "email": "invite-new-user@example.com",
+        "firstName": "NewUser",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Test"
+      }
+    },
+    {
+      "type": "user",
+      "id": "01KMC4P85CFV2F5DT8E5WSKGF0",
+      "attributes": {
+        "lastLogin": null,
+        "deletedAt": null,
+        "createdAt": "2026-03-23T01:24:29.997139Z",
+        "lastUpdatedAt": "2026-03-23T01:24:30.162989Z",
+        "email": "invite-already-accepted@example.com",
+        "firstName": "Test",
+        "isActive": true,
+        "isStaff": false,
+        "lastName": "Invitee"
+      }
+    }
+  ],
+  "meta": { "pagination": { "page": 1, "pages": 1, "count": 38 } }
+}

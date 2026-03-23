@@ -108,12 +108,18 @@ export class ApiRecorder {
     for (const page of this.pages) {
       try {
         await page.waitForLoadState("networkidle");
-        await page.unrouteAll({ behavior: "ignoreErrors" });
       } catch {
         // Page may already be closed
       }
     }
     await this.waitForInflight();
+    for (const page of this.pages) {
+      try {
+        await page.unrouteAll({ behavior: "ignoreErrors" });
+      } catch {
+        // Page may already be closed
+      }
+    }
 
     if (this.responses.length === 0) {
       console.log(`⚠️  No API calls recorded for ${this.testInfo.file}`);

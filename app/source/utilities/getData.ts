@@ -16,7 +16,7 @@ import getNamesFromElement from "./getNamesFromElement";
 import type { Overpass, Question } from "../library/game/types";
 import { Difficulty } from "../library/game/types";
 import type { AreaSelection } from "./store";
-import api from "../api";
+import api, { type FetchResourceListOptions } from "../api";
 import type { AreaOverpassData, MapFeature } from "../api/resourceObjects";
 import capLng from "./capLng";
 import { PresetAreaShape } from "../library/game/types";
@@ -62,6 +62,16 @@ difficultiesToHighwayCategories[Difficulty.TaxiDriver] = [
 ];
 
 const RETRYABLE_OVERPASS_STATUSES = new Set([408, 429]);
+
+let preloadedOverpassData: {
+  areaId: string;
+  promise: Promise<Overpass.Response>;
+} | null = null;
+
+let preloadedMapFeatures: {
+  areaId: string;
+  promise: Promise<MapFeature[]>;
+} | null = null;
 
 function buildPot(
   overpassElements: Overpass.Element[],
@@ -127,6 +137,39 @@ async function fetchMapFeatures(
     filter,
   });
   return response.data;
+}
+
+async function fetchAreaOverpassData(
+  areaId: string,
+  fetchOptions?: FetchResourceListOptions["fetchOptions"],
+): Promise<Overpass.Response> {
+  const result = await api.fetchResourceList<AreaOverpassData>(
+    "areaoverpassdata",
+    {
+      fetchOptions,
+      filter: {
+        area__id: areaId,
+      },
+      page: {
+        size: 1,
+      },
+    },
+  );
+  if (!result.data.length) {
+    throw new Error("No AreaOverpassDatas");
+  }
+  return result.data[0].attributes.responseBody;
+}
+
+async function fetchMapFeaturesByAreaId(
+  areaId: string,
+  fetchOptions?: FetchResourceListOptions["fetchOptions"],
+): Promise<MapFeature[]> {
+  const result = await api.fetchResourceList<MapFeature>("mapFeature", {
+    fetchOptions,
+    filter: { area__id: areaId },
+  });
+  return result.data;
 }
 
 function getOrCreatePotEntry(
@@ -213,30 +256,29 @@ async function loadOverpassData({
   areaSelection: AreaSelection;
 }) {
   // It's safe to set this to false in development; e.g. to get the overpass query or response
-  const mustGetDataFromBackend = areaSelection.areaId;
-  if (mustGetDataFromBackend) {
-    try {
-      const areaOverpassDataItems =
-        await api.fetchResourceList<AreaOverpassData>("areaoverpassdata", {
-          filter: {
-            area__id: areaSelection.areaId,
-          },
-          page: {
-            size: 1,
-          },
-        });
-      if (!areaOverpassDataItems.data.length) {
-        throw new Error("No AreaOverpassDatas");
+  if (areaSelection.areaId) {
+    if (preloadedOverpassData?.areaId === areaSelection.areaId) {
+      const { promise } = preloadedOverpassData;
+      preloadedOverpassData = null;
+      try {
+        return await promise;
+      } catch (error) {
+        console.warn(
+          "Preloaded overpass data failed, falling back to Overpass...",
+          { error },
+        );
+        reportError(error);
       }
-      return areaOverpassDataItems.data[0].attributes.responseBody;
-    } catch (error) {
-      console.warn(
-        "Failed to get overpass data from backend, falling back to Overpass...",
-        {
-          error,
-        },
-      );
-      reportError(error);
+    } else {
+      try {
+        return await fetchAreaOverpassData(areaSelection.areaId);
+      } catch (error) {
+        console.warn(
+          "Failed to get overpass data from backend, falling back to Overpass...",
+          { error },
+        );
+        reportError(error);
+      }
     }
   }
 
@@ -319,7 +361,7 @@ function makeOverpassQuery({
       A polygon may have an outer ring and (optional) inner rings (to exclude). We use the "stitched
       path" trick to exlude any inner rings. All rings get converted to`lat1 lng1 lat2 lng2..`, but
       we also repeat the first (outer) vertice before and after each inner ring.
-      
+
       Examples:
       - Simple polygon: `lat1 lng1 lat2 lng2...`
       - Polygon with two inner rings:
@@ -560,13 +602,24 @@ export default async function getData({
   isOrganizationUrl: boolean;
   numberOfQuestions: number;
 }): Promise<Question["target"][]> {
-  const mapFeaturesPromise = isOrganizationUrl
-    ? fetchMapFeatures(areaSelection).catch((error) => {
-        console.warn("Failed to fetch map features", { error });
-        reportError(error);
-        return [] as MapFeature[];
-      })
-    : Promise.resolve([] as MapFeature[]);
+  let mapFeaturesPromise: Promise<MapFeature[]>;
+  if (!isOrganizationUrl) {
+    mapFeaturesPromise = Promise.resolve([] as MapFeature[]);
+  } else if (
+    areaSelection.areaId &&
+    preloadedMapFeatures?.areaId === areaSelection.areaId
+  ) {
+    const { promise } = preloadedMapFeatures;
+    preloadedMapFeatures = null;
+    mapFeaturesPromise = promise;
+  } else {
+    mapFeaturesPromise = fetchMapFeatures(areaSelection);
+  }
+  mapFeaturesPromise = mapFeaturesPromise.catch((error) => {
+    console.warn("Failed to fetch map features", { error });
+    reportError(error);
+    return [] as MapFeature[];
+  });
 
   const [{ elements: overpassElements }, mapFeatures] = await Promise.all([
     loadOverpassData({ areaSelection }) as Promise<Overpass.Response>,
@@ -576,4 +629,19 @@ export default async function getData({
   const pot = buildPot(overpassElements, difficulty, mapFeatures);
   const selected = selectRandomEntries(pot, numberOfQuestions, getRandomNumber);
   return selected.map(buildTarget);
+}
+
+export function preloadAreaDataForRound(areaId: string) {
+  if (preloadedOverpassData?.areaId !== areaId) {
+    preloadedOverpassData = {
+      areaId,
+      promise: fetchAreaOverpassData(areaId, { priority: "low" }),
+    };
+  }
+  if (preloadedMapFeatures?.areaId !== areaId) {
+    preloadedMapFeatures = {
+      areaId,
+      promise: fetchMapFeaturesByAreaId(areaId, { priority: "low" }),
+    };
+  }
 }

@@ -17,7 +17,7 @@ const mocks = {
           status: 200,
           headers: {
             server: "Werkzeug/3.0.3 Python/3.11.15",
-            date: "Tue, 17 Mar 2026 23:36:01 GMT",
+            date: "Mon, 23 Mar 2026 00:27:05 GMT",
             "content-type": "application/json",
             "x-frame-options": "DENY",
             "content-length": "16",
@@ -28,9 +28,9 @@ const mocks = {
             "access-control-allow-origin":
               "https://local-backofyourhand.com:7210",
             "access-control-allow-credentials": "true",
-            "djdt-store-id": "79d457d741544c8b98f8daff62ce7ff6",
+            "djdt-store-id": "5433bc7bebcb4b6fb4c63935b4303605",
             "server-timing":
-              'TimerPanel_utime;dur=163.63400000000007;desc="User CPU time", TimerPanel_stime;dur=57.43999999999971;desc="System CPU time", TimerPanel_total;dur=221.07399999999978;desc="Total CPU time", TimerPanel_total_time;dur=1765.7338429999072;desc="Elapsed time", SQLPanel_sql_time;dur=23.641312996915076;desc="SQL 1 queries", CachePanel_total_time;dur=0;desc="Cache 0 Calls"',
+              'TimerPanel_utime;dur=37.11899999996149;desc="User CPU time", TimerPanel_stime;dur=11.617000000001099;desc="System CPU time", TimerPanel_total;dur=48.73599999996259;desc="Total CPU time", TimerPanel_total_time;dur=169.16608597966842;desc="Elapsed time", SQLPanel_sql_time;dur=23.13158501056023;desc="SQL 1 queries", CachePanel_total_time;dur=0;desc="Cache 0 Calls"',
             connection: "close",
           },
           body: {

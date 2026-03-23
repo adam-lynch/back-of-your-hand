@@ -21,6 +21,7 @@ import {
   hasEverPlayedARoundOnThisDevice,
 } from "../utilities/store";
 import { ClientRequestError } from "../api/requestApi";
+import { preloadAreaDataForRound } from "../utilities/getData";
 
 export default async function fetchAreas({
   sort,
@@ -65,6 +66,7 @@ export default async function fetchAreas({
           presetShape: PresetAreaShape.MultiPolygon,
           radius: null,
         });
+        preloadAreaDataForRound(area.id);
       }
     }
 

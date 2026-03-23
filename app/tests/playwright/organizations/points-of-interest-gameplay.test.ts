@@ -78,8 +78,8 @@ function setUpMapFeatureOnlyRoutes(page: import("@playwright/test").Page) {
 
 test.describe("Points of Interest Gameplay Integration", () => {
   test("round starts with map features only", async ({ page }) => {
-    await logIn(page, organization, user);
     setUpMapFeatureOnlyRoutes(page);
+    await logIn(page, organization, user);
 
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
     await page.getByRole("button", { name: /play solo/i }).click();
@@ -94,8 +94,8 @@ test.describe("Points of Interest Gameplay Integration", () => {
   });
 
   test("can complete a round with only map features", async ({ page }) => {
-    await logIn(page, organization, user);
     setUpMapFeatureOnlyRoutes(page);
+    await logIn(page, organization, user);
 
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
     await page.getByRole("button", { name: /play solo/i }).click();
@@ -107,8 +107,8 @@ test.describe("Points of Interest Gameplay Integration", () => {
   });
 
   test("map feature names appear in round summary", async ({ page }) => {
-    await logIn(page, organization, user);
     setUpMapFeatureOnlyRoutes(page);
+    await logIn(page, organization, user);
 
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
     await page.getByRole("button", { name: /play solo/i }).click();
@@ -132,8 +132,8 @@ test.describe("Points of Interest Gameplay Integration", () => {
   });
 
   test("point feature renders as circle marker on reveal", async ({ page }) => {
-    await logIn(page, organization, user);
     setUpMapFeatureOnlyRoutes(page);
+    await logIn(page, organization, user);
 
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
     await page.getByRole("button", { name: /play solo/i }).click();

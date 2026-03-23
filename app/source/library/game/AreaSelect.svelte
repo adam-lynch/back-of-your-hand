@@ -21,6 +21,7 @@
   import createFeatureFromPresetAreaShape from "../../utilities/createFeatureFromPresetAreaShape";
   import createFeatureFromArea from "../../utilities/createFeatureFromArea";
   import { areas } from "../../userData/store";
+  import { preloadAreaDataForRound } from "../../utilities/getData";
 
   const options = derived([areas], ([$areas]) => {
     if ($areas === null) {
@@ -103,6 +104,7 @@
       presetShape: PresetAreaShape.MultiPolygon,
       radius: null,
     });
+    preloadAreaDataForRound(area.id);
   };
 
   onMount(() => {

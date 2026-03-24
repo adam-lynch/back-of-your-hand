@@ -93,7 +93,7 @@ test.describe("User Settings", () => {
           body: JSON.stringify({ error: "Failed to update user" }),
         });
       } else {
-        await route.continue();
+        await route.fallback();
       }
     });
 

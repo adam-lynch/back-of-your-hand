@@ -3,3 +3,4 @@ public/learn-more.html
 public/privacy.html
 public/terms-of-service.html
 source/third-party
+tests/playwright/mocking/mocks

@@ -7,11 +7,35 @@
  * Copyright © 2026 Adam Lynch (https://adamlynch.com)
  */
 
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { test as base } from "@playwright/test";
 import type { Page, TestInfo } from "@playwright/test";
+import { getDefaultContentType } from "./content-type-defaults";
 import isRecordableRequest from "./is-recordable-request";
 import getMockFilePath from "./paths";
 import { ApiRecorder } from "./recorder";
+
+const currentDir = dirname(fileURLToPath(import.meta.url));
+const sharedBodyCache = new Map<string, string>();
+
+function resolveBody(body: unknown): string {
+  if (typeof body === "string" && body.startsWith("__shared_body::")) {
+    const hash = body.slice("__shared_body::".length);
+    if (!sharedBodyCache.has(hash)) {
+      const filePath = join(
+        currentDir,
+        "mocks",
+        "shared-bodies",
+        `${hash}.json`,
+      );
+      sharedBodyCache.set(hash, readFileSync(filePath, "utf-8"));
+    }
+    return sharedBodyCache.get(hash)!;
+  }
+  return typeof body === "string" ? body : JSON.stringify(body);
+}
 
 const backend = process.env.PLAYWRIGHT_BACKEND || "mock";
 const shouldUseMocks = backend === "mock";
@@ -79,9 +103,9 @@ async function applyMockRoutes(page: Page, state: MockState): Promise<void> {
     if (mock) {
       counters.set(endpoint, currentCount + 1);
 
-      const contentType = mock.headers?.["content-type"] || "application/json";
-      let body =
-        typeof mock.body === "string" ? mock.body : JSON.stringify(mock.body);
+      const contentType =
+        mock.headers?.["content-type"] || getDefaultContentType(url);
+      let body = resolveBody(mock.body);
 
       // Patch expired accessExpiration to prevent token refresh attempts
       if (body.includes('"accessExpiration"')) {
@@ -113,11 +137,8 @@ async function applyMockRoutes(page: Page, state: MockState): Promise<void> {
       );
       const lastMock = endpointMocks[lastIndex];
       const contentType =
-        lastMock.headers?.["content-type"] || "application/json";
-      let body =
-        typeof lastMock.body === "string"
-          ? lastMock.body
-          : JSON.stringify(lastMock.body);
+        lastMock.headers?.["content-type"] || getDefaultContentType(url);
+      let body = resolveBody(lastMock.body);
 
       if (body.includes('"accessExpiration"')) {
         const futureDate = new Date(Date.now() + 3600000).toISOString();

@@ -37,6 +37,11 @@ export default [
     },
   },
   {
-    ignores: ["dist", "public/gc.js", "source/third-party"],
+    ignores: [
+      "dist",
+      "public/gc.js",
+      "source/third-party",
+      "tests/playwright/mocking/mocks",
+    ],
   },
 ];

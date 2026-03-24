@@ -7,10 +7,41 @@
  * Copyright © 2026 Adam Lynch (https://adamlynch.com)
  */
 
+import { createHash } from "crypto";
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from "fs";
 import { dirname, join, relative } from "path";
 import type { TestInfo } from "@playwright/test";
 import type { RecordedResponse } from "./types";
+import { getDefaultContentType } from "./content-type-defaults";
+
+const HEADERS_TO_KEEP = new Set(["content-type", "set-cookie"]);
+const SHARED_BODY_THRESHOLD = 1024;
+
+function filterHeaders(
+  headers: Record<string, string>,
+  url: string,
+): Record<string, string> | undefined {
+  const filtered: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (HEADERS_TO_KEEP.has(key)) {
+      filtered[key] = value;
+    }
+  }
+
+  if (Object.keys(filtered).length === 0) {
+    return undefined;
+  }
+
+  if (
+    Object.keys(filtered).length === 1 &&
+    filtered["content-type"] &&
+    filtered["content-type"] === getDefaultContentType(url)
+  ) {
+    return undefined;
+  }
+
+  return filtered;
+}
 
 export async function generatePlaywrightMocks(
   responses: RecordedResponse[],
@@ -21,11 +52,16 @@ export async function generatePlaywrightMocks(
     return;
   }
 
-  // Derive mock file path from test file path
   const playwrightDir = join(process.cwd(), "tests", "playwright");
   const relativePath = relative(playwrightDir, testInfo.file);
   const mockFileName = relativePath.replace(/\.test\.ts$/, ".mock.ts");
   const mockFilePath = join(playwrightDir, "mocking", "mocks", mockFileName);
+  const sharedBodiesDir = join(
+    playwrightDir,
+    "mocking",
+    "mocks",
+    "shared-bodies",
+  );
 
   interface MockTree {
     [key: string]: MockTree;
@@ -34,9 +70,7 @@ export async function generatePlaywrightMocks(
 
   if (existsSync(mockFilePath)) {
     try {
-      // Read as text to avoid Node's module cache
       const fileContent = readFileSync(mockFilePath, "utf-8");
-      // Extract JSON from: const mocks = {...};
       const match = fileContent.match(
         /const mocks = ({[\s\S]*?});?\s*export default mocks;/,
       );
@@ -61,13 +95,33 @@ export async function generatePlaywrightMocks(
       current[response.endpoint] = {} as MockTree;
     }
 
-    (current[response.endpoint] as Record<string, unknown>)[response.index] = {
-      method: response.method,
-      url: response.url,
-      status: response.status,
-      headers: response.headers,
-      body: response.body,
-    };
+    const bodyStr =
+      typeof response.body === "string"
+        ? response.body
+        : JSON.stringify(response.body);
+
+    let body: unknown = response.body;
+    if (bodyStr.length > SHARED_BODY_THRESHOLD) {
+      const hash = createHash("sha256").update(bodyStr).digest("hex");
+      mkdirSync(sharedBodiesDir, { recursive: true });
+      const sharedBodyPath = join(sharedBodiesDir, `${hash}.json`);
+      if (!existsSync(sharedBodyPath)) {
+        writeFileSync(sharedBodyPath, bodyStr, "utf-8");
+      }
+      body = `__shared_body::${hash}`;
+    }
+
+    const entry: Record<string, unknown> = { body };
+    if (response.status !== 200) {
+      entry.status = response.status;
+    }
+    const filteredHeaders = filterHeaders(response.headers, response.url);
+    if (filteredHeaders) {
+      entry.headers = filteredHeaders;
+    }
+
+    (current[response.endpoint] as Record<string, unknown>)[response.index] =
+      entry;
   }
 
   const tsContent = `/*
@@ -79,7 +133,7 @@ export async function generatePlaywrightMocks(
  * Copyright © 2026 Adam Lynch (https://adamlynch.com)
  */
 
-const mocks = ${JSON.stringify(mocks, null, 2)};
+const mocks = ${JSON.stringify(mocks)};
 
 export default mocks;
 `;

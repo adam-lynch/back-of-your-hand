@@ -5,3 +5,18 @@ changed=$(git diff --name-only --cached)
 if echo "$changed" | grep -qE '^app/'; then
   cd app && npx lint-staged --config build/lint-staged.config.js && npm run svelte-check && cd ..
 fi
+
+if echo "$changed" | grep -qE '\.mock\.ts$|shared-bodies/'; then
+  shared_dir="app/tests/playwright/mocking/mocks/shared-bodies"
+  if [ -d "$shared_dir" ]; then
+    referenced=$(grep -roh '__shared_body::[a-f0-9]\{64\}' app/tests/playwright/mocking/mocks/ --include='*.mock.ts' | sort -u | sed 's/__shared_body:://')
+    for filepath in "$shared_dir"/*.json; do
+      [ -f "$filepath" ] || continue
+      hash=$(basename "$filepath" .json)
+      if ! echo "$referenced" | grep -qx "$hash"; then
+        git rm -f "$filepath" 2>/dev/null || rm "$filepath"
+        echo "Pruned orphaned shared body: $filepath"
+      fi
+    done
+  fi
+fi

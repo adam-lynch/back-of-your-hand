@@ -1,23 +1,3 @@
-/\*
-
-- This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-- If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
--
-- Project: Back Of Your Hand (https://backofyourhand.com)
-- Repository: https://github.com/adam-lynch/back-of-your-hand
-- Copyright © 2026 Adam Lynch (https://adamlynch.com)
-  \*/
-
-## Per-Test Mock Hierarchy
-
-Mocks are stored per test file and use a nested structure that mirrors describe blocks and test names.
-Example:
-
-- `tests/playwright/organizations/invite-acceptance.test.ts`
-  → `tests/playwright/mocking/mocks/organizations/invite-acceptance.mock.ts`
-
-Each test keeps its own request counters per endpoint, so multiple requests to the same endpoint can return different recorded responses in sequence.
-
 # Playwright Mock System
 
 This directory contains the per-test isolation mock system for E2E tests.
@@ -37,18 +17,17 @@ The mock system uses Playwright's native `page.route()` to intercept HTTP reques
 
 ```
 mocking/
-├── setup.ts              # Test fixture that loads and applies per-test mocks
-├── recorder.ts           # Records live API responses during test runs
-├── generate-mocks.ts     # Generates TypeScript mock files from recordings
-└── mocks/                # Recorded mock responses (per-test files)
-    ├── public/           # Mirrors tests/playwright/public/ structure
-    │   ├── homepage.mock.ts
-    │   ├── navigation.mock.ts
+├── setup.ts                # Test fixture that loads and applies per-test mocks
+├── ...
+└── mocks/
+    ├── shared-bodies/      # Large response bodies stored once, referenced by hash
+    │   ├── {sha256}.json
     │   └── ...
-    └── organizations/    # Mirrors tests/playwright/organizations/ structure
+    ├── public/             # Mirrors tests/playwright/public/ structure
+    │   ├── homepage.mock.ts
+    │   └── ...
+    └── organizations/      # Mirrors tests/playwright/organizations/ structure
         ├── authentication.mock.ts
-        ├── invitation.mock.ts
-        ├── invite-acceptance.mock.ts
         └── ...
 ```
 
@@ -62,13 +41,9 @@ const mocks = {
     "can log in as admin": {  // test name
       "GET example1--backend.local-backofyourhand--backend.com:7200/api/users/me": {
         0: {  // First request to this endpoint
-          method: "GET",
-          url: "https://example1--backend.local-backofyourhand--backend.com:7200/api/users/me",
-          status: 200,
-          headers: { "content-type": "application/vnd.api+json" },
           body: { data: { type: "user", id: "123", attributes: {...} } }
         },
-        1: {  // Second request to this endpoint
+        1: {  // Second request to same endpoint
           // ...
         }
       }
@@ -78,6 +53,18 @@ const mocks = {
 ```
 
 The endpoint key format is: `"{METHOD} {host}{pathname}{search}{hash}"` (full URL without protocol).
+
+Each response entry contains:
+
+- `body` (required) — the response body, or a `"__shared_body::{sha256}"` reference for large bodies (see below)
+- `status` (optional) — omitted when 200
+- `headers` (optional) — only stored when non-default headers are needed (e.g. `set-cookie`). Content-type is inferred from the URL domain: `application/vnd.api+json` for backend, `application/json` for everything else.
+
+### Shared bodies
+
+Response bodies larger than 1KB are extracted into `mocks/shared-bodies/{sha256}.json` and referenced by hash. This avoids duplicating large geometry data across tests. The same body used by multiple tests (or multiple requests within a test) is stored exactly once.
+
+A pre-commit hook automatically prunes orphaned shared body files when mock files change.
 
 ## Usage
 

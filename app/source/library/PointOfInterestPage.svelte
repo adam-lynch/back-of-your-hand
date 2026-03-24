@@ -19,6 +19,7 @@
   import SettingsPage from "./SettingsPage.svelte";
   import AutoSavingTextField from "./forms/autoSavingFields/AutoSavingTextField.svelte";
   import Field from "./forms/Field.svelte";
+  import MapLibreMap from "./MapLibreMap.svelte";
   import TextInput from "./forms/TextInput.svelte";
   import Button from "./forms/Button.svelte";
   import ConfirmationModal from "./ConfirmationModal.svelte";
@@ -33,6 +34,7 @@
   import eventEmitter from "../utilities/eventEmitter";
   import getCommonToastOptions from "./utilities/getCommonToastOptions";
   import { reportError } from "../utilities/setUpErrorReporting";
+  import parseLatLng from "../utilities/parseLatLng";
 
   export let routePathParameters: {
     mapFeatureId: string;
@@ -137,6 +139,12 @@
     }
   });
 
+  const { data: coordinateData } = coordinateForm;
+  $: previewLatLng = parseLatLng(
+    $coordinateData.latitude,
+    $coordinateData.longitude,
+  );
+
   const handleDeleteConfirm = async () => {
     const mapFeature = svelteStore.get(mapFeatureStore);
     if (!mapFeature) {
@@ -224,6 +232,15 @@
         </Field>
       </form>
 
+      <div class="point-of-interest-page__map-preview">
+        <MapLibreMap
+          centerLatLng={previewLatLng ?? undefined}
+          isInteractive={false}
+          markerLatLng={previewLatLng}
+          zoom={15}
+        />
+      </div>
+
       <div class="point-of-interest-page__actions">
         <ConfirmationModal
           confirmText="Delete"
@@ -258,6 +275,13 @@
   .point-of-interest-page__inner form {
     display: flex;
     flex-direction: column;
+  }
+
+  .point-of-interest-page__map-preview {
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 0.5rem;
   }
 
   .point-of-interest-page__actions {

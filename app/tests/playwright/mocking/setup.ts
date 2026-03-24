@@ -100,6 +100,41 @@ async function applyMockRoutes(page: Page, state: MockState): Promise<void> {
           ...mock.headers,
         },
       });
+    } else if (endpointMocks) {
+      /*
+       * Counter exhausted: the app made more requests to this endpoint than
+       * were recorded (common when instant mock responses let preload
+       * requests complete that would be cancelled by navigation during
+       * recording with real network latency). Replay the last recorded
+       * response.
+       */
+      const lastIndex = String(
+        Math.max(...Object.keys(endpointMocks).map(Number)),
+      );
+      const lastMock = endpointMocks[lastIndex];
+      const contentType =
+        lastMock.headers?.["content-type"] || "application/json";
+      let body =
+        typeof lastMock.body === "string"
+          ? lastMock.body
+          : JSON.stringify(lastMock.body);
+
+      if (body.includes('"accessExpiration"')) {
+        const futureDate = new Date(Date.now() + 3600000).toISOString();
+        body = body.replace(
+          /"accessExpiration":"[^"]*"/,
+          `"accessExpiration":"${futureDate}"`,
+        );
+      }
+
+      await route.fulfill({
+        status: lastMock.status || 200,
+        body,
+        headers: {
+          "content-type": contentType,
+          ...lastMock.headers,
+        },
+      });
     } else {
       if (isRecordableRequest(url)) {
         console.warn(`⚠️  No mock found for: ${endpoint}`);

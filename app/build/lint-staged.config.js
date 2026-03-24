@@ -12,10 +12,19 @@ import { commentableExtensionsWhichPrettierSupports } from "../../build/fileExte
 const eslint = "eslint --config eslint.config.js --fix";
 const prettier = "prettier --write";
 
+const ignoreMocks = (files) =>
+  files.filter((f) => !f.includes("/mocking/mocks/"));
+
 export default {
-  [`*.{${commentableExtensionsWhichPrettierSupports.join(",")}}`]: [
-    prettier,
-    eslint,
-  ],
-  "*.{json,md}": [prettier],
+  [`*.{${commentableExtensionsWhichPrettierSupports.join(",")}}`]: (files) => {
+    const filtered = ignoreMocks(files);
+    if (filtered.length === 0) return [];
+    const paths = filtered.join(" ");
+    return [`${prettier} ${paths}`, `${eslint} ${paths}`];
+  },
+  "*.{json,md}": (files) => {
+    const filtered = ignoreMocks(files);
+    if (filtered.length === 0) return [];
+    return [`${prettier} ${filtered.join(" ")}`];
+  },
 };

@@ -38,6 +38,26 @@ function newPassword() {
     .min(8, "Password must be at least 8 characters");
 }
 
+function inRange({ min, max }: { min: number; max: number }) {
+  return yup
+    .string()
+    .test("in-range", `Must be between ${min} and ${max}`, (value) => {
+      if (!value || isNaN(Number(value))) return true;
+      const num = Number(value);
+      return num >= min && num <= max;
+    });
+}
+
+function wholeNumber() {
+  return yup
+    .string()
+    .test(
+      "is-whole-number",
+      "Must be a whole number",
+      (value) => !value || /^\d+$/.test(value),
+    );
+}
+
 function latitude() {
   return yup
     .string()
@@ -75,7 +95,9 @@ function longitude() {
 export default {
   checkbox,
   email,
+  inRange,
   latitude,
   longitude,
   newPassword,
+  wholeNumber,
 };

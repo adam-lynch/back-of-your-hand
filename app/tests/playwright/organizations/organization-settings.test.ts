@@ -79,29 +79,33 @@ test.describe("Organization Settings", () => {
     }
   });
 
-  test.describe("Maximum questions per round", () => {
-    test("changing value saves, persists, and affects the slider max", async ({
-      page,
-    }) => {
+  test.describe("Questions per round limits", () => {
+    async function testSavePersistAndAffectSlider(
+      page: import("@playwright/test").Page,
+      field: {
+        label: RegExp;
+        sliderAttribute: "min" | "max";
+        newValue: string;
+      },
+    ) {
       await logIn(page, organization, example1Users.admin);
       await page.goto(settingsUrl);
 
-      const input = page.getByLabel(/maximum questions per round/i);
+      const input = page.getByLabel(field.label);
       await expect(input).toBeVisible();
       const originalValue = await input.inputValue();
-      const newLimit = "30";
 
       try {
-        await input.fill(newLimit);
+        await input.fill(field.newValue);
         const updatePromise = waitForOrgPatch(page);
         await input.blur();
         const response = await updatePromise;
         expect(response.status()).toBe(200);
 
         await page.reload();
-        await expect(
-          page.getByLabel(/maximum questions per round/i),
-        ).toHaveValue(newLimit, { timeout: 10000 });
+        await expect(page.getByLabel(field.label)).toHaveValue(field.newValue, {
+          timeout: 10000,
+        });
 
         await page.goto(organization.baseUrl);
         await expect(page.getByTestId("game-map")).toBeVisible({
@@ -111,43 +115,138 @@ test.describe("Organization Settings", () => {
         await page.getByRole("button", { name: /configure/i }).click();
 
         const slider = page.locator("#numberOfQuestionsInput");
-        await expect(slider).toHaveAttribute("max", newLimit, {
-          timeout: 5000,
-        });
+        await expect(slider).toHaveAttribute(
+          field.sliderAttribute,
+          field.newValue,
+          { timeout: 5000 },
+        );
       } finally {
         await page.goto(settingsUrl);
-        const revertInput = page.getByLabel(/maximum questions per round/i);
+        const revertInput = page.getByLabel(field.label);
         await revertInput.fill(originalValue);
         const revertPromise = waitForOrgPatch(page);
         await revertInput.blur();
         await revertPromise;
       }
-    });
+    }
 
-    test("shows validation errors for invalid values", async ({ page }) => {
+    async function testValidationErrors(
+      page: import("@playwright/test").Page,
+      field: {
+        label: RegExp;
+        belowRangeValue: string;
+        rangeMessage: string;
+        requiredMessage: string;
+      },
+    ) {
       await logIn(page, organization, example1Users.admin);
       await page.goto(settingsUrl);
 
-      const input = page.getByLabel(/maximum questions per round/i);
+      const input = page.getByLabel(field.label);
       await expect(input).toBeVisible();
 
       await input.fill("abc");
       await input.blur();
       await expect(page.getByText("Must be a whole number")).toBeVisible();
 
-      await input.fill("3");
+      await input.fill(field.belowRangeValue);
       await input.blur();
-      await expect(page.getByText("Must be between 5 and 250")).toBeVisible();
+      await expect(page.getByText(field.rangeMessage)).toBeVisible();
 
       await input.fill("300");
       await input.blur();
-      await expect(page.getByText("Must be between 5 and 250")).toBeVisible();
+      await expect(page.getByText(field.rangeMessage)).toBeVisible();
 
       await input.fill("");
       await input.blur();
+      await expect(page.getByText(field.requiredMessage)).toBeVisible();
+    }
+
+    test("changing minimum saves, persists, and affects the slider", async ({
+      page,
+    }) => {
+      await testSavePersistAndAffectSlider(page, {
+        label: /minimum questions per round/i,
+        sliderAttribute: "min",
+        newValue: "15",
+      });
+    });
+
+    test("changing maximum saves, persists, and affects the slider", async ({
+      page,
+    }) => {
+      await testSavePersistAndAffectSlider(page, {
+        label: /maximum questions per round/i,
+        sliderAttribute: "max",
+        newValue: "30",
+      });
+    });
+
+    test("minimum shows validation errors for invalid values", async ({
+      page,
+    }) => {
+      await testValidationErrors(page, {
+        label: /minimum questions per round/i,
+        belowRangeValue: "0",
+        rangeMessage: "Must be between 1 and 250",
+        requiredMessage: "Minimum questions per round is required",
+      });
+    });
+
+    test("maximum shows validation errors for invalid values", async ({
+      page,
+    }) => {
+      await testValidationErrors(page, {
+        label: /maximum questions per round/i,
+        belowRangeValue: "3",
+        rangeMessage: "Must be between 5 and 250",
+        requiredMessage: "Maximum questions per round is required",
+      });
+    });
+
+    test("minimum cannot exceed the maximum", async ({ page }) => {
+      await logIn(page, organization, example1Users.admin);
+      await page.goto(settingsUrl);
+
+      const maxValue = await page
+        .getByLabel(/maximum questions per round/i)
+        .inputValue();
+      const input = page.getByLabel(/minimum questions per round/i);
+      await input.fill(String(Number(maxValue) + 10));
+      await input.blur();
       await expect(
-        page.getByText("Maximum questions per round is required"),
+        page.getByText(`Must not exceed ${maxValue} (the current maximum)`),
       ).toBeVisible();
+    });
+
+    test("maximum cannot go below the minimum", async ({ page }) => {
+      await logIn(page, organization, example1Users.admin);
+      await page.goto(settingsUrl);
+
+      const minInput = page.getByLabel(/minimum questions per round/i);
+      const originalMin = await minInput.inputValue();
+      const newMin = "20";
+
+      try {
+        await minInput.fill(newMin);
+        const updatePromise = waitForOrgPatch(page);
+        await minInput.blur();
+        await updatePromise;
+
+        const maxInput = page.getByLabel(/maximum questions per round/i);
+        await maxInput.fill(String(Number(newMin) - 1));
+        await maxInput.blur();
+        await expect(
+          page.getByText(`Must be at least ${newMin} (the current minimum)`),
+        ).toBeVisible();
+      } finally {
+        await page.goto(settingsUrl);
+        const revertInput = page.getByLabel(/minimum questions per round/i);
+        await revertInput.fill(originalMin);
+        const revertPromise = waitForOrgPatch(page);
+        await revertInput.blur();
+        await revertPromise;
+      }
     });
   });
 });

@@ -7,7 +7,7 @@
  * Copyright © 2024 Adam Lynch (https://adamlynch.com)
  */
 
-import { derived, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 import type {
   Area,
   Organization,
@@ -15,6 +15,7 @@ import type {
   UserOrganization,
 } from "../api/resourceObjects";
 import ignoreError from "../utilities/ignoreError";
+import { numberOfQuestions } from "../utilities/store";
 
 export type AccessDetailsAttributes = {
   access: string;
@@ -53,3 +54,15 @@ export const userOrganizationIsAdmin = derived(
     $userOrganization && $userOrganization.attributes.role === "admin",
 );
 export const organization = writable<Organization | null>(null);
+
+organization.subscribe(($organization) => {
+  if (!$organization) return;
+  const { questionsPerRoundMinimum, questionsPerRoundLimit } =
+    $organization.attributes;
+  const current = get(numberOfQuestions);
+  if (current < questionsPerRoundMinimum) {
+    numberOfQuestions.set(questionsPerRoundMinimum);
+  } else if (questionsPerRoundLimit && current > questionsPerRoundLimit) {
+    numberOfQuestions.set(questionsPerRoundLimit);
+  }
+});

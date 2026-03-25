@@ -80,6 +80,7 @@ export type Organization = JSONAPI.ResourceObject<
     logo: OptionalAttributeValue<string>;
     name: string;
     questionsPerRoundLimit: OptionalAttributeValue<number>;
+    questionsPerRoundMinimum: number;
   }
 >;
 

@@ -8,25 +8,52 @@
 -->
 
 <script lang="ts">
+  import { get } from "svelte/store";
   import SettingsPage from "./SettingsPage.svelte";
   import AutoSavingSelectField from "./forms/autoSavingFields/AutoSavingSelectField.svelte";
   import AutoSavingTextField from "./forms/autoSavingFields/AutoSavingTextField.svelte";
+  import commonSchema from "./forms/commonSchema";
   import { organization } from "../userData/store";
   import yup from "./forms/yup";
 
-  const questionsPerRoundLimitSchema = yup
-    .string()
+  const limitRange = { min: 5, max: 250 };
+  const questionsPerRoundLimitSchema = commonSchema
+    .wholeNumber()
     .label("Maximum questions per round")
     .required("Maximum questions per round is required")
-    .test(
-      "is-whole-number",
-      "Must be a whole number",
-      (value) => !value || /^\d+$/.test(value),
-    )
-    .test("in-range", "Must be between 5 and 250", (value) => {
-      if (!value || !/^\d+$/.test(value)) return true;
+    .concat(commonSchema.inRange(limitRange))
+    .test("gte-minimum", function (value) {
+      if (!value) return true;
       const num = Number(value);
-      return num >= 5 && num <= 250;
+      if (num < limitRange.min || num > limitRange.max) return true;
+      const minimum =
+        get(organization)?.attributes.questionsPerRoundMinimum ?? 0;
+      if (minimum > 0 && num < minimum) {
+        return this.createError({
+          message: `Must be at least ${minimum} (the current minimum)`,
+        });
+      }
+      return true;
+    });
+
+  const minimumRange = { min: 1, max: 250 };
+  const questionsPerRoundMinimumSchema = commonSchema
+    .wholeNumber()
+    .label("Minimum questions per round")
+    .required("Minimum questions per round is required")
+    .concat(commonSchema.inRange(minimumRange))
+    .test("lte-maximum", function (value) {
+      if (!value) return true;
+      const num = Number(value);
+      if (num < minimumRange.min || num > minimumRange.max) return true;
+      const maximum =
+        get(organization)?.attributes.questionsPerRoundLimit ?? 50;
+      if (num > maximum) {
+        return this.createError({
+          message: `Must not exceed ${maximum} (the current maximum)`,
+        });
+      }
+      return true;
     });
 </script>
 
@@ -62,6 +89,20 @@
         }}
         writable={organization}
         writableSelector="attributes.questionsPerRoundLimit"
+      />
+      <AutoSavingTextField
+        fieldProps={{
+          labelText: "Minimum questions per round",
+        }}
+        schema={questionsPerRoundMinimumSchema}
+        shouldPatchResourceOnWritableUpdated={true}
+        textProps={{
+          autocomplete: "off",
+          inputmode: "numeric",
+          required: true,
+        }}
+        writable={organization}
+        writableSelector="attributes.questionsPerRoundMinimum"
       />
     </div>
   {/if}

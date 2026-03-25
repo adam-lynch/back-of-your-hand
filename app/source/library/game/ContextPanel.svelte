@@ -43,6 +43,11 @@
   export let clearRound: () => void;
   export let resetGame: () => void;
 
+  $: questionsPerRoundMinimum =
+    $organization?.attributes.questionsPerRoundMinimum ?? 5;
+  $: questionsPerRoundLimit =
+    $organization?.attributes.questionsPerRoundLimit ?? 50;
+
   const onNumberOfQuestionsUpdated = (event: Event) => {
     const amount = parseInt((event.target as HTMLInputElement).value);
     numberOfQuestions.set(amount);
@@ -470,10 +475,10 @@
             <div class="subtext">{$numberOfQuestions}</div>
             <input
               type="range"
-              min="5"
-              max={$organization?.attributes.questionsPerRoundLimit ?? 50}
+              min={questionsPerRoundMinimum}
+              max={questionsPerRoundLimit}
               value={$numberOfQuestions}
-              step="5"
+              step={questionsPerRoundMinimum % 5 === 0 ? 5 : 1}
               class="slider"
               id="numberOfQuestionsInput"
               on:input={onNumberOfQuestionsUpdated}

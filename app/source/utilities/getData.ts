@@ -135,6 +135,7 @@ async function fetchMapFeatures(
 
   const response = await api.fetchResourceList<MapFeature>("mapFeature", {
     filter,
+    page: { size: 50 },
   });
   return response.data;
 }
@@ -168,6 +169,7 @@ async function fetchMapFeaturesByAreaId(
   const result = await api.fetchResourceList<MapFeature>("mapFeature", {
     fetchOptions,
     filter: { area__id: areaId },
+    page: { size: 50 },
   });
   return result.data;
 }

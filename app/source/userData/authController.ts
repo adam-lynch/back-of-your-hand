@@ -18,7 +18,6 @@ import * as store from "./store";
 import * as storeActions from "./storeActions";
 import eventEmitter from "../utilities/eventEmitter";
 import * as svelteStore from "svelte/store";
-import { reportError } from "../utilities/setUpErrorReporting";
 import getInternalRoutes from "../library/routing/getInternalRoutes";
 import getCurrentInternalRoute from "../library/routing/getCurrentInternalRoute";
 
@@ -158,7 +157,7 @@ async function onPreApiFetch(fetchArgs: { url: string; options: RequestInit }) {
       url: fetchArgs.url,
     });
   } catch (error) {
-    reportError(error);
+    console.warn("Failed to get valid access token", error);
     eventEmitter.emit("lack-of-authentication-detected", {
       functionWhichErrored: "getValidAccessToken",
     });

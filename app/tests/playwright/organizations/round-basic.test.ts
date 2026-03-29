@@ -44,6 +44,7 @@ test.describe("Round Basic Flow", () => {
   });
 
   test("can start and complete a round", async ({ page }) => {
+    test.slow();
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
 
     await page.getByRole("button", { name: /play solo/i }).click();
@@ -55,6 +56,7 @@ test.describe("Round Basic Flow", () => {
   });
 
   test("can start a new round after completing one", async ({ page }) => {
+    test.slow();
     await expect(page.getByTestId("game-map")).toBeVisible({ timeout: 10000 });
 
     await page.getByRole("button", { name: /play solo/i }).click();

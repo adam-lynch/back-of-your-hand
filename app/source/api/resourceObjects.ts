@@ -78,6 +78,11 @@ export type Organization = JSONAPI.ResourceObject<
     distanceUnit: "imperial" | "metric";
     location: OptionalAttributeValue<string>;
     logo: OptionalAttributeValue<string>;
+    mapLabelsWhileGuessing:
+      | "allAreaNames"
+      | "hidden"
+      | "majorAreaNames"
+      | "visible";
     name: string;
     questionsPerRoundLimit: OptionalAttributeValue<number>;
     questionsPerRoundMinimum: number;

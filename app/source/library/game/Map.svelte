@@ -44,7 +44,7 @@
     gameRound,
     sidebarState,
   } from "../../utilities/store";
-  import { isOrganizationUrl } from "../../userData/store";
+  import { isOrganizationUrl, organization } from "../../userData/store";
 
   const selectionBoundsPaddingPx: [number, number] = [10, 10];
   export let areSettingsShown = writable(false);
@@ -120,7 +120,7 @@
   const tileLayer = getTileLayer("labels");
 
   let areElementLabelsShown = true;
-  let maplibreLabelLayerIds: string[] | null = null;
+  let labelLayerIds: string[] | null = null;
 
   // Used when intializing, plus when updating its style (when starting a new round)
   const areaBoundsLayerGroupSelectionStyle = {
@@ -237,41 +237,63 @@
     areaBoundsCenterMarker = newAreaBoundsCenterMarker;
   };
 
-  const setMaplibreLabelVisibility = (shouldShow: boolean) => {
+  const majorAreaNameLayerIds = new Set([
+    "label-boundary-country-large",
+    "label-boundary-country-medium",
+    "label-boundary-country-small",
+    "label-boundary-state",
+    "label-place-capital",
+    "label-place-city",
+    "label-place-statecapital",
+    "label-place-town",
+    "label-place-village",
+  ]);
+  const allAreaNamePrefixes = ["label-boundary-", "label-place-"];
+
+  const populateLabelLayerIds = (
+    maplibreMap: ReturnType<typeof tileLayer.getMaplibreMap>,
+  ) => {
+    if (labelLayerIds) return;
+
+    const style = maplibreMap.getStyle();
+    if (!style?.layers) return;
+
+    const hasTextOrIcon = (layout: unknown) =>
+      Boolean(
+        layout &&
+          typeof layout === "object" &&
+          ("text-field" in (layout as Record<string, unknown>) ||
+            "icon-image" in (layout as Record<string, unknown>)),
+      );
+
+    labelLayerIds = style.layers
+      .filter(({ layout, type }) => type === "symbol" || hasTextOrIcon(layout))
+      .map(({ id }) => id);
+  };
+
+  const setMaplibreLabelVisibility = (isGuessing: boolean) => {
     const maplibreMap = tileLayer.getMaplibreMap();
-    // To be safe
     if (!maplibreMap) {
       console.warn("Maplibre map unavailable, cannot toggle labels");
       return;
     }
 
     const applyVisibility = () => {
-      if (!maplibreLabelLayerIds || maplibreLabelLayerIds.length === 0) {
-        const style = maplibreMap.getStyle();
-        if (!style?.layers) {
-          return;
-        }
+      const settingValue =
+        $organization?.attributes.mapLabelsWhileGuessing ?? "hidden";
+      if (settingValue === "visible") return;
 
-        const hasTextOrIcon = (layout: unknown) =>
-          Boolean(
-            layout &&
-              typeof layout === "object" &&
-              ("text-field" in (layout as Record<string, unknown>) ||
-                "icon-image" in (layout as Record<string, unknown>)),
-          );
+      populateLabelLayerIds(maplibreMap);
+      if (!labelLayerIds?.length) return;
 
-        maplibreLabelLayerIds = style.layers
-          .filter(
-            ({ layout, type }) => type === "symbol" || hasTextOrIcon(layout),
-          )
-          .map(({ id }) => id);
-      }
+      labelLayerIds.forEach((layerId) => {
+        const shouldShow =
+          !isGuessing ||
+          (settingValue === "majorAreaNames" &&
+            majorAreaNameLayerIds.has(layerId)) ||
+          (settingValue === "allAreaNames" &&
+            allAreaNamePrefixes.some((prefix) => layerId.startsWith(prefix)));
 
-      if (!maplibreLabelLayerIds || maplibreLabelLayerIds.length === 0) {
-        return;
-      }
-
-      maplibreLabelLayerIds.forEach((layerId) => {
         try {
           maplibreMap.setLayoutProperty(
             layerId,
@@ -300,7 +322,7 @@
       return;
     }
 
-    setMaplibreLabelVisibility(false);
+    setMaplibreLabelVisibility(true);
     areElementLabelsShown = false;
   };
 
@@ -309,7 +331,7 @@
       return;
     }
 
-    setMaplibreLabelVisibility(true);
+    setMaplibreLabelVisibility(false);
     areElementLabelsShown = true;
   };
 

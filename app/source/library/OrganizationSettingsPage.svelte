@@ -62,6 +62,24 @@
     <div class="organization-settings-page__inner">
       <AutoSavingSelectField
         fieldProps={{
+          labelText: "Map labels while guessing",
+        }}
+        schema={yup.string().required()}
+        selectProps={{
+          options: [
+            { label: "Hidden", value: "hidden" },
+            { label: "Major area names only", value: "majorAreaNames" },
+            { label: "All area names", value: "allAreaNames" },
+            { label: "All visible", value: "visible" },
+          ],
+          required: true,
+        }}
+        shouldPatchResourceOnWritableUpdated={true}
+        writable={organization}
+        writableSelector="attributes.mapLabelsWhileGuessing"
+      />
+      <AutoSavingSelectField
+        fieldProps={{
           labelText: "Distance unit",
         }}
         schema={yup.string().required()}

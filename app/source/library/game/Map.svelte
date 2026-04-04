@@ -579,11 +579,6 @@
     };
 
     locateControl.add(map);
-    if (import.meta.env.DEV) {
-      // For playwright tests
-      (mapElement as unknown as { _leafletMap: leaflet.Map })._leafletMap = map;
-    }
-
     map.attributionControl.setPrefix("");
 
     // Let leaflet know when the map container changes size (e.g. when the context-panel grows)

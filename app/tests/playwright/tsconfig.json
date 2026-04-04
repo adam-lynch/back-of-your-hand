@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "types": ["node", "@playwright/test"],
-    "moduleResolution": "node"
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["mocking/mocks/**"]
-}
